@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /privacy/
 
-Sitemap: /sitemap.xml
+Sitemap: https://techa-automation.bigcarl7171.workers.dev/sitemap.xml

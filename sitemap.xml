@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
-  <url><loc>/ko/age-calculator/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>/ko/dday/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>/ko/char-counter/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>/ko/lotto/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>/ko/ladder/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>/ko/menu-roulette/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>/ko/unit-converter/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>/ko/percent/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>/ko/date-diff/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>/ko/workdays/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://techa-automation.bigcarl7171.workers.dev/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://techa-automation.bigcarl7171.workers.dev/ko/age-calculator/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://techa-automation.bigcarl7171.workers.dev/ko/dday/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://techa-automation.bigcarl7171.workers.dev/ko/char-counter/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://techa-automation.bigcarl7171.workers.dev/ko/lotto/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://techa-automation.bigcarl7171.workers.dev/ko/ladder/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://techa-automation.bigcarl7171.workers.dev/ko/menu-roulette/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://techa-automation.bigcarl7171.workers.dev/ko/unit-converter/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://techa-automation.bigcarl7171.workers.dev/ko/percent/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://techa-automation.bigcarl7171.workers.dev/ko/date-diff/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://techa-automation.bigcarl7171.workers.dev/ko/workdays/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
 </urlset>
