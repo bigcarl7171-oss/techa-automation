@@ -176,8 +176,36 @@
     if (opts.title) renderPageHead(opts);
     renderAdSlots();
     renderShopCTA();
+    if (opts.share) renderShare(opts.share);
     if (opts.slug) renderRelated(opts.slug, opts.category, opts.related);
     renderFooter();
+  }
+
+  // ---------- 결과 공유 버튼 ----------
+  // opts.share = 결과 요소 선택자(예: "#result"). 해당 요소 바로 뒤에 공유 버튼 삽입.
+  function renderShare(sel) {
+    if (typeof sel !== "string") sel = "#result";
+    var el = document.querySelector(sel);
+    if (!el) return;
+    var btn = document.createElement("button");
+    btn.className = "btn btn-ghost btn-sm";
+    btn.type = "button";
+    btn.textContent = "🔗 결과 공유하기";
+    btn.style.marginTop = "12px";
+    btn.addEventListener("click", function () {
+      var resultText = (el.textContent || "").replace(/\s+/g, " ").trim();
+      var title = (document.title.split("—")[0] || "테차 툴즈").trim();
+      var url = location.href;
+      var text = (resultText ? resultText + "\n" : "") + title + " | 테차 툴즈";
+      if (navigator.share) {
+        navigator.share({ title: title, text: text, url: url }).catch(function () {});
+      } else if (navigator.clipboard) {
+        navigator.clipboard.writeText(text + "\n" + url);
+        var t = btn.textContent; btn.textContent = "링크가 복사됐어요!";
+        setTimeout(function () { btn.textContent = t; }, 1600);
+      }
+    });
+    el.parentNode.insertBefore(btn, el.nextSibling);
   }
 
   // ---------- TECHA 선물샵 CTA (탄생화·탄생석 등) ----------

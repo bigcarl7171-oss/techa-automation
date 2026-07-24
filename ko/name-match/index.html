@@ -58,7 +58,7 @@
 
 <script src="/assets/js/site.js"></script>
 <script>
-TECHA.initPage({ title:"이름 궁합 테스트", desc:"두 사람의 이름으로 궁합 점수를 재미로 확인해 보세요.", category:"fortune", slug:"name-match", related:["horoscope","zodiac-love","birth-flower"] });
+TECHA.initPage({ title:"이름 궁합 테스트", desc:"두 사람의 이름으로 궁합 점수를 재미로 확인해 보세요.", category:"fortune", slug:"name-match", related:["horoscope","zodiac-love","birth-flower"], share:"#result" });
 (function(){
   var n1=document.getElementById("n1"), n2=document.getElementById("n2"), result=document.getElementById("result");
   function hash(s){ var h=2166136261; for(var i=0;i<s.length;i++){ h^=s.charCodeAt(i); h=Math.imul(h,16777619); } return (h>>>0); }
