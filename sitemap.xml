@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://techa-automation.bigcarl7171.workers.dev/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://techa-automation.bigcarl7171.workers.dev/about/</loc><changefreq>monthly</changefreq><priority>0.4</priority></url>
   <url><loc>https://techa-automation.bigcarl7171.workers.dev/ko/age-calculator/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://techa-automation.bigcarl7171.workers.dev/ko/dday/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://techa-automation.bigcarl7171.workers.dev/ko/char-counter/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
