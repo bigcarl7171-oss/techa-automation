@@ -10,7 +10,8 @@
   var SITE = {
     name: "테차 툴즈",
     tagline: "간단하고 편리한 생활 도구 모음",
-    base: "" // 예: "https://tools.example.com" (배포 후 채움)
+    base: "", // 예: "https://tools.example.com" (배포 후 채움)
+    shopUrl: "" // TECHA 선물샵 URL (설정 시 탄생화·탄생석 등에 선물 CTA 자동 노출)
   };
 
   // ---------- 앱 레지스트리 ----------
@@ -45,17 +46,28 @@
     { slug: "margin", name: "마진율 계산기", emoji: "📈", cat: "money",
       desc: "판매가·원가로 마진 계산", status: "live", path: "/ko/margin/" },
     { slug: "compound", name: "복리 계산기", emoji: "💹", cat: "money",
-      desc: "복리·적립 미래가치·72법칙", status: "live", path: "/ko/compound/" }
+      desc: "복리·적립 미래가치·72법칙", status: "live", path: "/ko/compound/" },
+    { slug: "name-match", name: "이름 궁합 테스트", emoji: "💞", cat: "fortune",
+      desc: "두 사람 이름으로 보는 궁합", status: "live", path: "/ko/name-match/" },
+    { slug: "horoscope", name: "오늘의 별자리 운세", emoji: "🔮", cat: "fortune",
+      desc: "생일로 보는 오늘의 운세", status: "live", path: "/ko/horoscope/" },
+    { slug: "zodiac-love", name: "별자리 궁합", emoji: "💘", cat: "fortune",
+      desc: "두 별자리의 궁합 분석", status: "live", path: "/ko/zodiac-love/" },
+    { slug: "birth-flower", name: "월별 탄생화·꽃말", emoji: "🌸", cat: "fortune",
+      desc: "태어난 달의 꽃과 꽃말", status: "live", path: "/ko/birth-flower/" },
+    { slug: "birth-stone", name: "월별 탄생석", emoji: "💎", cat: "fortune",
+      desc: "태어난 달의 보석과 의미", status: "live", path: "/ko/birth-stone/" }
   ];
 
   var CATS = {
-    date:   { title: "날짜·시간", emoji: "📆" },
-    calc:   { title: "계산·변환", emoji: "🧮" },
-    money:  { title: "금융·재테크", emoji: "💰" },
-    health: { title: "건강", emoji: "💪" },
-    text:   { title: "텍스트 도구", emoji: "✍️" },
-    fun:    { title: "재미·추첨", emoji: "🎲" },
-    life:   { title: "생활", emoji: "🏠" }
+    date:    { title: "날짜·시간", emoji: "📆" },
+    calc:    { title: "계산·변환", emoji: "🧮" },
+    money:   { title: "금융·재테크", emoji: "💰" },
+    health:  { title: "건강", emoji: "💪" },
+    fortune: { title: "운세·감성", emoji: "🔮" },
+    text:    { title: "텍스트 도구", emoji: "✍️" },
+    fun:     { title: "재미·추첨", emoji: "🎲" },
+    life:    { title: "생활", emoji: "🏠" }
   };
 
   // ---------- 헤더 주입 ----------
@@ -162,8 +174,27 @@
     renderHeader();
     if (opts.title) renderPageHead(opts);
     renderAdSlots();
+    renderShopCTA();
     if (opts.slug) renderRelated(opts.slug, opts.category, opts.related);
     renderFooter();
+  }
+
+  // ---------- TECHA 선물샵 CTA (탄생화·탄생석 등) ----------
+  // 페이지에 <div id="techa-cta" data-text="..."></div> 가 있으면 채움
+  function renderShopCTA() {
+    var el = document.getElementById("techa-cta");
+    if (!el) return;
+    var text = el.getAttribute("data-text") || "이 감성을 담은 프리저브드 플라워 선물, 테차에서 만나보세요";
+    var base = 'margin:22px 0;padding:18px 20px;border-radius:12px;background:#fbeecf;border:1px solid #f0dca8;';
+    if (SITE.shopUrl) {
+      el.innerHTML = '<div style="' + base + '">' +
+        '<div style="font-weight:700;color:#5c4a1f;margin-bottom:10px">🌸 ' + text + '</div>' +
+        '<a class="btn btn-primary btn-sm" href="' + SITE.shopUrl + '" target="_blank" rel="noopener">테차 선물 보러가기 →</a></div>';
+    } else {
+      el.innerHTML = '<div style="' + base + 'opacity:.85">' +
+        '<div style="font-weight:700;color:#5c4a1f">🌸 ' + text + '</div>' +
+        '<div style="font-size:13px;color:#8a7a54;margin-top:4px">테차 선물샵 연결 준비중</div></div>';
+    }
   }
 
   window.TECHA = {

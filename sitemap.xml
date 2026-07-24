@@ -16,4 +16,9 @@
   <url><loc>https://techa-automation.bigcarl7171.workers.dev/ko/vat/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://techa-automation.bigcarl7171.workers.dev/ko/margin/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://techa-automation.bigcarl7171.workers.dev/ko/compound/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://techa-automation.bigcarl7171.workers.dev/ko/name-match/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://techa-automation.bigcarl7171.workers.dev/ko/horoscope/</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://techa-automation.bigcarl7171.workers.dev/ko/zodiac-love/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://techa-automation.bigcarl7171.workers.dev/ko/birth-flower/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://techa-automation.bigcarl7171.workers.dev/ko/birth-stone/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
 </urlset>
