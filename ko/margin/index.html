@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>마진율 계산기 — 판매가·원가로 순이익·마진율 계산 | 테차 툴즈</title>
+<meta name="description" content="판매가, 매입원가, 부대비용(수수료 등)을 넣으면 순이익과 마진율(판매가 대비), 마크업률(원가 대비)을 계산합니다. 자영업·온라인 셀러 필수 도구.">
+<link rel="canonical" href="/ko/margin/">
+<link rel="alternate" hreflang="ko" href="/ko/margin/">
+<link rel="alternate" hreflang="x-default" href="/ko/margin/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="마진율 계산기 | 테차 툴즈">
+<meta property="og:description" content="판매가·원가로 순이익·마진율·마크업률 계산.">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&display=swap">
+<link rel="stylesheet" href="/assets/css/style.css">
+<script type="application/ld+json">
+{ "@context":"https://schema.org","@type":"WebApplication","name":"마진율 계산기",
+  "applicationCategory":"BusinessApplication","operatingSystem":"Any",
+  "offers":{"@type":"Offer","price":"0","priceCurrency":"KRW"} }
+</script>
+<style>
+  .brk{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-top:14px}
+  .brk .stat{background:var(--blue-soft);border-radius:10px;padding:12px;text-align:center}
+  .brk .n{font-family:"Gowun Batang",serif;font-size:20px;font-weight:700;color:var(--blue)}
+  .brk .l{font-size:12px;color:var(--muted)}
+</style>
+</head>
+<body>
+<header id="site-header"></header>
+<div id="page-head"></div>
+
+<main class="wrap">
+  <div class="ad-slot"></div>
+
+  <section class="card">
+    <label class="field" for="price">판매가 (원)</label>
+    <input type="number" id="price" value="20000" step="any">
+    <div class="row" style="margin-top:12px">
+      <div><label class="field" for="cost">매입원가 (원)</label><input type="number" id="cost" value="12000" step="any"></div>
+      <div><label class="field" for="extra">부대비용 <span class="hint">(수수료·배송 등)</span></label><input type="number" id="extra" value="2000" step="any"></div>
+    </div>
+
+    <div class="result empty" id="result" style="margin-top:16px">값을 입력하면 계산됩니다.</div>
+    <div class="brk" id="brk" style="display:none">
+      <div class="stat"><div class="n" id="marginRate">-</div><div class="l">마진율(판매가 대비)</div></div>
+      <div class="stat"><div class="n" id="markup">-</div><div class="l">마크업률(원가 대비)</div></div>
+    </div>
+  </section>
+
+  <div class="ad-slot"></div>
+
+  <article class="article">
+    <h2>마진율 계산기 사용법</h2>
+    <p>판매가, 매입원가, 부대비용(카드·플랫폼 수수료, 배송비 등)을 입력하면
+       <b>순이익, 마진율, 마크업률</b>을 한 번에 계산합니다. 온라인 셀러, 소매업, 요식업 등에서
+       가격 책정과 수익성 판단에 활용하세요.</p>
+
+    <h2>마진율 vs 마크업률</h2>
+    <ul>
+      <li><b>순이익</b> = 판매가 − 매입원가 − 부대비용</li>
+      <li><b>마진율</b> = 순이익 ÷ <b>판매가</b> × 100 (매출 대비 남는 비율)</li>
+      <li><b>마크업률</b> = 순이익 ÷ <b>원가</b> × 100 (원가에 얼마나 붙였나)</li>
+    </ul>
+    <p>같은 상품이라도 기준이 판매가냐 원가냐에 따라 비율이 달라집니다. 보통 "마진율"이라 하면 판매가 대비를 뜻합니다.</p>
+
+    <h3>예시</h3>
+    <p>판매가 20,000원, 원가 12,000원, 수수료 2,000원이면 순이익 6,000원 → 마진율 30%, 마크업률 50%입니다.</p>
+
+    <div class="note">부가세·세금·인건비 등 다른 비용은 부대비용에 합산해 넣으면 더 정확합니다.</div>
+  </article>
+
+  <div id="related"></div>
+</main>
+
+<footer id="site-footer"></footer>
+
+<script src="/assets/js/site.js"></script>
+<script>
+TECHA.initPage({ title:"마진율 계산기", desc:"판매가·원가·비용으로 순이익과 마진율을 계산합니다.", category:"money", slug:"margin", related:["vat","loan","compound"] });
+(function(){
+  var price=document.getElementById("price"), cost=document.getElementById("cost"), extra=document.getElementById("extra");
+  var result=document.getElementById("result"), brk=document.getElementById("brk");
+  function won(n){ return Math.round(n).toLocaleString()+"원"; }
+  function pct(n){ return (Math.round(n*10)/10)+"%"; }
+  function calc(){
+    var p=parseFloat(price.value)||0, c=parseFloat(cost.value)||0, e=parseFloat(extra.value)||0;
+    if(p<=0){ result.className="result empty"; result.textContent="판매가를 입력하세요."; brk.style.display="none"; return; }
+    var profit=p-c-e;
+    result.className="result";
+    result.innerHTML='<div class="big">순이익 '+won(profit)+'</div><div class="sub">'+(profit<0?"손실이 발생합니다":"판매가 "+won(p))+'</div>';
+    document.getElementById("marginRate").textContent=pct(profit/p*100);
+    document.getElementById("markup").textContent=(c>0?pct(profit/c*100):"-");
+    brk.style.display="grid";
+  }
+  [price,cost,extra].forEach(function(el){ el.addEventListener("input",calc); });
+  calc();
+})();
+</script>
+</body>
+</html>

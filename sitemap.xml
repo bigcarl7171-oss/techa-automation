@@ -11,4 +11,9 @@
   <url><loc>https://techa-automation.bigcarl7171.workers.dev/ko/percent/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://techa-automation.bigcarl7171.workers.dev/ko/date-diff/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://techa-automation.bigcarl7171.workers.dev/ko/workdays/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://techa-automation.bigcarl7171.workers.dev/ko/bmi/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://techa-automation.bigcarl7171.workers.dev/ko/loan/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://techa-automation.bigcarl7171.workers.dev/ko/vat/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://techa-automation.bigcarl7171.workers.dev/ko/margin/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://techa-automation.bigcarl7171.workers.dev/ko/compound/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
 </urlset>

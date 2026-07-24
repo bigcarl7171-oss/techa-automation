@@ -35,15 +35,27 @@
     { slug: "date-diff", name: "두 날짜 사이 일수", emoji: "🗓️", cat: "date",
       desc: "날짜 차이·주·개월·년 환산", status: "live", path: "/ko/date-diff/" },
     { slug: "workdays", name: "근무일수 계산기", emoji: "💼", cat: "date",
-      desc: "주말·공휴일 제외 근무일 계산", status: "live", path: "/ko/workdays/" }
+      desc: "주말·공휴일 제외 근무일 계산", status: "live", path: "/ko/workdays/" },
+    { slug: "bmi", name: "BMI 계산기", emoji: "⚖️", cat: "health",
+      desc: "체질량지수·비만도 확인", status: "live", path: "/ko/bmi/" },
+    { slug: "loan", name: "대출 이자 계산기", emoji: "🏦", cat: "money",
+      desc: "원리금균등·원금균등 상환", status: "live", path: "/ko/loan/" },
+    { slug: "vat", name: "부가가치세 계산기", emoji: "🧾", cat: "money",
+      desc: "공급가↔합계 부가세 계산", status: "live", path: "/ko/vat/" },
+    { slug: "margin", name: "마진율 계산기", emoji: "📈", cat: "money",
+      desc: "판매가·원가로 마진 계산", status: "live", path: "/ko/margin/" },
+    { slug: "compound", name: "복리 계산기", emoji: "💹", cat: "money",
+      desc: "복리·적립 미래가치·72법칙", status: "live", path: "/ko/compound/" }
   ];
 
   var CATS = {
-    date: { title: "날짜·시간", emoji: "📆" },
-    calc: { title: "계산·변환", emoji: "🧮" },
-    text: { title: "텍스트 도구", emoji: "✍️" },
-    fun:  { title: "재미·추첨", emoji: "🎲" },
-    life: { title: "생활", emoji: "🏠" }
+    date:   { title: "날짜·시간", emoji: "📆" },
+    calc:   { title: "계산·변환", emoji: "🧮" },
+    money:  { title: "금융·재테크", emoji: "💰" },
+    health: { title: "건강", emoji: "💪" },
+    text:   { title: "텍스트 도구", emoji: "✍️" },
+    fun:    { title: "재미·추첨", emoji: "🎲" },
+    life:   { title: "생활", emoji: "🏠" }
   };
 
   // ---------- 헤더 주입 ----------

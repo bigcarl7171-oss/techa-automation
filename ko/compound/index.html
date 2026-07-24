@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>복리 계산기 — 적립·투자 미래가치와 72법칙 | 테차 툴즈</title>
+<meta name="description" content="원금과 월 적립액, 연이율, 기간을 넣으면 복리로 불어난 미래 금액과 총 이자를 계산합니다. 72법칙으로 원금 2배 기간도 확인하세요.">
+<link rel="canonical" href="/ko/compound/">
+<link rel="alternate" hreflang="ko" href="/ko/compound/">
+<link rel="alternate" hreflang="x-default" href="/ko/compound/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="복리 계산기 | 테차 툴즈">
+<meta property="og:description" content="적립·투자 복리 미래가치와 72법칙 계산.">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&display=swap">
+<link rel="stylesheet" href="/assets/css/style.css">
+<script type="application/ld+json">
+{ "@context":"https://schema.org","@type":"WebApplication","name":"복리 계산기",
+  "applicationCategory":"FinanceApplication","operatingSystem":"Any",
+  "offers":{"@type":"Offer","price":"0","priceCurrency":"KRW"} }
+</script>
+<style>
+  .brk{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-top:14px}
+  .brk .stat{background:var(--blue-soft);border-radius:10px;padding:12px;text-align:center}
+  .brk .n{font-family:"Gowun Batang",serif;font-size:18px;font-weight:700;color:var(--blue)}
+  .brk .l{font-size:12px;color:var(--muted)}
+</style>
+</head>
+<body>
+<header id="site-header"></header>
+<div id="page-head"></div>
+
+<main class="wrap">
+  <div class="ad-slot"></div>
+
+  <section class="card">
+    <div class="row">
+      <div><label class="field" for="p">초기 원금 (원)</label><input type="number" id="p" value="10000000" step="any"></div>
+      <div><label class="field" for="m">월 적립액 (원)</label><input type="number" id="m" value="500000" step="any"></div>
+    </div>
+    <div class="row" style="margin-top:12px">
+      <div><label class="field" for="r">연이율 (%)</label><input type="number" id="r" value="6" step="any"></div>
+      <div><label class="field" for="y">기간 (년)</label><input type="number" id="y" value="10" step="any"></div>
+    </div>
+    <div style="margin-top:16px"><button class="btn btn-primary btn-block" id="calc">복리 계산하기</button></div>
+
+    <div class="result empty" id="result" style="margin-top:16px">값을 입력하고 계산하세요.</div>
+    <div class="brk" id="brk" style="display:none">
+      <div class="stat"><div class="n" id="deposit">-</div><div class="l">총 납입액</div></div>
+      <div class="stat"><div class="n" id="interest">-</div><div class="l">총 이자(수익)</div></div>
+      <div class="stat"><div class="n" id="double">-</div><div class="l">72법칙 2배 기간</div></div>
+    </div>
+  </section>
+
+  <div class="ad-slot"></div>
+
+  <article class="article">
+    <h2>복리 계산기 사용법</h2>
+    <p>초기 원금과 매달 적립액, 연이율, 기간(년)을 입력하면 <b>복리로 불어난 최종 금액</b>과
+       그중 이자(수익)가 얼마인지 계산합니다. 적금·펀드·연금 등 장기 자산 계획에 활용하세요.
+       (매달 말 적립, 월 복리 기준으로 계산합니다.)</p>
+
+    <h2>복리의 힘과 72법칙</h2>
+    <p><b>복리</b>는 이자에 다시 이자가 붙는 구조라, 기간이 길수록 눈덩이처럼 불어납니다.
+       <b>72법칙</b>은 원금이 2배가 되는 데 걸리는 대략적인 햇수를 알려줍니다:
+       <b>72 ÷ 연이율(%)</b>. 예를 들어 연 6%면 약 12년 만에 원금이 2배가 됩니다.</p>
+
+    <h3>계산 공식</h3>
+    <ul>
+      <li>원금의 미래가치 = 원금 × (1+월이율)^개월</li>
+      <li>적립금의 미래가치 = 월적립 × ((1+월이율)^개월 − 1) ÷ 월이율</li>
+    </ul>
+
+    <div class="note">세금(이자소득세 15.4%)과 물가상승은 반영하지 않은 세전·명목 금액입니다. 실제 수익률은 상품·시장에 따라 달라집니다.</div>
+  </article>
+
+  <div id="related"></div>
+</main>
+
+<footer id="site-footer"></footer>
+
+<script src="/assets/js/site.js"></script>
+<script>
+TECHA.initPage({ title:"복리 계산기", desc:"적립·투자의 복리 미래가치와 총 이자, 72법칙을 계산합니다.", category:"money", slug:"compound", related:["loan","vat","margin"] });
+(function(){
+  function won(n){ return Math.round(n).toLocaleString()+"원"; }
+  var result=document.getElementById("result"), brk=document.getElementById("brk");
+  function calc(){
+    var P=parseFloat(document.getElementById("p").value)||0;
+    var PMT=parseFloat(document.getElementById("m").value)||0;
+    var annual=parseFloat(document.getElementById("r").value);
+    var years=parseFloat(document.getElementById("y").value);
+    if(isNaN(annual)||!years||years<=0){ result.className="result empty"; result.textContent="연이율과 기간을 입력하세요."; brk.style.display="none"; return; }
+    var i=annual/100/12, n=Math.round(years*12);
+    var fvP = i===0 ? P : P*Math.pow(1+i,n);
+    var fvPMT = i===0 ? PMT*n : PMT*((Math.pow(1+i,n)-1)/i);
+    var total=fvP+fvPMT, deposit=P+PMT*n, interest=total-deposit;
+    result.className="result";
+    result.innerHTML='<div class="big">'+won(total)+'</div><div class="sub">'+years+'년 후 예상 금액</div>';
+    document.getElementById("deposit").textContent=won(deposit);
+    document.getElementById("interest").textContent=won(interest);
+    document.getElementById("double").textContent = annual>0 ? (Math.round(72/annual*10)/10)+"년" : "-";
+    brk.style.display="grid";
+  }
+  ["p","m","r","y"].forEach(function(id){ document.getElementById(id).addEventListener("input",calc); });
+  document.getElementById("calc").addEventListener("click",calc);
+  calc();
+})();
+</script>
+</body>
+</html>
