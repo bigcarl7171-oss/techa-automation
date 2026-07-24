@@ -1,0 +1,150 @@
+/* ===========================================================
+   테차 유틸리티 — 공통 스크립트
+   - 앱 레지스트리(홈/관련링크 공용)
+   - 헤더/푸터/브레드크럼/광고슬롯 주입
+   =========================================================== */
+(function () {
+  "use strict";
+
+  // 사이트 기본 정보 (배포 시 도메인만 교체)
+  var SITE = {
+    name: "테차 툴즈",
+    tagline: "간단하고 편리한 생활 도구 모음",
+    base: "" // 예: "https://tools.example.com" (배포 후 채움)
+  };
+
+  // ---------- 앱 레지스트리 ----------
+  // status: "live" | "soon"  /  cat: 카테고리 키
+  var APPS = [
+    { slug: "age-calculator", name: "만 나이 계산기", emoji: "🎂", cat: "date",
+      desc: "생년월일로 만 나이·연 나이 계산", status: "live", path: "/ko/age-calculator/" },
+    { slug: "dday", name: "D-Day 계산기", emoji: "📅", cat: "date",
+      desc: "목표일까지 남은 날·100일·1000일", status: "live", path: "/ko/dday/" },
+    { slug: "char-counter", name: "글자수 세기", emoji: "🔤", cat: "text",
+      desc: "공백 포함/제외·바이트·단어수", status: "live", path: "/ko/char-counter/" },
+    { slug: "lotto", name: "로또 번호 추첨기", emoji: "🎱", cat: "fun",
+      desc: "1~45 랜덤 6개+보너스, 제외수 옵션", status: "live", path: "/ko/lotto/" },
+    { slug: "ladder", name: "사다리 타기", emoji: "🪜", cat: "fun",
+      desc: "내기·순서 정하기 랜덤 사다리", status: "live", path: "/ko/ladder/" }
+  ];
+
+  var CATS = {
+    date: { title: "날짜·시간", emoji: "📆" },
+    text: { title: "텍스트 도구", emoji: "✍️" },
+    fun:  { title: "재미·추첨", emoji: "🎲" },
+    life: { title: "생활", emoji: "🏠" }
+  };
+
+  // ---------- 헤더 주입 ----------
+  function renderHeader() {
+    var el = document.getElementById("site-header");
+    if (!el) return;
+    el.className = "site-header";
+    el.innerHTML =
+      '<div class="wrap">' +
+      '  <a class="logo" href="/">테<b>차</b> 툴즈</a>' +
+      '  <nav class="header-nav"><a href="/">전체 도구</a></nav>' +
+      '</div>';
+  }
+
+  // ---------- 브레드크럼 + 페이지 헤드 ----------
+  // opts: { title, desc, category }
+  function renderPageHead(opts) {
+    var el = document.getElementById("page-head");
+    if (!el) return;
+    var cat = CATS[opts.category];
+    var crumb = '<a href="/">홈</a> › ' +
+      (cat ? '<a href="/#' + opts.category + '">' + cat.title + '</a> › ' : '') +
+      '<span>' + opts.title + '</span>';
+    el.innerHTML =
+      '<div class="wrap">' +
+      '  <div class="breadcrumb">' + crumb + '</div>' +
+      '  <div class="page-head"><h1>' + opts.title + '</h1>' +
+      (opts.desc ? '<p class="lead">' + opts.desc + '</p>' : '') + '</div>' +
+      '</div>';
+  }
+
+  // ---------- 광고 슬롯 ----------
+  // AdSense 승인 후 아래 자리에 광고 코드 삽입
+  function renderAdSlots() {
+    var slots = document.querySelectorAll(".ad-slot");
+    slots.forEach(function (s) {
+      if (!s.innerHTML.trim()) s.innerHTML = "광고 영역 (AdSense)";
+      /* AdSense 예시:
+         <ins class="adsbygoogle" style="display:block"
+              data-ad-client="ca-pub-XXXX" data-ad-slot="YYYY"
+              data-ad-format="auto" data-full-width-responsive="true"></ins> */
+    });
+  }
+
+  // ---------- 관련 앱(내부 링크) ----------
+  // slugs: 표시할 앱 slug 배열 (없으면 같은 카테고리 자동)
+  function renderRelated(currentSlug, category, slugs) {
+    var el = document.getElementById("related");
+    if (!el) return;
+    var list = slugs
+      ? slugs.map(function (sg) { return byslug(sg); }).filter(Boolean)
+      : APPS.filter(function (a) { return a.cat === category && a.slug !== currentSlug; });
+    if (!list.length) { el.innerHTML = ""; return; }
+    el.className = "related";
+    el.innerHTML = '<h2>관련 도구</h2><div class="related-list">' +
+      list.map(function (a) {
+        return '<a href="' + a.path + '">' + a.emoji + " " + a.name + "</a>";
+      }).join("") + "</div>";
+  }
+
+  // ---------- 푸터 주입 ----------
+  function renderFooter() {
+    var el = document.getElementById("site-footer");
+    if (!el) return;
+    el.className = "site-footer";
+    el.innerHTML =
+      '<div class="wrap">' +
+      '  <a href="/">홈</a><a href="/privacy/">개인정보처리방침</a>' +
+      '  <div class="disclaimer">본 사이트의 계산 결과는 참고용이며, 정확한 판단이 필요한 경우 전문가·공식기관에 확인하세요. © ' +
+      new Date().getFullYear() + " 테차 툴즈</div>" +
+      '</div>';
+  }
+
+  function byslug(sg) {
+    for (var i = 0; i < APPS.length; i++) if (APPS[i].slug === sg) return APPS[i];
+    return null;
+  }
+
+  // ---------- 홈 그리드 ----------
+  function renderHome() {
+    var el = document.getElementById("home-grid");
+    if (!el) return;
+    var html = "";
+    Object.keys(CATS).forEach(function (key) {
+      var apps = APPS.filter(function (a) { return a.cat === key; });
+      if (!apps.length) return;
+      html += '<h2 class="cat-title" id="' + key + '">' + CATS[key].emoji + " " + CATS[key].title + "</h2>";
+      html += '<div class="grid">';
+      apps.forEach(function (a) {
+        var soon = a.status !== "live";
+        html += '<a class="app-card' + (soon ? " soon" : "") + '" href="' + (soon ? "#" : a.path) + '">' +
+          '<div class="emoji">' + a.emoji + "</div>" +
+          '<div class="name">' + a.name + "</div>" +
+          '<div class="desc">' + a.desc + "</div></a>";
+      });
+      html += "</div>";
+    });
+    el.innerHTML = html;
+  }
+
+  // ---------- 공통 초기화 ----------
+  function initPage(opts) {
+    opts = opts || {};
+    renderHeader();
+    if (opts.title) renderPageHead(opts);
+    renderAdSlots();
+    if (opts.slug) renderRelated(opts.slug, opts.category, opts.related);
+    renderFooter();
+  }
+
+  window.TECHA = {
+    SITE: SITE, APPS: APPS, CATS: CATS,
+    initPage: initPage, renderHome: renderHome
+  };
+})();
