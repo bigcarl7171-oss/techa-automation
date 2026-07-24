@@ -25,11 +25,22 @@
     { slug: "lotto", name: "로또 번호 추첨기", emoji: "🎱", cat: "fun",
       desc: "1~45 랜덤 6개+보너스, 제외수 옵션", status: "live", path: "/ko/lotto/" },
     { slug: "ladder", name: "사다리 타기", emoji: "🪜", cat: "fun",
-      desc: "내기·순서 정하기 랜덤 사다리", status: "live", path: "/ko/ladder/" }
+      desc: "내기·순서 정하기 랜덤 사다리", status: "live", path: "/ko/ladder/" },
+    { slug: "menu-roulette", name: "오늘 뭐 먹지? 메뉴 룰렛", emoji: "🍽️", cat: "fun",
+      desc: "메뉴 고민 끝, 랜덤 추천", status: "live", path: "/ko/menu-roulette/" },
+    { slug: "unit-converter", name: "단위 변환기", emoji: "📏", cat: "calc",
+      desc: "길이·무게·넓이·온도 등 변환", status: "live", path: "/ko/unit-converter/" },
+    { slug: "percent", name: "퍼센트 계산기", emoji: "％", cat: "calc",
+      desc: "비율·증감률·할인 3종 계산", status: "live", path: "/ko/percent/" },
+    { slug: "date-diff", name: "두 날짜 사이 일수", emoji: "🗓️", cat: "date",
+      desc: "날짜 차이·주·개월·년 환산", status: "live", path: "/ko/date-diff/" },
+    { slug: "workdays", name: "근무일수 계산기", emoji: "💼", cat: "date",
+      desc: "주말·공휴일 제외 근무일 계산", status: "live", path: "/ko/workdays/" }
   ];
 
   var CATS = {
     date: { title: "날짜·시간", emoji: "📆" },
+    calc: { title: "계산·변환", emoji: "🧮" },
     text: { title: "텍스트 도구", emoji: "✍️" },
     fun:  { title: "재미·추첨", emoji: "🎲" },
     life: { title: "생활", emoji: "🏠" }

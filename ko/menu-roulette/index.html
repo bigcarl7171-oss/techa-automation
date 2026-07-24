@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>오늘 뭐 먹지? 메뉴 룰렛 — 점심·저녁 메뉴 랜덤 추천 | 테차 툴즈</title>
+<meta name="description" content="메뉴 고민될 때 버튼 한 번으로 오늘의 메뉴를 랜덤 추천합니다. 한식·중식·일식·양식·분식·카페 카테고리 선택 가능, 직접 메뉴 추가도 됩니다.">
+<link rel="canonical" href="/ko/menu-roulette/">
+<link rel="alternate" hreflang="ko" href="/ko/menu-roulette/">
+<link rel="alternate" hreflang="x-default" href="/ko/menu-roulette/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="오늘 뭐 먹지? 메뉴 룰렛 | 테차 툴즈">
+<meta property="og:description" content="점심·저녁 메뉴 고민 끝, 랜덤 추천.">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&display=swap">
+<link rel="stylesheet" href="/assets/css/style.css">
+<script type="application/ld+json">
+{ "@context":"https://schema.org","@type":"WebApplication","name":"오늘 뭐 먹지 메뉴 룰렛",
+  "applicationCategory":"GameApplication","operatingSystem":"Any",
+  "offers":{"@type":"Offer","price":"0","priceCurrency":"KRW"} }
+</script>
+<style>
+  .cats { display:flex; flex-wrap:wrap; gap:8px; }
+  .cat-btn { border:1px solid var(--line); background:var(--white); border-radius:20px;
+    padding:8px 16px; font-size:14px; font-weight:600; color:var(--brown); cursor:pointer; }
+  .cat-btn.on { background:var(--blue); color:#fff; border-color:var(--blue); }
+  #spinResult { font-family:"Gowun Batang",serif; font-size:40px; font-weight:700; color:var(--blue); min-height:52px; }
+  .spinning #spinResult { color:var(--muted); }
+</style>
+</head>
+<body>
+<header id="site-header"></header>
+<div id="page-head"></div>
+
+<main class="wrap">
+  <div class="ad-slot"></div>
+
+  <section class="card">
+    <label class="field">카테고리 선택</label>
+    <div class="cats" id="cats"></div>
+
+    <label class="field" for="custom" style="margin-top:16px">메뉴 직접 추가 <span class="hint">(쉼표로 구분, 선택)</span></label>
+    <input type="text" id="custom" placeholder="예: 샐러드, 도시락">
+
+    <div style="margin-top:16px">
+      <button class="btn btn-primary btn-block" id="spin">돌리기 🍽️</button>
+    </div>
+
+    <div class="result" id="box" style="margin-top:18px">
+      <div id="spinResult">?</div>
+      <div class="sub" id="spinSub">카테고리를 고르고 돌려 보세요</div>
+    </div>
+  </section>
+
+  <div class="ad-slot"></div>
+
+  <article class="article">
+    <h2>메뉴 룰렛 사용법</h2>
+    <p>카테고리(전체·한식·중식·일식·양식·분식·카페)를 고르고 <b>돌리기</b>를 누르면 해당 메뉴 중 하나를 무작위로 추천합니다.
+       먹고 싶은 후보가 따로 있으면 '메뉴 직접 추가'에 입력해 함께 돌릴 수 있습니다. 마음에 안 들면 다시 돌리면 됩니다.</p>
+
+    <h2>메뉴 결정, 왜 이렇게 어려울까요?</h2>
+    <p>선택지가 많을수록 오히려 고르기 힘들어지는 <b>결정 장애(선택의 역설)</b> 때문입니다.
+       이럴 땐 무작위로 하나를 정해 두고, 그 결과에 대한 내 반응을 살펴보세요.
+       "다른 게 먹고 싶다"는 생각이 들면 그게 진짜 원하는 메뉴라는 신호입니다.</p>
+
+    <h3>이럴 때 쓰면 좋아요</h3>
+    <ul>
+      <li>점심·저녁 메뉴가 도무지 안 정해질 때</li>
+      <li>여럿이 의견이 갈릴 때 공정하게 정하기</li>
+      <li>매번 같은 것만 먹어 새로운 시도가 필요할 때</li>
+    </ul>
+
+    <div class="note">여러 명이 순서·역할을 정해야 한다면 '사다리 타기'도 함께 이용해 보세요.</div>
+  </article>
+
+  <div id="related"></div>
+</main>
+
+<footer id="site-footer"></footer>
+
+<script src="/assets/js/site.js"></script>
+<script>
+TECHA.initPage({
+  title: "오늘 뭐 먹지? 메뉴 룰렛",
+  desc: "메뉴 고민될 때 버튼 한 번으로 오늘의 메뉴를 추천합니다.",
+  category: "fun",
+  slug: "menu-roulette",
+  related: ["ladder", "lotto", "workdays"]
+});
+
+(function () {
+  // 메뉴 주제 뱅크 (고정 배열 — 검색 없음)
+  var BANK = {
+    "한식": ["김치찌개","된장찌개","비빔밥","불고기","제육볶음","순두부찌개","냉면","삼계탕","갈비탕","김밥","비빔국수","돌솥밥","보쌈","감자탕","부대찌개"],
+    "중식": ["짜장면","짬뽕","탕수육","마라탕","마라샹궈","양장피","깐풍기","울면","볶음밥","고추잡채","유린기","꿔바로우"],
+    "일식": ["초밥","돈카츠","라멘","우동","규동","가츠동","오야코동","텐동","연어덮밥","냉모밀","오코노미야키"],
+    "양식": ["파스타","피자","스테이크","리조또","햄버거","샐러드","오므라이스","그라탱","브런치","수제버거","필라프"],
+    "분식": ["떡볶이","순대","튀김","라볶이","김밥","쫄면","우동","만두","핫도그","치즈볼","어묵"],
+    "카페": ["샌드위치","베이글","와플","팬케이크","케이크","크로플","스콘","브런치플레이트","샐러드볼","파니니"]
+  };
+  var ALL = []; Object.keys(BANK).forEach(function(k){ ALL = ALL.concat(BANK[k]); });
+
+  var catsEl = document.getElementById("cats");
+  var order = ["전체","한식","중식","일식","양식","분식","카페"];
+  var selected = "전체";
+  order.forEach(function(c){
+    var b = document.createElement("button");
+    b.className = "cat-btn" + (c==="전체"?" on":""); b.textContent = c; b.dataset.c = c;
+    b.addEventListener("click", function(){
+      selected = c;
+      catsEl.querySelectorAll(".cat-btn").forEach(function(x){ x.classList.toggle("on", x.dataset.c===c); });
+    });
+    catsEl.appendChild(b);
+  });
+
+  function pool() {
+    var base = selected === "전체" ? ALL.slice() : BANK[selected].slice();
+    var custom = document.getElementById("custom").value.split(",").map(function(s){return s.trim();}).filter(Boolean);
+    return base.concat(custom);
+  }
+
+  var box = document.getElementById("box");
+  var res = document.getElementById("spinResult");
+  var sub = document.getElementById("spinSub");
+  var timer = null;
+
+  function spin() {
+    var list = pool();
+    if (!list.length) { res.textContent = "메뉴 없음"; return; }
+    box.classList.add("spinning");
+    var ticks = 16, i = 0;
+    clearInterval(timer);
+    timer = setInterval(function(){
+      res.textContent = list[Math.floor(Math.random()*list.length)];
+      i++;
+      if (i >= ticks) {
+        clearInterval(timer);
+        var pick = list[Math.floor(Math.random()*list.length)];
+        res.textContent = pick;
+        sub.textContent = "오늘은 이거 어때요? 🎉";
+        box.classList.remove("spinning");
+      }
+    }, 60 + i*4);
+  }
+
+  document.getElementById("spin").addEventListener("click", spin);
+})();
+</script>
+</body>
+</html>

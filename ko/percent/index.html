@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>퍼센트 계산기 — 비율·증감률·할인가 계산 | 테차 툴즈</title>
+<meta name="description" content="X의 Y%, X는 Y의 몇 %, 증감률까지 세 가지 퍼센트 계산을 한 곳에서. 할인율·부가세·성장률 계산에 바로 쓰세요.">
+<link rel="canonical" href="/ko/percent/">
+<link rel="alternate" hreflang="ko" href="/ko/percent/">
+<link rel="alternate" hreflang="x-default" href="/ko/percent/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="퍼센트 계산기 | 테차 툴즈">
+<meta property="og:description" content="비율·증감률·할인가 3종 퍼센트 계산.">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&display=swap">
+<link rel="stylesheet" href="/assets/css/style.css">
+<script type="application/ld+json">
+{ "@context":"https://schema.org","@type":"WebApplication","name":"퍼센트 계산기",
+  "applicationCategory":"UtilitiesApplication","operatingSystem":"Any",
+  "offers":{"@type":"Offer","price":"0","priceCurrency":"KRW"} }
+</script>
+<style>
+  .mini { border:1px solid var(--line); border-radius:12px; padding:16px; margin-bottom:14px; background:var(--white); }
+  .mini h3 { margin:0 0 10px; font-size:15px; }
+  .mini .q { display:flex; align-items:center; flex-wrap:wrap; gap:8px; font-size:15px; }
+  .mini input { width:90px; flex:none; text-align:center; }
+  .mini .ans { margin-top:10px; font-weight:700; color:var(--blue); font-size:17px; }
+</style>
+</head>
+<body>
+<header id="site-header"></header>
+<div id="page-head"></div>
+
+<main class="wrap">
+  <div class="ad-slot"></div>
+
+  <section class="card">
+    <div class="mini">
+      <h3>① 어떤 값의 몇 %는?</h3>
+      <div class="q"><input type="number" id="a1" value="30000" step="any">의
+        <input type="number" id="a2" value="10" step="any">% 는</div>
+      <div class="ans" id="ansA">= 3,000</div>
+    </div>
+
+    <div class="mini">
+      <h3>② A는 B의 몇 %?</h3>
+      <div class="q"><input type="number" id="b1" value="45" step="any">는
+        <input type="number" id="b2" value="180" step="any">의</div>
+      <div class="ans" id="ansB">= 25%</div>
+    </div>
+
+    <div class="mini">
+      <h3>③ 증가·감소율 (A → B)</h3>
+      <div class="q"><input type="number" id="c1" value="200" step="any">에서
+        <input type="number" id="c2" value="250" step="any">(으)로</div>
+      <div class="ans" id="ansC">= 25% 증가</div>
+    </div>
+  </section>
+
+  <div class="ad-slot"></div>
+
+  <article class="article">
+    <h2>퍼센트 계산기 사용법</h2>
+    <p>세 가지 상황을 한 화면에서 계산합니다. 값을 바꾸면 결과가 실시간으로 갱신됩니다.
+       ① 정가에서 할인액 구하기, ② 목표 대비 달성률 구하기, ③ 작년 대비 성장·하락률 구하기 등에 활용하세요.</p>
+
+    <h2>계산 공식</h2>
+    <ul>
+      <li><b>① 부분값</b> = 전체 × 퍼센트 ÷ 100</li>
+      <li><b>② 비율</b> = A ÷ B × 100 (%)</li>
+      <li><b>③ 증감률</b> = (B − A) ÷ A × 100 (%)</li>
+    </ul>
+
+    <h3>실전 예시</h3>
+    <ul>
+      <li><b>할인</b>: 30,000원의 10%는 3,000원 → 할인가 27,000원</li>
+      <li><b>부가세</b>: 공급가 50,000원의 10%는 5,000원 → 합계 55,000원</li>
+      <li><b>성장률</b>: 매출 200 → 250이면 25% 증가</li>
+    </ul>
+
+    <div class="note">모든 계산은 브라우저 안에서 즉시 처리되며 별도 전송이 없습니다.</div>
+  </article>
+
+  <div id="related"></div>
+</main>
+
+<footer id="site-footer"></footer>
+
+<script src="/assets/js/site.js"></script>
+<script>
+TECHA.initPage({
+  title: "퍼센트 계산기",
+  desc: "비율·증감률·할인 세 가지 퍼센트 계산을 한 곳에서.",
+  category: "calc",
+  slug: "percent",
+  related: ["unit-converter", "date-diff", "char-counter"]
+});
+
+(function () {
+  function num(id){ return parseFloat(document.getElementById(id).value); }
+  function fmt(n){ if(!isFinite(n)) return "-"; return (Math.round(n*100)/100).toLocaleString(undefined,{maximumFractionDigits:2}); }
+
+  function calcA(){
+    var v = num("a1")*num("a2")/100;
+    document.getElementById("ansA").textContent = isNaN(v)?"= -":"= "+fmt(v);
+  }
+  function calcB(){
+    var v = num("b1")/num("b2")*100;
+    document.getElementById("ansB").textContent = isNaN(v)||!isFinite(v)?"= -":"= "+fmt(v)+"%";
+  }
+  function calcC(){
+    var a=num("c1"), b=num("c2"); var v=(b-a)/a*100;
+    var el=document.getElementById("ansC");
+    if(isNaN(v)||!isFinite(v)){ el.textContent="= -"; return; }
+    var word = v>0?"증가":(v<0?"감소":"변화 없음");
+    el.textContent = "= "+fmt(Math.abs(v))+"% "+word;
+  }
+  ["a1","a2"].forEach(function(id){document.getElementById(id).addEventListener("input",calcA);});
+  ["b1","b2"].forEach(function(id){document.getElementById(id).addEventListener("input",calcB);});
+  ["c1","c2"].forEach(function(id){document.getElementById(id).addEventListener("input",calcC);});
+  calcA(); calcB(); calcC();
+})();
+</script>
+</body>
+</html>

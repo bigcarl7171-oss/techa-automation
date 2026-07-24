@@ -6,4 +6,9 @@
   <url><loc>/ko/char-counter/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>/ko/lotto/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>/ko/ladder/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>/ko/menu-roulette/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>/ko/unit-converter/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>/ko/percent/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>/ko/date-diff/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>/ko/workdays/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
 </urlset>
