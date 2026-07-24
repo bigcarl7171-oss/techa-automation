@@ -11,7 +11,7 @@
     name: "테차 툴즈",
     tagline: "간단하고 편리한 생활 도구 모음",
     base: "", // 예: "https://tools.example.com" (배포 후 채움)
-    shopUrl: "" // TECHA 선물샵 URL (설정 시 탄생화·탄생석 등에 선물 CTA 자동 노출)
+    shopUrl: "https://smartstore.naver.com/itecha" // TECHA 선물샵 (탄생화·탄생석 등에 선물 CTA 자동 노출)
   };
 
   // ---------- 앱 레지스트리 ----------
