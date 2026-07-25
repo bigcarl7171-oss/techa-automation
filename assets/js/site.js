@@ -30,6 +30,8 @@
       desc: "내기·순서 정하기 랜덤 사다리", status: "live", path: "/ko/ladder/" },
     { slug: "menu-roulette", name: "오늘 뭐 먹지? 메뉴 룰렛", emoji: "🍽️", cat: "fun",
       desc: "메뉴 고민 끝, 랜덤 추천", status: "live", path: "/ko/menu-roulette/" },
+    { slug: "dad-joke", name: "아재개그 뽑기", emoji: "🥸", cat: "fun",
+      desc: "질문 보고 정답 맞히는 아재개그 + 아재력 테스트", status: "live", path: "/ko/dad-joke/" },
     { slug: "unit-converter", name: "단위 변환기", emoji: "📏", cat: "calc",
       desc: "길이·무게·넓이·온도 등 변환", status: "live", path: "/ko/unit-converter/" },
     { slug: "percent", name: "퍼센트 계산기", emoji: "％", cat: "calc",
