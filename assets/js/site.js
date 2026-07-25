@@ -8,8 +8,8 @@
 
   // 사이트 기본 정보 (배포 시 도메인만 교체)
   var SITE = {
-    name: "테차 툴즈",
-    tagline: "간단하고 편리한 생활 도구 모음",
+    name: "테차 서랍",
+    tagline: "일상의 자잘한 고민, 여기서 끝",
     base: "https://www.techa.kr",
     shopUrl: "https://smartstore.naver.com/itecha", // TECHA 선물샵 (탄생화·탄생석 등에 선물 CTA 자동 노출)
     gaId: "", // GA4 측정 ID(G-XXXXXXXXXX). 값을 채우면 전 페이지에서 자동으로 애널리틱스가 활성화됨
@@ -81,7 +81,7 @@
     el.className = "site-header";
     el.innerHTML =
       '<div class="wrap">' +
-      '  <a class="logo" href="/">테<b>차</b> 툴즈</a>' +
+      '  <a class="logo" href="/">테<b>차</b> 서랍</a>' +
       '  <nav class="header-nav"><a href="/">전체 도구</a></nav>' +
       '</div>';
   }
@@ -142,7 +142,7 @@
       '  <a href="/">홈</a><a href="/about/">사이트 소개</a><a href="/contact/">문의하기</a>' +
       '  <a href="/privacy/">개인정보처리방침</a><a href="/terms/">이용약관</a>' +
       '  <div class="disclaimer">본 사이트의 계산 결과는 참고용이며, 정확한 판단이 필요한 경우 전문가·공식기관에 확인하세요. © ' +
-      new Date().getFullYear() + " 테차 툴즈</div>" +
+      new Date().getFullYear() + " 테차 서랍</div>" +
       '</div>';
   }
 
@@ -214,9 +214,9 @@
     btn.style.marginTop = "12px";
     btn.addEventListener("click", function () {
       var resultText = (el.textContent || "").replace(/\s+/g, " ").trim();
-      var title = (document.title.split("—")[0] || "테차 툴즈").trim();
+      var title = (document.title.split("—")[0] || "테차 서랍").trim();
       var url = location.href;
-      var text = (resultText ? resultText + "\n" : "") + title + " | 테차 툴즈";
+      var text = (resultText ? resultText + "\n" : "") + title + " | 테차 서랍";
       if (navigator.share) {
         navigator.share({ title: title, text: text, url: url }).catch(function () {});
       } else if (navigator.clipboard) {

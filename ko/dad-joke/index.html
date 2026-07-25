@@ -7,7 +7,7 @@
 <link rel="icon" href="/assets/icons/icon-32.png" type="image/png" sizes="32x32">
 <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
-<title>아재개그 뽑기 — 질문 보고 정답 맞히는 아재개그 | 테차 툴즈</title>
+<title>아재개그 뽑기 — 질문 보고 정답 맞히는 아재개그 | 테차 서랍</title>
 <meta name="description" content="랜덤으로 아재개그를 뽑아 카드를 뒤집어 정답을 확인하세요. 지역·인물·음식·동물·영어·직장 카테고리별 필터와 아재력 테스트도 있습니다.">
 <link rel="canonical" href="https://www.techa.kr/ko/dad-joke/">
 <meta property="og:image" content="https://www.techa.kr/assets/og/og-default.png">
@@ -18,7 +18,7 @@
 <link rel="alternate" hreflang="ko" href="https://www.techa.kr/ko/dad-joke/">
 <link rel="alternate" hreflang="x-default" href="https://www.techa.kr/ko/dad-joke/">
 <meta property="og:type" content="website">
-<meta property="og:title" content="아재개그 뽑기 | 테차 툴즈">
+<meta property="og:title" content="아재개그 뽑기 | 테차 서랍">
 <meta property="og:description" content="질문 보고 정답 맞혀보는 아재개그 뽑기 + 아재력 테스트.">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
@@ -351,7 +351,7 @@ TECHA.initPage({
   });
   document.getElementById("quizCopy").addEventListener("click", function () {
     var text = "아재력 테스트 결과: " + document.getElementById("quizGrade").textContent +
-      " (" + document.getElementById("quizScoreText").textContent + ") | 테차 툴즈 아재개그 뽑기";
+      " (" + document.getElementById("quizScoreText").textContent + ") | 테차 서랍 아재개그 뽑기";
     navigator.clipboard && navigator.clipboard.writeText(text);
     var b = this, t = b.textContent;
     b.textContent = "복사됨!";

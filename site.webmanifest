@@ -1,7 +1,7 @@
 {
-  "name": "테차 툴즈",
-  "short_name": "테차툴즈",
-  "description": "간단하고 편리한 생활 도구 모음",
+  "name": "테차 서랍",
+  "short_name": "테차서랍",
+  "description": "일상의 자잘한 고민, 여기서 끝",
   "start_url": "/",
   "display": "standalone",
   "theme_color": "#6E82A6",
