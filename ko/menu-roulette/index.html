@@ -8,7 +8,7 @@
 <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <title>오늘 뭐 먹지? 메뉴 룰렛 — 점심·저녁 메뉴 랜덤 추천 | 테차 툴즈</title>
-<meta name="description" content="메뉴 고민될 때 버튼 한 번으로 오늘의 메뉴를 랜덤 추천합니다. 한식·중식·일식·양식·분식·카페 카테고리 선택 가능, 직접 메뉴 추가도 됩니다.">
+<meta name="description" content="메뉴 고민될 때 버튼 한 번으로 오늘의 메뉴를 랜덤 추천합니다. 74개 메뉴에 추천 이유까지 함께 알려드려요. 한식·중식·일식·양식·분식·카페 카테고리 선택, 직접 메뉴 추가도 됩니다.">
 <link rel="canonical" href="/ko/menu-roulette/">
 <meta property="og:image" content="https://techa-automation.bigcarl7171.workers.dev/assets/og/og-default.png">
 <meta property="og:image:width" content="1200">
@@ -59,6 +59,7 @@
     <div class="result" id="box" style="margin-top:18px">
       <div id="spinResult">?</div>
       <div class="sub" id="spinSub">카테고리를 고르고 돌려 보세요</div>
+      <div class="sub" id="spinTag" style="margin-top:4px;font-size:12px"></div>
     </div>
   </section>
 
@@ -115,20 +116,11 @@ TECHA.initPage({
 });
 
 (function () {
-  // 메뉴 주제 뱅크 (고정 배열 — 검색 없음)
-  var BANK = {
-    "한식": ["김치찌개","된장찌개","비빔밥","불고기","제육볶음","순두부찌개","냉면","삼계탕","갈비탕","김밥","비빔국수","돌솥밥","보쌈","감자탕","부대찌개"],
-    "중식": ["짜장면","짬뽕","탕수육","마라탕","마라샹궈","양장피","깐풍기","울면","볶음밥","고추잡채","유린기","꿔바로우"],
-    "일식": ["초밥","돈카츠","라멘","우동","규동","가츠동","오야코동","텐동","연어덮밥","냉모밀","오코노미야키"],
-    "양식": ["파스타","피자","스테이크","리조또","햄버거","샐러드","오므라이스","그라탱","브런치","수제버거","필라프"],
-    "분식": ["떡볶이","순대","튀김","라볶이","김밥","쫄면","우동","만두","핫도그","치즈볼","어묵"],
-    "카페": ["샌드위치","베이글","와플","팬케이크","케이크","크로플","스콘","브런치플레이트","샐러드볼","파니니"]
-  };
-  var ALL = []; Object.keys(BANK).forEach(function(k){ ALL = ALL.concat(BANK[k]); });
-
-  var catsEl = document.getElementById("cats");
+  var DATA = [];
   var order = ["전체","한식","중식","일식","양식","분식","카페"];
   var selected = "전체";
+
+  var catsEl = document.getElementById("cats");
   order.forEach(function(c){
     var b = document.createElement("button");
     b.className = "cat-btn" + (c==="전체"?" on":""); b.textContent = c; b.dataset.c = c;
@@ -140,14 +132,16 @@ TECHA.initPage({
   });
 
   function pool() {
-    var base = selected === "전체" ? ALL.slice() : BANK[selected].slice();
+    var base = selected === "전체" ? DATA.slice() : DATA.filter(function(m){ return m.cat === selected; });
     var custom = document.getElementById("custom").value.split(",").map(function(s){return s.trim();}).filter(Boolean);
-    return base.concat(custom);
+    custom.forEach(function(name){ base.push({ name: name }); });
+    return base;
   }
 
   var box = document.getElementById("box");
   var res = document.getElementById("spinResult");
   var sub = document.getElementById("spinSub");
+  var tag = document.getElementById("spinTag");
   var timer = null;
 
   function spin() {
@@ -157,19 +151,25 @@ TECHA.initPage({
     var ticks = 16, i = 0;
     clearInterval(timer);
     timer = setInterval(function(){
-      res.textContent = list[Math.floor(Math.random()*list.length)];
+      res.textContent = list[Math.floor(Math.random()*list.length)].name;
       i++;
       if (i >= ticks) {
         clearInterval(timer);
         var pick = list[Math.floor(Math.random()*list.length)];
-        res.textContent = pick;
-        sub.textContent = "오늘은 이거 어때요? 🎉";
+        res.textContent = pick.name;
+        sub.textContent = pick.reason ? "💡 " + pick.reason : "오늘은 이거 어때요? 🎉";
+        tag.textContent = pick.situation ? "🙋 이럴 때 좋아요: " + pick.situation : "";
         box.classList.remove("spinning");
       }
     }, 60 + i*4);
   }
 
   document.getElementById("spin").addEventListener("click", spin);
+
+  fetch("/assets/data/menu-items.json")
+    .then(function (r) { return r.json(); })
+    .then(function (d) { DATA = d; })
+    .catch(function () { sub.textContent = "메뉴 데이터를 불러오지 못했어요."; });
 })();
 </script>
 </body>
