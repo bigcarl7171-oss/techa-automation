@@ -79,8 +79,8 @@ var DATA = [
     { id:"meta", label:"페이지별 title/description/canonical", note:"20개 앱 전체", done:true },
     { id:"jsonld", label:"구조화 데이터(JSON-LD)", note:"WebApplication 스키마", done:true },
     { id:"sitemap", label:"sitemap.xml / robots.txt", note:"절대주소 기준", done:true },
-    { id:"gsc", label:"Google Search Console 등록", note:"소유권 확인 완료", done:true },
-    { id:"gscSubmit", label:"sitemap 제출", note:"색인 대기 중(자동 진행)", done:true },
+    { id:"gsc", label:"Google Search Console 등록", note:"www.techa.kr 도메인 속성으로 재인증 완료(Cloudflare DNS 자동 연동)", done:true },
+    { id:"gscSubmit", label:"sitemap 제출", note:"새 도메인 속성에 재제출 완료 — 22페이지 인식, 색인 대기 중", done:true },
     { id:"contentDepth", label:"설명 콘텐츠 깊이 보강(800~1,500자)", note:"완료: 20/20 앱 전체", done:true },
     { id:"favicon", label:"파비콘 추가", note:"완료: 브랜드색 꽃 아이콘, 전 27페이지 + PWA 매니페스트", done:true },
     { id:"ogimg", label:"OG 이미지(공유 썸네일)", note:"완료: 브랜드 디자인 1200×630, 전 27페이지 og:image·twitter:card", done:true }
@@ -92,9 +92,9 @@ var DATA = [
   ]},
   { key:"stage4", title:"4단계 · 수익화", emoji:"💰", items:[
     { id:"techaCta", label:"TECHA 자사상품 CTA 연결", note:"탄생화·탄생석·이름궁합·별자리궁합 4곳 라이브", done:true },
-    { id:"domain", label:"커스텀 도메인 구매·연결", note:"www.techa.kr 구매 완료 · Cloudflare Custom Domain 바인딩(네임서버 전환)은 진행 중 — 애드센스 승인의 사실상 전제조건", done:false },
-    { id:"adsense", label:"Google AdSense 신청·승인", note:"도메인 연결 후 진행", done:false },
-    { id:"coupang", label:"쿠팡파트너스 등 제휴 링크", note:"파트너스 ID 등록됨(site.js) · 실제 상품 링크·고지 문구 삽입은 미착수", done:false },
+    { id:"domain", label:"커스텀 도메인 구매·연결", note:"www.techa.kr + techa.kr 모두 Cloudflare Workers Custom Domain 연결 완료, 라이브 확인됨", done:true },
+    { id:"adsense", label:"Google AdSense 신청·승인", note:"도메인 연결 완료 — 신청 가능", done:false },
+    { id:"coupang", label:"쿠팡파트너스 등 제휴 링크", note:"파트너스 ID 등록 · 미디어(사이트) URL을 www.techa.kr로 갱신 완료 · 실제 상품 링크·고지 문구 삽입은 미착수", done:false },
     { id:"premiumNetwork", label:"Ezoic/Mediavine 등 전환", note:"트래픽 성장 후", done:false }
   ]}
 ];
