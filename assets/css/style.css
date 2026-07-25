@@ -24,6 +24,7 @@
   --radius: 14px;      /* 메인 카드 */
   --radius-pill: 20px; /* 필터 칩, 관련 링크 */
   --shadow: 0 2px 14px rgba(58, 50, 43, 0.07);
+  --shadow-lg: 0 1px 2px rgba(58,50,43,.06), 0 10px 24px rgba(58,50,43,.09);
   --maxw: 760px;
 }
 
@@ -33,7 +34,11 @@ body {
   margin: 0;
   font-family: "Pretendard", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
   color: var(--brown);
-  background: var(--paper);
+  background:
+    radial-gradient(560px 320px at 12% -8%, var(--blue-soft) 0%, transparent 60%),
+    radial-gradient(600px 340px at 100% 0%, var(--amber-soft) 0%, transparent 55%),
+    var(--paper);
+  background-attachment: fixed;
   line-height: 1.65;
   font-size: 16px;
 }
@@ -49,8 +54,11 @@ a:hover { text-decoration: underline; }
 
 /* ---------- 헤더 ---------- */
 .site-header {
-  background: var(--white);
+  background: rgba(255, 253, 249, .88);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--line);
+  box-shadow: 0 1px 0 rgba(58,50,43,.03), 0 6px 20px rgba(58,50,43,.04);
   position: sticky; top: 0; z-index: 50;
 }
 .site-header .wrap {
@@ -73,10 +81,10 @@ a:hover { text-decoration: underline; }
 
 /* ---------- 카드 / 도구 박스 ---------- */
 .card {
-  background: var(--white);
+  background: linear-gradient(180deg, #fffefc 0%, var(--white) 100%);
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow-lg);
   padding: 22px;
   margin: 16px 0;
 }
@@ -110,17 +118,21 @@ textarea { min-height: 160px; resize: vertical; line-height: 1.6; }
   padding: 12px 20px; transition: filter .15s, transform .05s;
 }
 .btn:active { transform: translateY(1px); }
-.btn-primary { background: var(--amber); color: var(--amber-cta-ink); }   /* CTA = 앰버 */
-.btn-primary:hover { filter: brightness(1.04); text-decoration: none; }
-.btn-ghost { background: var(--blue-soft); color: var(--blue); }
-.btn-ghost:hover { filter: brightness(0.98); text-decoration: none; }
+.btn-primary {
+  background: linear-gradient(180deg, #f3c169 0%, var(--amber) 100%);
+  color: var(--amber-cta-ink);
+  box-shadow: 0 1px 1px rgba(255,255,255,.5) inset, 0 6px 16px rgba(239,176,84,.35);
+}
+.btn-primary:hover { filter: brightness(1.04); text-decoration: none; transform: translateY(-1px); box-shadow: 0 1px 1px rgba(255,255,255,.5) inset, 0 10px 20px rgba(239,176,84,.4); }
+.btn-ghost { background: var(--blue-soft); color: var(--blue); border: 1px solid #dfe5ef; }
+.btn-ghost:hover { filter: brightness(0.98); text-decoration: none; transform: translateY(-1px); }
 .btn-block { width: 100%; }
 .btn-sm { padding: 8px 14px; font-size: 13px; }
 
 /* ---------- 결과 박스 ---------- */
 .result {
   margin-top: 16px; padding: 20px;
-  background: var(--blue-soft);
+  background: linear-gradient(160deg, var(--blue-soft) 0%, #f5f2ea 100%);
   border: 1px solid #dfe5ef;
   border-radius: var(--radius-md);
   text-align: center;
@@ -134,9 +146,11 @@ textarea { min-height: 160px; resize: vertical; line-height: 1.6; }
 .chip {
   width: 46px; height: 46px; border-radius: 50%;
   display: inline-flex; align-items: center; justify-content: center;
-  font-weight: 700; color: var(--white); background: var(--blue);
+  font-weight: 700; color: var(--white);
+  background: linear-gradient(160deg, #839ac2, var(--blue));
+  box-shadow: 0 3px 8px rgba(110,130,166,.35);
 }
-.chip.bonus { background: var(--amber); color: var(--amber-cta-ink); }
+.chip.bonus { background: linear-gradient(160deg, #f3c169, var(--amber)); color: var(--amber-cta-ink); box-shadow: 0 3px 8px rgba(239,176,84,.4); }
 
 /* ---------- 설명 콘텐츠 ---------- */
 .article { margin: 26px 0; }
@@ -158,19 +172,38 @@ textarea { min-height: 160px; resize: vertical; line-height: 1.6; }
 }
 
 /* ---------- 홈 허브 ---------- */
-.hero { text-align: center; padding: 40px 0 20px; }
-.hero h1 { font-size: 34px; margin: 0 0 10px; }
-.hero p { color: var(--muted); margin: 0; }
-.cat-title { font-size: 20px; margin: 30px 0 12px; display: flex; align-items: center; gap: 8px; }
-.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
-.app-card {
-  background: var(--white); border: 1px solid var(--line); border-radius: var(--radius);
-  padding: 16px; box-shadow: var(--shadow); transition: transform .1s, box-shadow .1s;
-  display: block; color: var(--brown);
+.hero { text-align: center; padding: 48px 0 22px; }
+.hero h1 {
+  font-size: 36px; margin: 0 0 10px;
+  background: linear-gradient(100deg, var(--blue) 20%, #c98a3a 80%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
 }
-.app-card:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(58,50,43,.1); text-decoration: none; }
-.app-card .emoji { font-size: 24px; }
-.app-card .name { font-weight: 700; margin: 6px 0 2px; }
+.hero p { color: var(--muted); margin: 0; }
+.cat-title {
+  font-size: 20px; margin: 34px 0 14px; display: flex; align-items: center; gap: 10px;
+}
+.cat-title::after { content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, var(--line), transparent); }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
+.app-card {
+  background: linear-gradient(180deg, #fffefc 0%, var(--white) 100%);
+  border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 18px; box-shadow: var(--shadow);
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+  display: block; color: var(--brown);
+  animation: card-in .4s ease backwards;
+}
+.grid .app-card:nth-child(1) { animation-delay: .02s; }
+.grid .app-card:nth-child(2) { animation-delay: .05s; }
+.grid .app-card:nth-child(3) { animation-delay: .08s; }
+.grid .app-card:nth-child(4) { animation-delay: .11s; }
+.grid .app-card:nth-child(n+5) { animation-delay: .13s; }
+@keyframes card-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+.app-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); border-color: #d9cdb8; text-decoration: none; }
+.app-card .emoji {
+  font-size: 22px; width: 42px; height: 42px; display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 50%; background: radial-gradient(circle at 30% 30%, var(--blue-soft), #fff);
+}
+.app-card .name { font-weight: 700; margin: 10px 0 2px; }
 .app-card .desc { font-size: 13px; color: var(--muted); }
 .app-card.soon { opacity: .55; pointer-events: none; }
 .app-card.soon .desc::after { content: " · 준비중"; color: var(--amber); }
