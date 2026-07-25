@@ -10,9 +10,10 @@
   var SITE = {
     name: "테차 툴즈",
     tagline: "간단하고 편리한 생활 도구 모음",
-    base: "", // 예: "https://tools.example.com" (배포 후 채움)
+    base: "https://www.techa.kr",
     shopUrl: "https://smartstore.naver.com/itecha", // TECHA 선물샵 (탄생화·탄생석 등에 선물 CTA 자동 노출)
-    gaId: "" // GA4 측정 ID(G-XXXXXXXXXX). 값을 채우면 전 페이지에서 자동으로 애널리틱스가 활성화됨
+    gaId: "", // GA4 측정 ID(G-XXXXXXXXXX). 값을 채우면 전 페이지에서 자동으로 애널리틱스가 활성화됨
+    coupangPartnersId: "AF354247" // 쿠팡 파트너스 ID. 아직 미사용 — 실제 상품 링크 삽입 시 이 값과 함께 필수 고지 문구를 넣을 것
   };
 
   // ---------- 앱 레지스트리 ----------
