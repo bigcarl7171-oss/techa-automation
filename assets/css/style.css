@@ -3,17 +3,26 @@
    브랜드 표준: 수국 블루 / 무드등 앰버 / 크림 페이퍼 / 공방 브라운 / 잎사귀 그린
    =========================================================== */
 :root {
-  --blue: #6E82A6;   /* 포인트·신뢰 */
-  --amber: #EFB054;  /* CTA */
-  --paper: #FAF7F1;  /* 배경 */
-  --brown: #3A322B;  /* 텍스트 */
-  --green: #7C8B6F;  /* 확정 상태 */
+  --blue: #6E82A6;   /* 수국 블루 — 포인트·신뢰 */
+  --amber: #EFB054;  /* 무드등 앰버 — CTA */
+  --paper: #FAF7F1;  /* 크림 페이퍼 — 배경 */
+  --brown: #3A322B;  /* 공방 브라운 — 텍스트 */
+  --green: #7C8B6F;  /* 잎사귀 그린 — 확정 상태(예약) */
   --blue-soft: #eef1f6;
   --amber-soft: #fbeecf;
+  --amber-cta-ink: #4a3410;    /* 앰버 배경 위 텍스트 */
+  --amber-strong-ink: #5c4a1f; /* 앰버 소프트 배경 위 텍스트 */
+  --amber-border: #f0dca8;
+  --amber-muted-ink: #8a7a54;
   --line: #e7e1d6;
   --muted: #857c70;
+  --muted-soft: #a89e8f;
+  --body-text: #4a4137;  /* article 본문용 보조 텍스트 */
   --white: #fffdf9;
-  --radius: 14px;
+  --radius-sm: 10px;   /* 버튼·인풋 */
+  --radius-md: 12px;   /* 카드형 박스, 플립카드 */
+  --radius: 14px;      /* 메인 카드 */
+  --radius-pill: 20px; /* 필터 칩, 관련 링크 */
   --shadow: 0 2px 14px rgba(58, 50, 43, 0.07);
   --maxw: 760px;
 }
@@ -79,7 +88,7 @@ input[type="text"], input[type="number"], input[type="date"], textarea, select {
   width: 100%;
   padding: 12px 14px;
   border: 1px solid var(--line);
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   background: var(--paper);
   color: var(--brown);
   font-size: 16px;
@@ -96,12 +105,12 @@ textarea { min-height: 160px; resize: vertical; line-height: 1.6; }
 /* ---------- 버튼 ---------- */
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-  border: none; border-radius: 10px; cursor: pointer;
+  border: none; border-radius: var(--radius-sm); cursor: pointer;
   font-size: 15px; font-weight: 700; font-family: inherit;
   padding: 12px 20px; transition: filter .15s, transform .05s;
 }
 .btn:active { transform: translateY(1px); }
-.btn-primary { background: var(--amber); color: #4a3410; }   /* CTA = 앰버 */
+.btn-primary { background: var(--amber); color: var(--amber-cta-ink); }   /* CTA = 앰버 */
 .btn-primary:hover { filter: brightness(1.04); text-decoration: none; }
 .btn-ghost { background: var(--blue-soft); color: var(--blue); }
 .btn-ghost:hover { filter: brightness(0.98); text-decoration: none; }
@@ -113,7 +122,7 @@ textarea { min-height: 160px; resize: vertical; line-height: 1.6; }
   margin-top: 16px; padding: 20px;
   background: var(--blue-soft);
   border: 1px solid #dfe5ef;
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   text-align: center;
 }
 .result .big { font-family: "Gowun Batang", serif; font-size: 34px; font-weight: 700; color: var(--blue); }
@@ -127,24 +136,24 @@ textarea { min-height: 160px; resize: vertical; line-height: 1.6; }
   display: inline-flex; align-items: center; justify-content: center;
   font-weight: 700; color: var(--white); background: var(--blue);
 }
-.chip.bonus { background: var(--amber); color: #4a3410; }
+.chip.bonus { background: var(--amber); color: var(--amber-cta-ink); }
 
 /* ---------- 설명 콘텐츠 ---------- */
 .article { margin: 26px 0; }
 .article h2 { font-size: 20px; margin: 26px 0 10px; padding-bottom: 6px; border-bottom: 2px solid var(--amber-soft); }
 .article h3 { font-size: 16px; margin: 18px 0 6px; }
-.article p, .article li { color: #4a4137; font-size: 15px; }
+.article p, .article li { color: var(--body-text); font-size: 15px; }
 .article ul { padding-left: 20px; }
 .article .note {
-  background: var(--amber-soft); border-radius: 10px; padding: 12px 16px;
-  font-size: 14px; color: #5c4a1f;
+  background: var(--amber-soft); border-radius: var(--radius-sm); padding: 12px 16px;
+  font-size: 14px; color: var(--amber-strong-ink);
 }
 
 /* ---------- 광고 슬롯 ---------- */
 .ad-slot {
   margin: 22px 0; min-height: 90px;
   display: flex; align-items: center; justify-content: center;
-  border: 1px dashed #d8d0c2; border-radius: 10px;
+  border: 1px dashed #d8d0c2; border-radius: var(--radius-sm);
   color: #b6ac9c; font-size: 12px; background: #fbf9f4;
 }
 
@@ -171,7 +180,7 @@ textarea { min-height: 160px; resize: vertical; line-height: 1.6; }
 .related h2 { font-size: 18px; margin-bottom: 10px; }
 .related-list { display: flex; flex-wrap: wrap; gap: 8px; }
 .related-list a {
-  background: var(--white); border: 1px solid var(--line); border-radius: 20px;
+  background: var(--white); border: 1px solid var(--line); border-radius: var(--radius-pill);
   padding: 7px 14px; font-size: 13px; color: var(--brown);
 }
 .related-list a:hover { border-color: var(--blue); text-decoration: none; }
@@ -182,7 +191,7 @@ textarea { min-height: 160px; resize: vertical; line-height: 1.6; }
   background: var(--white); padding: 24px 0; color: var(--muted); font-size: 13px;
 }
 .site-footer a { color: var(--muted); margin-right: 14px; }
-.site-footer .disclaimer { margin-top: 10px; font-size: 12px; color: #a89e8f; }
+.site-footer .disclaimer { margin-top: 10px; font-size: 12px; color: var(--muted-soft); }
 
 /* ---------- 반응형 ---------- */
 @media (max-width: 520px) {

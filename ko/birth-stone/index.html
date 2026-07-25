@@ -127,11 +127,11 @@ TECHA.initPage({ title:"월별 탄생석", desc:"태어난 달의 탄생석과 �
     var s=STONES[sel.value];
     result.className="result";
     result.innerHTML='<div class="big">'+s.e+' '+s.n+'</div><div class="sub">의미 · '+s.m+'</div>';
-    detail.innerHTML='<div style="text-align:left;margin-top:14px;padding:16px;border:1px solid var(--line);border-radius:12px;background:var(--paper)">'+
+    detail.innerHTML='<div style="text-align:left;margin-top:14px;padding:16px;border:1px solid var(--line);border-radius:var(--radius-md);background:var(--paper)">'+
       '<div style="font-weight:700;color:var(--blue);margin-bottom:4px">💎 이름의 유래와 이야기</div>'+
-      '<div style="color:#4a4137;font-size:15px;line-height:1.65;margin-bottom:12px">'+s.o+'</div>'+
+      '<div style="color:var(--body-text);font-size:15px;line-height:1.65;margin-bottom:12px">'+s.o+'</div>'+
       '<div style="font-weight:700;color:var(--blue);margin-bottom:4px">💝 이런 분께 어울려요</div>'+
-      '<div style="color:#4a4137;font-size:15px;line-height:1.65">'+s.t+'</div></div>';
+      '<div style="color:var(--body-text);font-size:15px;line-height:1.65">'+s.t+'</div></div>';
   }
   sel.addEventListener("change",show); show();
 })();

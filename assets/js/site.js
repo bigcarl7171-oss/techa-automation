@@ -233,15 +233,15 @@
     var el = document.getElementById("techa-cta");
     if (!el) return;
     var text = el.getAttribute("data-text") || "이 감성을 담은 프리저브드 플라워 선물, 테차에서 만나보세요";
-    var base = 'margin:22px 0;padding:18px 20px;border-radius:12px;background:#fbeecf;border:1px solid #f0dca8;';
+    var base = 'margin:22px 0;padding:18px 20px;border-radius:var(--radius-md);background:var(--amber-soft);border:1px solid var(--amber-border);';
     if (SITE.shopUrl) {
       el.innerHTML = '<div style="' + base + '">' +
-        '<div style="font-weight:700;color:#5c4a1f;margin-bottom:10px">🌸 ' + text + '</div>' +
+        '<div style="font-weight:700;color:var(--amber-strong-ink);margin-bottom:10px">🌸 ' + text + '</div>' +
         '<a class="btn btn-primary btn-sm" href="' + SITE.shopUrl + '" target="_blank" rel="noopener">테차 선물 보러가기 →</a></div>';
     } else {
       el.innerHTML = '<div style="' + base + 'opacity:.85">' +
-        '<div style="font-weight:700;color:#5c4a1f">🌸 ' + text + '</div>' +
-        '<div style="font-size:13px;color:#8a7a54;margin-top:4px">테차 선물샵 연결 준비중</div></div>';
+        '<div style="font-weight:700;color:var(--amber-strong-ink)">🌸 ' + text + '</div>' +
+        '<div style="font-size:13px;color:var(--amber-muted-ink);margin-top:4px">테차 선물샵 연결 준비중</div></div>';
     }
   }
 
