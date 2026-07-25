@@ -11,7 +11,8 @@
     name: "테차 툴즈",
     tagline: "간단하고 편리한 생활 도구 모음",
     base: "", // 예: "https://tools.example.com" (배포 후 채움)
-    shopUrl: "https://smartstore.naver.com/itecha" // TECHA 선물샵 (탄생화·탄생석 등에 선물 CTA 자동 노출)
+    shopUrl: "https://smartstore.naver.com/itecha", // TECHA 선물샵 (탄생화·탄생석 등에 선물 CTA 자동 노출)
+    gaId: "" // GA4 측정 ID(G-XXXXXXXXXX). 값을 채우면 전 페이지에서 자동으로 애널리틱스가 활성화됨
   };
 
   // ---------- 앱 레지스트리 ----------
@@ -169,9 +170,25 @@
     el.innerHTML = html;
   }
 
+  // ---------- Google Analytics (GA4) — SITE.gaId 설정 시에만 활성화 ----------
+  function initAnalytics() {
+    if (!SITE.gaId || window.__gaLoaded) return;
+    window.__gaLoaded = true;
+    var s = document.createElement("script");
+    s.async = true;
+    s.src = "https://www.googletagmanager.com/gtag/js?id=" + SITE.gaId;
+    document.head.appendChild(s);
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { window.dataLayer.push(arguments); }
+    gtag("js", new Date());
+    gtag("config", SITE.gaId);
+    window.gtag = gtag;
+  }
+
   // ---------- 공통 초기화 ----------
   function initPage(opts) {
     opts = opts || {};
+    initAnalytics();
     renderHeader();
     if (opts.title) renderPageHead(opts);
     renderAdSlots();
