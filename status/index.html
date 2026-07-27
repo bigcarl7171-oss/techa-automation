@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" href="/assets/icons/icon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<title>운영 체크리스트 — 테차 서랍</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="canonical" href="https://www.techa.kr/status/">
+<meta property="og:image" content="https://www.techa.kr/assets/og/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.techa.kr/assets/og/og-default.png">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&display=swap">
+<link rel="stylesheet" href="/assets/css/style.css">
+<style>
+  .stage { margin: 26px 0; }
+  .stage h2 { display:flex; align-items:center; gap:8px; font-size:18px; margin-bottom:10px; }
+  .stage .pct { font-size:13px; color:var(--muted); font-weight:400; }
+  .item {
+    display:flex; align-items:flex-start; gap:10px; padding:12px 14px; margin-bottom:8px;
+    background:var(--white); border:1px solid var(--line); border-radius:10px; cursor:pointer;
+  }
+  .item input { margin-top:3px; width:18px; height:18px; accent-color: var(--green); flex:none; cursor:pointer; }
+  .item .txt { flex:1; }
+  .item .txt b { display:block; font-size:14px; }
+  .item .txt span { font-size:12px; color:var(--muted); }
+  .item.done { background:#f3f6f0; border-color:var(--green); }
+  .item.done .txt b { color:var(--green); text-decoration: line-through; text-decoration-color:#b9c4ae; }
+  .bar-wrap { background:var(--line); border-radius:8px; height:8px; overflow:hidden; margin:8px 0 16px; }
+  .bar-fill { background:var(--green); height:100%; transition:width .2s; }
+  .top-summary { text-align:center; padding:20px; }
+  .top-summary .big { font-family:"Gowun Batang",serif; font-size:40px; font-weight:700; color:var(--green); }
+</style>
+</head>
+<body>
+<header id="site-header"></header>
+
+<main class="wrap" style="max-width:640px">
+  <div class="page-head" style="padding-top:20px">
+    <h1>🛠️ 운영 체크리스트</h1>
+    <p class="lead">애드센스 승인 전까지의 준비 상태를 한눈에. 항목을 누르면 체크되고 브라우저에 저장됩니다.
+       (이 페이지는 검색에 노출되지 않는 운영자 전용 페이지입니다.)</p>
+  </div>
+
+  <div class="card top-summary">
+    <div class="big" id="overallPct">0%</div>
+    <div class="sub">전체 진행률 (<span id="overallCount">0/0</span>)</div>
+    <div class="bar-wrap"><div class="bar-fill" id="overallBar" style="width:0%"></div></div>
+  </div>
+
+  <div id="stages"></div>
+
+  <div class="card" style="text-align:center">
+    <button class="btn btn-ghost btn-sm" id="reset">체크 상태 초기화</button>
+  </div>
+</main>
+
+<footer id="site-footer"></footer>
+
+<script src="/assets/js/site.js"></script>
+<script>
+TECHA.initPage({});
+
+var DATA = [
+  { key:"stage1", title:"1단계 · 사이트 기반 구축", emoji:"🏗️", items:[
+    { id:"skeleton", label:"사이트 뼈대 구축", note:"공통 CSS/JS, 헤더·푸터·홈 허브", done:true },
+    { id:"apps20", label:"생활 도구 20개 배포", note:"날짜·계산·금융·건강·재미·운세 카테고리", done:true },
+    { id:"legal", label:"법적/안내 페이지 3종", note:"이용약관·사이트 소개·문의하기 (+ 개인정보처리방침)", done:true },
+    { id:"deploy", label:"무료 호스팅 배포(Cloudflare)", note:"workers.dev 주소로 라이브", done:true }
+  ]},
+  { key:"stage2", title:"2단계 · 검색 노출(SEO) 준비", emoji:"🔍", items:[
+    { id:"meta", label:"페이지별 title/description/canonical", note:"20개 앱 전체", done:true },
+    { id:"jsonld", label:"구조화 데이터(JSON-LD)", note:"WebApplication 스키마", done:true },
+    { id:"sitemap", label:"sitemap.xml / robots.txt", note:"절대주소 기준", done:true },
+    { id:"gsc", label:"Google Search Console 등록", note:"www.techa.kr 도메인 속성으로 재인증 완료(Cloudflare DNS 자동 연동)", done:true },
+    { id:"gscSubmit", label:"sitemap 제출", note:"새 도메인 속성에 재제출 완료 — 22페이지 인식, 색인 대기 중", done:true },
+    { id:"contentDepth", label:"설명 콘텐츠 깊이 보강(800~1,500자)", note:"완료: 20/20 앱 전체", done:true },
+    { id:"favicon", label:"파비콘 추가", note:"완료: 브랜드색 꽃 아이콘, 전 27페이지 + PWA 매니페스트", done:true },
+    { id:"ogimg", label:"OG 이미지(공유 썸네일)", note:"완료: 브랜드 디자인 1200×630, 전 27페이지 og:image·twitter:card", done:true }
+  ]},
+  { key:"stage3", title:"3단계 · 트래픽·바이럴 장치", emoji:"📣", items:[
+    { id:"share", label:"결과 공유 버튼", note:"이름궁합·운세·별자리궁합·탄생화·탄생석·로또·메뉴룰렛", done:true },
+    { id:"internalLink", label:"내부 링크(관련 도구)", note:"전체 앱 적용", done:true },
+    { id:"analytics", label:"방문 분석(Google Analytics 등)", note:"스캐폴딩 준비 완료 — site.js의 gaId에 측정 ID만 넣으면 전 페이지 자동 활성화", done:false }
+  ]},
+  { key:"stage4", title:"4단계 · 수익화", emoji:"💰", items:[
+    { id:"techaCta", label:"TECHA 자사상품 CTA 연결", note:"탄생화·탄생석·이름궁합·별자리궁합 4곳 라이브", done:true },
+    { id:"domain", label:"커스텀 도메인 구매·연결", note:"www.techa.kr + techa.kr 모두 Cloudflare Workers Custom Domain 연결 완료, 라이브 확인됨", done:true },
+    { id:"adsense", label:"Google AdSense 신청·승인", note:"도메인 연결 완료 — 신청 가능", done:false },
+    { id:"coupang", label:"쿠팡파트너스 등 제휴 링크", note:"파트너스 ID 등록 · 미디어(사이트) URL을 www.techa.kr로 갱신 완료 · 실제 상품 링크·고지 문구 삽입은 미착수", done:false },
+    { id:"premiumNetwork", label:"Ezoic/Mediavine 등 전환", note:"트래픽 성장 후", done:false }
+  ]}
+];
+
+(function () {
+  var STORAGE_KEY = "techa_status_checklist_v1";
+  var saved = {};
+  try { saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}"); } catch (e) {}
+
+  function isChecked(id, defaultDone) {
+    return saved.hasOwnProperty(id) ? saved[id] : defaultDone;
+  }
+
+  var stagesEl = document.getElementById("stages");
+  var html = "";
+  DATA.forEach(function (stage) {
+    html += '<section class="stage"><h2>' + stage.emoji + ' ' + stage.title +
+      ' <span class="pct" data-stagepct="' + stage.key + '"></span></h2>' +
+      '<div class="bar-wrap"><div class="bar-fill" data-stagebar="' + stage.key + '" style="width:0%"></div></div>';
+    stage.items.forEach(function (item) {
+      html += '<label class="item" data-id="' + item.id + '">' +
+        '<input type="checkbox" data-id="' + item.id + '">' +
+        '<span class="txt"><b>' + item.label + '</b><span>' + item.note + '</span></span></label>';
+    });
+    html += '</section>';
+  });
+  stagesEl.innerHTML = html;
+
+  function update() {
+    var totalAll = 0, doneAll = 0;
+    DATA.forEach(function (stage) {
+      var total = stage.items.length, done = 0;
+      stage.items.forEach(function (item) {
+        var checked = isChecked(item.id, item.done);
+        var row = stagesEl.querySelector('.item[data-id="' + item.id + '"]');
+        var box = row.querySelector('input');
+        box.checked = checked;
+        row.classList.toggle("done", checked);
+        if (checked) done++;
+      });
+      totalAll += total; doneAll += done;
+      var pct = Math.round((done / total) * 100);
+      document.querySelector('[data-stagepct="' + stage.key + '"]').textContent = done + "/" + total + " (" + pct + "%)";
+      document.querySelector('[data-stagebar="' + stage.key + '"]').style.width = pct + "%";
+    });
+    var overallPct = Math.round((doneAll / totalAll) * 100);
+    document.getElementById("overallPct").textContent = overallPct + "%";
+    document.getElementById("overallCount").textContent = doneAll + "/" + totalAll;
+    document.getElementById("overallBar").style.width = overallPct + "%";
+  }
+
+  // label이 input을 감싸고 있어 클릭 시 브라우저가 자동으로 토글 + change 이벤트를 1회 발생시킴.
+  // click을 별도로 다루면 이중 토글(상쇄)이 생기므로 change만 사용한다.
+  stagesEl.addEventListener("change", function (e) {
+    if (e.target.tagName !== "INPUT") return;
+    var row = e.target.closest(".item");
+    var id = row.getAttribute("data-id");
+    saved[id] = e.target.checked;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
+    update();
+  });
+
+  document.getElementById("reset").addEventListener("click", function () {
+    if (!confirm("체크 상태를 초기값으로 되돌릴까요?")) return;
+    saved = {};
+    localStorage.removeItem(STORAGE_KEY);
+    update();
+  });
+
+  update();
+})();
+</script>
+</body>
+</html>

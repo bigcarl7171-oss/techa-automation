@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" href="/assets/icons/icon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<title>아재개그 뽑기 — 질문 보고 정답 맞히는 아재개그 | 테차 서랍</title>
+<meta name="description" content="랜덤으로 아재개그를 뽑아 카드를 뒤집어 정답을 확인하세요. 지역·인물·음식·동물·영어·직장 카테고리별 필터와 아재력 테스트도 있습니다.">
+<link rel="canonical" href="https://www.techa.kr/ko/dad-joke/">
+<meta property="og:image" content="https://www.techa.kr/assets/og/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.techa.kr/assets/og/og-default.png">
+<link rel="alternate" hreflang="ko" href="https://www.techa.kr/ko/dad-joke/">
+<link rel="alternate" hreflang="x-default" href="https://www.techa.kr/ko/dad-joke/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="아재개그 뽑기 | 테차 서랍">
+<meta property="og:description" content="질문 보고 정답 맞혀보는 아재개그 뽑기 + 아재력 테스트.">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&display=swap">
+<link rel="stylesheet" href="/assets/css/style.css">
+<script type="application/ld+json">
+{ "@context":"https://schema.org","@type":"WebApplication","name":"아재개그 뽑기",
+  "applicationCategory":"GameApplication","operatingSystem":"Any",
+  "offers":{"@type":"Offer","price":"0","priceCurrency":"KRW"} }
+</script>
+<style>
+  .mode-tabs { display:flex; gap:8px; margin-bottom:6px; }
+  .mode-tabs button { flex:1; }
+
+  .chip-filter { display:flex; flex-wrap:wrap; gap:8px; margin:14px 0 4px; }
+  .chip-filter button {
+    border:1px solid var(--line); background:var(--white); border-radius:var(--radius-pill);
+    padding:6px 13px; font-size:13px; cursor:pointer; color:var(--brown); font-family:inherit;
+  }
+  .chip-filter button.active { background:var(--blue); color:var(--white); border-color:var(--blue); }
+
+  .joke-card { perspective:1000px; margin-top:16px; min-height:170px; }
+  .joke-card .inner {
+    position:relative; width:100%; min-height:170px; transition:transform .5s;
+    transform-style:preserve-3d; cursor:pointer;
+  }
+  .joke-card.flipped .inner { transform:rotateY(180deg); }
+  .joke-card .face {
+    position:absolute; inset:0; backface-visibility:hidden; border-radius:var(--radius-md);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; padding:20px;
+  }
+  .joke-card .front { background:var(--blue-soft); }
+  .joke-card .back { background:var(--amber-soft); transform:rotateY(180deg); }
+  .joke-card .topic-tag { font-size:12px; color:var(--muted); margin-bottom:8px; }
+  .joke-card .txt { font-family:"Gowun Batang", serif; font-size:19px; font-weight:700; line-height:1.5; }
+  .joke-card .flip-hint { font-size:12px; color:var(--muted); margin-top:12px; }
+
+  .reaction-row { display:flex; gap:8px; justify-content:center; margin-top:14px; flex-wrap:wrap; }
+  .reaction-row button {
+    border:1px solid var(--line); background:var(--white); border-radius:var(--radius-pill);
+    padding:8px 14px; font-size:14px; cursor:pointer; font-family:inherit;
+  }
+  .reaction-row button .cnt { color:var(--muted); font-size:12px; margin-left:4px; }
+
+  .quiz-progress { text-align:center; font-size:13px; color:var(--muted); margin-bottom:8px; }
+  #quizPanel { display:none; }
+  #quizPanel.active { display:block; }
+  #drawPanel.hidden { display:none; }
+</style>
+</head>
+<body>
+<header id="site-header"></header>
+<div id="page-head"></div>
+
+<main class="wrap">
+  <div class="ad-slot"></div>
+
+  <section class="card">
+    <div class="mode-tabs">
+      <button class="btn btn-primary btn-block" id="tabDraw">🥸 뽑기</button>
+      <button class="btn btn-ghost btn-block" id="tabQuiz">📝 아재력 테스트</button>
+    </div>
+
+    <!-- 뽑기 모드 -->
+    <div id="drawPanel">
+      <div class="chip-filter" id="topicFilter">
+        <button class="active" data-topic="all">전체</button>
+      </div>
+
+      <div class="joke-card" id="jokeCard">
+        <div class="inner">
+          <div class="face front">
+            <div class="topic-tag" id="cardTopic"></div>
+            <div class="txt" id="cardQ">불러오는 중…</div>
+            <div class="flip-hint">👆 카드를 눌러 정답 확인</div>
+          </div>
+          <div class="face back">
+            <div class="topic-tag">정답</div>
+            <div class="txt" id="cardA"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="reaction-row" id="reactionRow">
+        <button data-r="haha">😆 빵터짐<span class="cnt" id="cntHaha">0</span></button>
+        <button data-r="pisik">😅 피식<span class="cnt" id="cntPisik">0</span></button>
+        <button data-r="cold">😐 썰렁<span class="cnt" id="cntCold">0</span></button>
+      </div>
+
+      <div style="margin-top:16px">
+        <button class="btn btn-primary btn-block" id="drawBtn">🎲 다른 개그 뽑기</button>
+      </div>
+    </div>
+
+    <!-- 아재력 테스트 모드 -->
+    <div id="quizPanel">
+      <div id="quizIntro">
+        <p style="text-align:center;color:var(--muted);font-size:14px">
+          랜덤 10문항! 질문 보고 정답을 맞혀보세요. 점수에 따라 등급이 매겨집니다.
+        </p>
+        <button class="btn btn-primary btn-block" id="quizStart">테스트 시작</button>
+      </div>
+
+      <div id="quizRun" style="display:none">
+        <div class="quiz-progress" id="quizProgress"></div>
+        <div class="joke-card" id="quizCard">
+          <div class="inner">
+            <div class="face front">
+              <div class="topic-tag" id="quizTopic"></div>
+              <div class="txt" id="quizQ"></div>
+              <div class="flip-hint">👆 카드를 눌러 정답 확인</div>
+            </div>
+            <div class="face back">
+              <div class="topic-tag">정답</div>
+              <div class="txt" id="quizA"></div>
+            </div>
+          </div>
+        </div>
+        <div class="reaction-row" id="quizScoreRow" style="display:none">
+          <button class="btn btn-primary btn-sm" id="quizKnew">😄 알고 있었어요</button>
+          <button class="btn btn-ghost btn-sm" id="quizMissed">😅 몰랐어요</button>
+        </div>
+      </div>
+
+      <div id="quizResult" style="display:none">
+        <div class="result">
+          <div class="big" id="quizGrade"></div>
+          <div class="sub" id="quizScoreText"></div>
+        </div>
+        <div class="row" style="margin-top:12px">
+          <button class="btn btn-ghost btn-sm" id="quizCopy">결과 복사</button>
+          <button class="btn btn-ghost btn-sm" id="quizRetry">다시 도전</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="ad-slot"></div>
+
+  <article class="article">
+    <h2>아재개그 뽑기 사용법</h2>
+    <p><b>뽑기</b> 모드에서는 랜덤으로 질문이 담긴 카드가 나옵니다. 카드를 누르면 뒤집히며 정답(펀치라인)이 공개됩니다.
+       지역·인물·음식·동물·영어·넌센스·직장 7개 카테고리 칩으로 원하는 주제만 골라 뽑을 수도 있어요.</p>
+    <p><b>아재력 테스트</b> 모드는 랜덤 10문항을 풀어보고 스스로 맞았는지 체크해 점수를 매기는 미니 게임입니다.
+       점수에 따라 순수 MZ부터 전설의 아재까지 등급이 나옵니다.</p>
+
+    <h2>자주 묻는 질문 (FAQ)</h2>
+    <h3>Q. 반응 버튼(빵터짐/피식/썰렁)을 누르면 어떻게 되나요?</h3>
+    <p>내 브라우저에만 저장되는 개인 기록입니다. 다른 사용자와 공유되는 전체 순위는 아니며, 그냥 재미로 눌러보는 용도예요.</p>
+    <h3>Q. 같은 개그가 반복해서 나와요.</h3>
+    <p>주제 필터를 좁게 걸어두면 해당 주제 안에서만 랜덤으로 뽑히기 때문에 반복될 수 있습니다. '전체'로 바꾸면 더 다양하게 나옵니다.</p>
+
+    <div class="note">아재개그는 재미로 즐기는 콘텐츠입니다. 너무 진지하게 받아들이지 마세요 🥸</div>
+  </article>
+
+  <div id="related"></div>
+</main>
+
+<footer id="site-footer"></footer>
+
+<script src="/assets/js/site.js"></script>
+<script>
+TECHA.initPage({
+  title: "아재개그 뽑기",
+  desc: "질문 보고 정답 맞혀보는 아재개그 뽑기와 아재력 테스트.",
+  category: "fun",
+  slug: "dad-joke",
+  related: ["lotto", "ladder", "menu-roulette"]
+});
+
+(function () {
+  var TOPICS = { place: "지역", person: "인물", food: "음식", animal: "동물", english: "영어", nonsense: "넌센스", job: "직장" };
+  var DATA = [];
+  var activeTopic = "all";
+  var current = null;
+
+  var jokeCard = document.getElementById("jokeCard");
+  var cardTopic = document.getElementById("cardTopic");
+  var cardQ = document.getElementById("cardQ");
+  var cardA = document.getElementById("cardA");
+  var topicFilter = document.getElementById("topicFilter");
+
+  function shuffle(arr) {
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+
+  function pool() {
+    return activeTopic === "all" ? DATA : DATA.filter(function (j) { return j.topic === activeTopic; });
+  }
+
+  function draw() {
+    var p = pool();
+    if (!p.length) return;
+    current = p[Math.floor(Math.random() * p.length)];
+    jokeCard.classList.remove("flipped");
+    cardTopic.textContent = TOPICS[current.topic];
+    cardQ.textContent = current.q;
+    cardA.textContent = current.a;
+  }
+
+  jokeCard.addEventListener("click", function () { jokeCard.classList.toggle("flipped"); });
+  document.getElementById("drawBtn").addEventListener("click", draw);
+
+  Object.keys(TOPICS).forEach(function (key) {
+    var b = document.createElement("button");
+    b.textContent = TOPICS[key];
+    b.setAttribute("data-topic", key);
+    topicFilter.appendChild(b);
+  });
+  topicFilter.addEventListener("click", function (e) {
+    var btn = e.target.closest("button[data-topic]");
+    if (!btn) return;
+    activeTopic = btn.getAttribute("data-topic");
+    topicFilter.querySelectorAll("button").forEach(function (b) { b.classList.toggle("active", b === btn); });
+    draw();
+  });
+
+  // ---------- 반응 버튼 (localStorage 개인 기록) ----------
+  var REACT_KEY = "techa_dadjoke_reactions";
+  var reactCounts = JSON.parse(localStorage.getItem(REACT_KEY) || "{}");
+  function paintReactions() {
+    document.getElementById("cntHaha").textContent = reactCounts.haha || 0;
+    document.getElementById("cntPisik").textContent = reactCounts.pisik || 0;
+    document.getElementById("cntCold").textContent = reactCounts.cold || 0;
+  }
+  document.getElementById("reactionRow").addEventListener("click", function (e) {
+    var btn = e.target.closest("button[data-r]");
+    if (!btn) return;
+    var r = btn.getAttribute("data-r");
+    reactCounts[r] = (reactCounts[r] || 0) + 1;
+    localStorage.setItem(REACT_KEY, JSON.stringify(reactCounts));
+    paintReactions();
+  });
+  paintReactions();
+
+  // ---------- 데이터 로드 ----------
+  fetch("/assets/data/dad-jokes.json")
+    .then(function (r) { return r.json(); })
+    .then(function (d) {
+      DATA = d;
+      draw();
+      quizData = d;
+    })
+    .catch(function () {
+      cardQ.textContent = "데이터를 불러오지 못했어요.";
+    });
+
+  // ---------- 모드 전환 ----------
+  var tabDraw = document.getElementById("tabDraw");
+  var tabQuiz = document.getElementById("tabQuiz");
+  var drawPanel = document.getElementById("drawPanel");
+  var quizPanel = document.getElementById("quizPanel");
+  tabDraw.addEventListener("click", function () {
+    tabDraw.className = "btn btn-primary btn-block";
+    tabQuiz.className = "btn btn-ghost btn-block";
+    drawPanel.classList.remove("hidden");
+    quizPanel.classList.remove("active");
+  });
+  tabQuiz.addEventListener("click", function () {
+    tabQuiz.className = "btn btn-primary btn-block";
+    tabDraw.className = "btn btn-ghost btn-block";
+    drawPanel.classList.add("hidden");
+    quizPanel.classList.add("active");
+  });
+
+  // ---------- 아재력 테스트 ----------
+  var quizData = [];
+  var quizItems = [], quizIdx = 0, quizScore = 0;
+  var quizCard = document.getElementById("quizCard");
+  var quizQ = document.getElementById("quizQ");
+  var quizA = document.getElementById("quizA");
+  var quizTopic = document.getElementById("quizTopic");
+  var quizProgress = document.getElementById("quizProgress");
+  var quizScoreRow = document.getElementById("quizScoreRow");
+
+  document.getElementById("quizStart").addEventListener("click", function () {
+    if (!quizData.length) return;
+    quizItems = shuffle(quizData).slice(0, 10);
+    quizIdx = 0; quizScore = 0;
+    document.getElementById("quizIntro").style.display = "none";
+    document.getElementById("quizRun").style.display = "block";
+    document.getElementById("quizResult").style.display = "none";
+    renderQuizStep();
+  });
+
+  function renderQuizStep() {
+    var item = quizItems[quizIdx];
+    quizCard.classList.remove("flipped");
+    quizScoreRow.style.display = "none";
+    quizTopic.textContent = TOPICS[item.topic];
+    quizQ.textContent = item.q;
+    quizA.textContent = item.a;
+    quizProgress.textContent = (quizIdx + 1) + " / " + quizItems.length;
+  }
+
+  quizCard.addEventListener("click", function () {
+    quizCard.classList.toggle("flipped");
+    if (quizCard.classList.contains("flipped")) quizScoreRow.style.display = "flex";
+  });
+
+  function nextQuizStep() {
+    quizIdx++;
+    if (quizIdx >= quizItems.length) { finishQuiz(); return; }
+    renderQuizStep();
+  }
+  document.getElementById("quizKnew").addEventListener("click", function () { quizScore++; nextQuizStep(); });
+  document.getElementById("quizMissed").addEventListener("click", nextQuizStep);
+
+  function finishQuiz() {
+    document.getElementById("quizRun").style.display = "none";
+    document.getElementById("quizResult").style.display = "block";
+    var grade, ratio = quizScore / quizItems.length;
+    if (ratio >= 0.9) grade = "🏆 전설의 아재";
+    else if (ratio >= 0.7) grade = "😎 아재 고수";
+    else if (ratio >= 0.4) grade = "🙂 아재 입문자";
+    else grade = "😇 순수 MZ";
+    document.getElementById("quizGrade").textContent = grade;
+    document.getElementById("quizScoreText").textContent = quizScore + " / " + quizItems.length + "문항 맞힘";
+  }
+
+  document.getElementById("quizRetry").addEventListener("click", function () {
+    document.getElementById("quizResult").style.display = "none";
+    document.getElementById("quizIntro").style.display = "block";
+  });
+  document.getElementById("quizCopy").addEventListener("click", function () {
+    var text = "아재력 테스트 결과: " + document.getElementById("quizGrade").textContent +
+      " (" + document.getElementById("quizScoreText").textContent + ") | 테차 서랍 아재개그 뽑기";
+    navigator.clipboard && navigator.clipboard.writeText(text);
+    var b = this, t = b.textContent;
+    b.textContent = "복사됨!";
+    setTimeout(function () { b.textContent = t; }, 1200);
+  });
+})();
+</script>
+</body>
+</html>

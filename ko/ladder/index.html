@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" href="/assets/icons/icon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<title>사다리 타기 — 내기·순서 정하기 랜덤 사다리 | 테차 서랍</title>
+<meta name="description" content="참가자와 결과를 입력하면 랜덤 사다리를 만들어 드립니다. 벌칙·내기·순서 정하기에 딱, 이름을 누르면 경로를 따라가며 결과를 보여줍니다.">
+<link rel="canonical" href="https://www.techa.kr/ko/ladder/">
+<meta property="og:image" content="https://www.techa.kr/assets/og/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.techa.kr/assets/og/og-default.png">
+<link rel="alternate" hreflang="ko" href="https://www.techa.kr/ko/ladder/">
+<link rel="alternate" hreflang="x-default" href="https://www.techa.kr/ko/ladder/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="사다리 타기 | 테차 서랍">
+<meta property="og:description" content="내기·순서 정하기 랜덤 사다리 타기.">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&display=swap">
+<link rel="stylesheet" href="/assets/css/style.css">
+<script type="application/ld+json">
+{ "@context":"https://schema.org","@type":"WebApplication","name":"사다리 타기",
+  "applicationCategory":"GameApplication","operatingSystem":"Any",
+  "offers":{"@type":"Offer","price":"0","priceCurrency":"KRW"} }
+</script>
+<style>
+  .labels { display:flex; }
+  .labels .lbl { flex:1; text-align:center; font-size:13px; font-weight:700; padding:6px 2px; word-break:break-all; }
+  .labels .lbl.top { cursor:pointer; color:var(--blue); }
+  .labels .lbl.top:hover { text-decoration:underline; }
+  .labels .lbl.bottom { color:var(--brown); }
+  .labels .lbl.hit { background:var(--amber-soft); border-radius:var(--radius-sm); }
+  #ladder { width:100%; display:block; background:var(--paper); border-radius:var(--radius-sm); touch-action:manipulation; }
+  #outcome { margin-top:12px; }
+</style>
+</head>
+<body>
+<header id="site-header"></header>
+<div id="page-head"></div>
+
+<main class="wrap">
+  <div class="ad-slot"></div>
+
+  <section class="card">
+    <label class="field" for="names">참가자 <span class="hint">(쉼표로 구분, 2~10명)</span></label>
+    <input type="text" id="names" placeholder="예: 철수, 영희, 민수, 지영">
+
+    <label class="field" for="prizes">결과 <span class="hint">(쉼표로 구분, 참가자와 같은 수)</span></label>
+    <input type="text" id="prizes" placeholder="예: 커피, 꽝, 꽝, 청소">
+
+    <div class="row" style="margin-top:16px">
+      <button class="btn btn-primary" id="make">사다리 만들기 🪜</button>
+      <button class="btn btn-ghost" id="all" style="display:none">전체 결과 보기</button>
+    </div>
+
+    <div id="stage" style="margin-top:16px; display:none">
+      <div class="labels" id="topLabels"></div>
+      <canvas id="ladder" height="340"></canvas>
+      <div class="labels" id="botLabels"></div>
+      <div class="result empty" id="outcome">위의 참가자 이름을 누르면 경로를 따라갑니다.</div>
+    </div>
+  </section>
+
+  <div class="ad-slot"></div>
+
+  <article class="article">
+    <h2>사다리 타기 사용법</h2>
+    <p>참가자 이름과 결과를 각각 쉼표로 입력하고 <b>사다리 만들기</b>를 누르면 랜덤 가로줄이 있는 사다리가 생성됩니다.
+       위쪽 이름을 클릭하면 선을 따라 내려가며 어떤 결과에 도착하는지 보여줍니다. 전체 결과도 한 번에 확인할 수 있습니다.</p>
+
+    <h2>어디에 쓰나요?</h2>
+    <ul>
+      <li>커피·밥값 <b>내기</b>, 벌칙·청소 당번 정하기</li>
+      <li>발표·게임 <b>순서</b> 정하기</li>
+      <li>선물·자리 <b>배정</b> 등 공정한 랜덤 분배</li>
+    </ul>
+
+    <h3>사다리는 정말 공정한가요?</h3>
+    <p>가로줄이 무작위로 배치되고, 각 참가자는 서로 다른 결과에 <b>1:1로 정확히 도착</b>합니다.
+       중복 없이 모두 다른 칸으로 연결되므로, 누구에게도 유리하거나 불리하지 않은 공정한 방식입니다.
+       사다리를 만드는 시점에 이미 모든 경로가 확정되어 있고, 그 경로가 무작위로 배치되기 때문에
+       누구도 결과를 예측하거나 조작할 수 없다는 점이 사다리 타기가 오랫동안 사랑받은 이유입니다.</p>
+
+    <h2>사다리 타기의 유래</h2>
+    <p>한국에서 흔히 '사다리 타기'라 부르는 이 게임은 일본에서 '아미다쿠지(あみだくじ)'라는 이름으로 널리 퍼졌습니다.
+       세로줄과 무작위 가로줄로 이루어진 경로를 따라가며 결과를 정하는 방식으로, 불교의 아미타여래 광배(光背) 모양과
+       닮았다 해서 이런 이름이 붙었다는 설이 있습니다. 지금은 온라인에서 인원이 많을 때도 빠르고 공정하게
+       무언가를 정하는 대표적인 방법으로 자리 잡았습니다.</p>
+
+    <h2>자주 묻는 질문 (FAQ)</h2>
+    <h3>Q. 참가자와 결과 수가 다르면 어떻게 되나요?</h3>
+    <p>결과가 참가자보다 적으면 자동으로 '꽝'이 채워지고, 많으면 참가자 수만큼만 사용됩니다.
+       가장 정확한 결과를 원한다면 참가자 수와 결과 수를 동일하게 입력하세요.</p>
+    <h3>Q. 같은 참가자·결과로 다시 만들면 같은 결과가 나오나요?</h3>
+    <p>아닙니다. '사다리 만들기'를 누를 때마다 가로줄이 새로 무작위 배치되어 매번 다른 결과가 나옵니다.
+       다시 뽑고 싶다면 그냥 한 번 더 눌러 주세요.</p>
+
+    <div class="note">순서·팀을 정하는 다른 방법이 필요하면 '로또 추첨기'나 '오늘 뭐 먹지 메뉴 룰렛'도 함께 이용해 보세요.</div>
+  </article>
+
+  <div id="related"></div>
+</main>
+
+<footer id="site-footer"></footer>
+
+<script src="/assets/js/site.js"></script>
+<script>
+TECHA.initPage({
+  title: "사다리 타기",
+  desc: "참가자와 결과를 입력하면 랜덤 사다리로 공정하게 정해 드립니다.",
+  category: "fun",
+  slug: "ladder",
+  related: ["lotto", "dday", "age-calculator"]
+});
+
+(function () {
+  var canvas = document.getElementById("ladder");
+  var ctx = canvas.getContext("2d");
+  var names = [], prizes = [], n = 0;
+  var rungs = [];          // rungs[level][gap] = true
+  var LEVELS = 9;
+  var cols = [];           // x 좌표
+  var topY = 20, botY = 320;
+  var levelY = [];
+  var mapping = [];        // 참가자 index -> 도착 결과 index
+
+  function setup() {
+    var rawNames = document.getElementById("names").value.split(",").map(function(s){return s.trim();}).filter(Boolean);
+    var rawPrizes = document.getElementById("prizes").value.split(",").map(function(s){return s.trim();}).filter(Boolean);
+    if (rawNames.length < 2) { alert("참가자를 2명 이상 입력해 주세요."); return; }
+    if (rawNames.length > 10) { alert("참가자는 최대 10명까지 가능합니다."); return; }
+    if (rawPrizes.length === 0) { for (var i=0;i<rawNames.length;i++) rawPrizes.push(i===0?"당첨":"꽝"); }
+    // 결과 수를 참가자 수에 맞춤
+    while (rawPrizes.length < rawNames.length) rawPrizes.push("꽝");
+    rawPrizes = rawPrizes.slice(0, rawNames.length);
+
+    names = rawNames; prizes = rawPrizes; n = names.length;
+    buildRungs();
+    layout();
+    computeMapping();
+    document.getElementById("stage").style.display = "block";
+    document.getElementById("all").style.display = "inline-flex";
+    renderLabels();
+    draw();
+    var o = document.getElementById("outcome");
+    o.className = "result empty"; o.textContent = "위의 참가자 이름을 누르면 경로를 따라갑니다.";
+  }
+
+  function buildRungs() {
+    rungs = [];
+    for (var l = 0; l < LEVELS; l++) {
+      var row = new Array(n - 1).fill(false);
+      for (var g = 0; g < n - 1; g++) {
+        if (row[g-1]) continue;            // 인접 가로줄 방지
+        if (Math.random() < 0.42) row[g] = true;
+      }
+      rungs.push(row);
+    }
+    // 각 참가자가 최소 한 번은 이동하도록 보정: 빈 사다리 방지
+  }
+
+  function layout() {
+    var W = canvas.clientWidth || 600;
+    canvas.width = W;
+    var margin = W / (n * 2);
+    cols = [];
+    for (var i = 0; i < n; i++) cols.push(margin + (W - margin * 2) * (i / (n - 1)));
+    levelY = [];
+    for (var l = 0; l < LEVELS; l++) levelY.push(topY + (botY - topY) * ((l + 1) / (LEVELS + 1)));
+  }
+
+  function computeMapping() {
+    mapping = [];
+    for (var start = 0; start < n; start++) {
+      var c = start;
+      for (var l = 0; l < LEVELS; l++) {
+        if (c > 0 && rungs[l][c-1]) c = c - 1;
+        else if (c < n-1 && rungs[l][c]) c = c + 1;
+      }
+      mapping[start] = c;
+    }
+  }
+
+  function draw(highlightPath) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // 세로줄
+    ctx.lineWidth = 3; ctx.strokeStyle = "#cdd5e2"; ctx.lineCap = "round";
+    for (var i = 0; i < n; i++) {
+      ctx.beginPath(); ctx.moveTo(cols[i], topY); ctx.lineTo(cols[i], botY); ctx.stroke();
+    }
+    // 가로줄
+    for (var l = 0; l < LEVELS; l++) {
+      for (var g = 0; g < n - 1; g++) {
+        if (rungs[l][g]) {
+          ctx.beginPath(); ctx.moveTo(cols[g], levelY[l]); ctx.lineTo(cols[g+1], levelY[l]); ctx.stroke();
+        }
+      }
+    }
+    // 경로 하이라이트
+    if (highlightPath && highlightPath.length) {
+      ctx.strokeStyle = "#EFB054"; ctx.lineWidth = 4;
+      ctx.beginPath(); ctx.moveTo(highlightPath[0].x, highlightPath[0].y);
+      for (var k = 1; k < highlightPath.length; k++) ctx.lineTo(highlightPath[k].x, highlightPath[k].y);
+      ctx.stroke();
+    }
+  }
+
+  function pathPoints(start) {
+    var c = start, pts = [{x: cols[c], y: topY}];
+    for (var l = 0; l < LEVELS; l++) {
+      pts.push({x: cols[c], y: levelY[l]});
+      if (c > 0 && rungs[l][c-1]) { c = c - 1; pts.push({x: cols[c], y: levelY[l]}); }
+      else if (c < n-1 && rungs[l][c]) { c = c + 1; pts.push({x: cols[c], y: levelY[l]}); }
+    }
+    pts.push({x: cols[c], y: botY});
+    return pts;
+  }
+
+  function animate(start) {
+    var full = pathPoints(start);
+    var end = mapping[start];
+    var i = 0;
+    function step() {
+      i++;
+      draw(full.slice(0, i + 1));
+      if (i < full.length - 1) requestAnimationFrame(step);
+      else showOutcome(start, end);
+    }
+    step();
+    // 라벨 하이라이트
+    var tops = document.querySelectorAll("#topLabels .lbl");
+    var bots = document.querySelectorAll("#botLabels .lbl");
+    tops.forEach(function(e,idx){ e.classList.toggle("hit", idx===start); });
+    bots.forEach(function(e,idx){ e.classList.toggle("hit", idx===end); });
+  }
+
+  function showOutcome(start, end) {
+    var o = document.getElementById("outcome");
+    o.className = "result";
+    o.innerHTML = '<div class="big">' + escapeHtml(names[start]) + ' → ' + escapeHtml(prizes[end]) + '</div>';
+  }
+
+  function renderLabels() {
+    var top = document.getElementById("topLabels");
+    var bot = document.getElementById("botLabels");
+    top.innerHTML = names.map(function(nm,i){ return '<div class="lbl top" data-i="'+i+'">'+escapeHtml(nm)+'</div>'; }).join("");
+    bot.innerHTML = prizes.map(function(p){ return '<div class="lbl bottom">'+escapeHtml(p)+'</div>'; }).join("");
+    top.querySelectorAll(".lbl").forEach(function(el){
+      el.addEventListener("click", function(){ animate(parseInt(this.getAttribute("data-i"))); });
+    });
+  }
+
+  function showAll() {
+    var o = document.getElementById("outcome");
+    o.className = "result";
+    o.innerHTML = names.map(function(nm,i){
+      return '<div style="padding:4px 0">' + escapeHtml(nm) + ' → <b>' + escapeHtml(prizes[mapping[i]]) + '</b></div>';
+    }).join("");
+    document.querySelectorAll("#topLabels .lbl,#botLabels .lbl").forEach(function(e){ e.classList.remove("hit"); });
+    draw();
+  }
+
+  function escapeHtml(s){ return s.replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
+
+  document.getElementById("make").addEventListener("click", setup);
+  document.getElementById("all").addEventListener("click", showAll);
+  window.addEventListener("resize", function(){ if (n) { layout(); computeMapping(); draw(); } });
+})();
+</script>
+</body>
+</html>

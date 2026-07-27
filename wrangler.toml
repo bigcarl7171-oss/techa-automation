@@ -1,0 +1,7 @@
+name = "techa-automation"
+compatibility_date = "2026-07-24"
+
+# 정적 사이트(빌드 없음) — 저장소 루트를 그대로 자산으로 서비스
+[assets]
+directory = "."
+not_found_handling = "404-page"

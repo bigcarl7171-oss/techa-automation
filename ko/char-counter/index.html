@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" href="/assets/icons/icon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<title>글자수 세기 — 공백 포함/제외·바이트·단어수 | 테차 서랍</title>
+<meta name="description" content="입력한 글의 글자수를 공백 포함/제외로 실시간 계산합니다. 바이트 수, 단어 수, 줄 수도 함께 확인해 자기소개서·리포트 분량을 맞추세요.">
+<link rel="canonical" href="https://www.techa.kr/ko/char-counter/">
+<meta property="og:image" content="https://www.techa.kr/assets/og/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.techa.kr/assets/og/og-default.png">
+<link rel="alternate" hreflang="ko" href="https://www.techa.kr/ko/char-counter/">
+<link rel="alternate" hreflang="x-default" href="https://www.techa.kr/ko/char-counter/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="글자수 세기 | 테차 서랍">
+<meta property="og:description" content="공백 포함/제외·바이트·단어수 실시간 계산.">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&display=swap">
+<link rel="stylesheet" href="/assets/css/style.css">
+<script type="application/ld+json">
+{ "@context":"https://schema.org","@type":"WebApplication","name":"글자수 세기",
+  "applicationCategory":"UtilitiesApplication","operatingSystem":"Any",
+  "offers":{"@type":"Offer","price":"0","priceCurrency":"KRW"} }
+</script>
+<style>
+  .stat-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:10px; }
+  .stat { background:var(--blue-soft); border-radius:var(--radius-sm); padding:14px; text-align:center; }
+  .stat .n { font-family:"Gowun Batang",serif; font-size:26px; font-weight:700; color:var(--blue); }
+  .stat .l { font-size:12px; color:var(--muted); margin-top:2px; }
+</style>
+</head>
+<body>
+<header id="site-header"></header>
+<div id="page-head"></div>
+
+<main class="wrap">
+  <div class="ad-slot"></div>
+
+  <section class="card">
+    <label class="field" for="text">텍스트 입력 <span class="hint">(입력하면 실시간으로 계산됩니다)</span></label>
+    <textarea id="text" placeholder="여기에 글을 붙여넣거나 입력하세요."></textarea>
+
+    <div class="stat-grid" style="margin-top:16px">
+      <div class="stat"><div class="n" id="withSpace">0</div><div class="l">공백 포함</div></div>
+      <div class="stat"><div class="n" id="noSpace">0</div><div class="l">공백 제외</div></div>
+      <div class="stat"><div class="n" id="bytes">0</div><div class="l">바이트</div></div>
+      <div class="stat"><div class="n" id="words">0</div><div class="l">단어</div></div>
+      <div class="stat"><div class="n" id="lines">0</div><div class="l">줄</div></div>
+    </div>
+
+    <div class="row" style="margin-top:14px">
+      <button class="btn btn-ghost btn-sm" id="copy">결과 복사</button>
+      <button class="btn btn-ghost btn-sm" id="clear">지우기</button>
+    </div>
+  </section>
+
+  <div class="ad-slot"></div>
+
+  <article class="article">
+    <h2>글자수 세기 사용법</h2>
+    <p>텍스트 상자에 글을 입력하거나 붙여넣으면 <b>공백 포함/제외 글자수, 바이트, 단어 수, 줄 수</b>가 즉시 표시됩니다.
+       자기소개서, 리포트, 블로그, SNS 게시글의 분량 제한을 맞출 때 유용합니다.</p>
+
+    <h2>공백 포함·제외, 무엇을 봐야 하나요?</h2>
+    <ul>
+      <li><b>공백 포함</b>: 띄어쓰기·줄바꿈을 모두 센 값. 대부분의 자기소개서 글자수 제한이 이 기준입니다.</li>
+      <li><b>공백 제외</b>: 순수 글자만 센 값. 일부 서식에서 요구합니다.</li>
+      <li><b>바이트</b>: 한글 1자를 보통 2~3바이트로 계산(UTF-8 기준)합니다. 이름 입력란 등 바이트 제한이 있을 때 확인하세요.</li>
+    </ul>
+
+    <h3>예시</h3>
+    <p>"안녕하세요"는 공백 포함·제외 모두 <b>5자</b>, UTF-8 기준 <b>15바이트</b>입니다.
+       "안녕 하세요"는 공백 포함 6자, 공백 제외 5자입니다. 한글은 한 글자가 3바이트라 5자면 15바이트가 됩니다.</p>
+
+    <h2>어디에 쓰면 좋을까요?</h2>
+    <ul>
+      <li><b>자기소개서·이력서</b>: 대부분 "공백 포함 000자 이내" 제한이 있어 실시간으로 맞추기 좋습니다.</li>
+      <li><b>대학 리포트·논문</b>: 글자수/단어수 요건 확인.</li>
+      <li><b>블로그·SNS</b>: 인스타그램 캡션, 메타 설명 등 길이 제한 맞추기.</li>
+      <li><b>회원가입 닉네임·아이디</b>: 바이트 제한이 있는 입력란 확인.</li>
+    </ul>
+
+    <h2>바이트(byte)는 왜 중요한가요?</h2>
+    <p>일부 시스템(옛 게시판, 일부 회원가입 폼)은 글자 수가 아니라 <b>바이트 수</b>로 길이를 제한합니다.
+       UTF-8 인코딩에서 영어·숫자는 1바이트, 한글은 보통 3바이트, 이모지는 4바이트를 차지합니다.
+       그래서 "10바이트 제한"이면 영어는 10자지만 한글은 약 3자밖에 못 넣습니다. 이 도구는 정확한 바이트 수도 함께 알려줍니다.</p>
+
+    <h2>자주 묻는 질문 (FAQ)</h2>
+    <h3>Q. 줄바꿈도 글자 수에 포함되나요?</h3>
+    <p>공백 포함 글자수에는 줄바꿈도 하나의 문자로 포함됩니다. 공백 제외에서는 제외됩니다.</p>
+    <h3>Q. 단어 수는 어떻게 세나요?</h3>
+    <p>공백(띄어쓰기·줄바꿈)으로 구분된 덩어리를 한 단어로 셉니다. 영어 문서의 word count와 같은 방식입니다.</p>
+
+    <div class="note">입력한 내용은 서버로 전송되지 않고 브라우저 안에서만 계산됩니다. 개인정보가 담긴 글도 안심하고 사용하세요.</div>
+  </article>
+
+  <div id="related"></div>
+</main>
+
+<footer id="site-footer"></footer>
+
+<script src="/assets/js/site.js"></script>
+<script>
+TECHA.initPage({
+  title: "글자수 세기",
+  desc: "공백 포함/제외 글자수와 바이트·단어·줄 수를 실시간으로 계산합니다.",
+  category: "text",
+  slug: "char-counter",
+  related: ["age-calculator", "dday", "lotto"]
+});
+
+(function () {
+  var text = document.getElementById("text");
+  var ids = ["withSpace","noSpace","bytes","words","lines"].reduce(function(o,k){o[k]=document.getElementById(k);return o;},{});
+
+  function byteLen(s) {
+    // UTF-8 바이트 수
+    var b = 0;
+    for (var i = 0; i < s.length; i++) {
+      var c = s.charCodeAt(i);
+      if (c <= 0x7f) b += 1;
+      else if (c <= 0x7ff) b += 2;
+      else if (c >= 0xd800 && c <= 0xdbff) { b += 4; i++; } // 서로게이트 페어(이모지 등)
+      else b += 3;
+    }
+    return b;
+  }
+
+  function update() {
+    var s = text.value;
+    var noSp = s.replace(/\s/g, "");
+    var words = s.trim() ? s.trim().split(/\s+/).length : 0;
+    var lines = s === "" ? 0 : s.split(/\n/).length;
+    ids.withSpace.textContent = s.length.toLocaleString();
+    ids.noSpace.textContent = noSp.length.toLocaleString();
+    ids.bytes.textContent = byteLen(s).toLocaleString();
+    ids.words.textContent = words.toLocaleString();
+    ids.lines.textContent = lines.toLocaleString();
+  }
+
+  text.addEventListener("input", update);
+  document.getElementById("clear").addEventListener("click", function () { text.value = ""; update(); text.focus(); });
+  document.getElementById("copy").addEventListener("click", function () {
+    var s = text.value;
+    var msg = "공백 포함 " + s.length + "자 / 공백 제외 " + s.replace(/\s/g,"").length + "자 / " + byteLen(s) + "바이트";
+    navigator.clipboard && navigator.clipboard.writeText(msg);
+    var btn = this; var t = btn.textContent; btn.textContent = "복사됨!";
+    setTimeout(function(){ btn.textContent = t; }, 1200);
+  });
+  update();
+})();
+</script>
+</body>
+</html>

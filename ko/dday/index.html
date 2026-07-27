@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" href="/assets/icons/icon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<title>D-Day 계산기 — 목표일까지 남은 날·100일·1000일 | 테차 서랍</title>
+<meta name="description" content="시험·기념일·마감일까지 남은 날짜를 계산합니다. 시작일 기준 100일·200일·1000일 기념일도 자동으로 알려드립니다.">
+<link rel="canonical" href="https://www.techa.kr/ko/dday/">
+<meta property="og:image" content="https://www.techa.kr/assets/og/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.techa.kr/assets/og/og-default.png">
+<link rel="alternate" hreflang="ko" href="https://www.techa.kr/ko/dday/">
+<link rel="alternate" hreflang="x-default" href="https://www.techa.kr/ko/dday/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="D-Day 계산기 | 테차 서랍">
+<meta property="og:description" content="목표일까지 남은 날·100일·1000일 기념일 계산.">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&display=swap">
+<link rel="stylesheet" href="/assets/css/style.css">
+<script type="application/ld+json">
+{ "@context":"https://schema.org","@type":"WebApplication","name":"D-Day 계산기",
+  "applicationCategory":"UtilitiesApplication","operatingSystem":"Any",
+  "offers":{"@type":"Offer","price":"0","priceCurrency":"KRW"} }
+</script>
+</head>
+<body>
+<header id="site-header"></header>
+<div id="page-head"></div>
+
+<main class="wrap">
+  <div class="ad-slot"></div>
+
+  <section class="card">
+    <label class="field" for="target">목표 날짜 <span class="hint">(D-Day를 셀 기준일)</span></label>
+    <input type="date" id="target">
+
+    <label class="field"><input type="checkbox" id="incl" style="width:auto;margin-right:6px;vertical-align:middle">시작일(오늘)을 1일째로 포함 <span class="hint">(연애 100일 방식)</span></label>
+
+    <div style="margin-top:16px">
+      <button class="btn btn-primary btn-block" id="calc">D-Day 계산하기</button>
+    </div>
+
+    <div class="result empty" id="result">목표 날짜를 선택해 주세요.</div>
+  </section>
+
+  <div class="ad-slot"></div>
+
+  <section class="card" id="milestone-card" style="display:none">
+    <h3 style="margin:0 0 8px">시작일 기준 기념일</h3>
+    <p class="hint" style="margin:0 0 12px">위 '목표 날짜'를 <b>시작일</b>로 보고 100일·1000일 등이 언제인지 알려드립니다.</p>
+    <div id="milestones"></div>
+  </section>
+
+  <article class="article">
+    <h2>D-Day 계산기 사용법</h2>
+    <p>목표 날짜를 선택하면 오늘로부터 남은 날(D-n) 또는 지난 날(D+n)을 계산합니다.
+       연애·결혼 기념일처럼 시작한 날을 1일째로 세는 방식이 필요하면 '시작일 포함'을 체크하세요.
+       시험·전역·기념일·프로젝트 마감 등 어떤 날짜에도 사용할 수 있습니다.</p>
+
+    <h2>D-Day 표기 방법</h2>
+    <ul>
+      <li><b>D-30</b>: 목표일까지 30일 남음</li>
+      <li><b>D-DAY</b>: 오늘이 바로 그날</li>
+      <li><b>D+15</b>: 목표일이 15일 지남</li>
+    </ul>
+
+    <h3>100일·1000일은 왜 다르게 세나요?</h3>
+    <p>연애 기념일은 보통 <b>만난 날을 1일째</b>로 세기 때문에, 100일은 시작일로부터 99일 뒤가 됩니다.
+       이 계산기의 기념일 표는 이 방식(시작일=1일째)으로 100·200·300·500·1000·2000일을 자동 계산해,
+       각 기념일이 정확히 며칠(요일 포함)인지, 오늘 기준 며칠 남았는지를 보여줍니다.
+       커플 기념일뿐 아니라 아기 100일, 개업 1000일 등 다양한 기념일에 활용할 수 있습니다.</p>
+
+    <h2>이럴 때 쓰면 좋아요</h2>
+    <ul>
+      <li><b>시험·수능·자격증</b>까지 남은 날을 세어 공부 계획을 세울 때</li>
+      <li><b>전역·제대</b>, 입대일까지 카운트다운</li>
+      <li><b>결혼기념일·생일·기념일</b> 챙기기</li>
+      <li><b>프로젝트·계약 마감일</b> 관리</li>
+      <li><b>여행·콘서트·이벤트</b>까지 설레는 D-day 세기</li>
+    </ul>
+
+    <h2>자주 묻는 질문 (FAQ)</h2>
+    <h3>Q. 오늘이 목표일이면 어떻게 표시되나요?</h3>
+    <p>D-DAY로 표시됩니다. 하루 전은 D-1, 하루 뒤는 D+1입니다.</p>
+    <h3>Q. '시작일 포함'은 언제 체크하나요?</h3>
+    <p>숙박 일수나 연애 100일처럼 <b>첫날을 1일째로 세야 할 때</b> 체크합니다. 체크하면 세는 값이 1 늘어납니다.
+       순수하게 남은 날만 알고 싶다면 체크하지 마세요.</p>
+    <h3>Q. 지난 날짜(과거)도 셀 수 있나요?</h3>
+    <p>네. 과거 날짜를 넣으면 며칠이 지났는지 D+n으로 알려줍니다. 기념일이 며칠 됐는지 확인할 때 유용합니다.</p>
+
+    <div class="note">두 날짜 사이의 정확한 일수만 필요하다면 <a href="/ko/date-diff/">두 날짜 사이 일수 계산기</a>가 더 편리합니다.</div>
+  </article>
+
+  <div id="related"></div>
+</main>
+
+<footer id="site-footer"></footer>
+
+<script src="/assets/js/site.js"></script>
+<script>
+TECHA.initPage({
+  title: "D-Day 계산기",
+  desc: "목표일까지 남은 날과 100일·1000일 기념일을 계산합니다.",
+  category: "date",
+  slug: "dday",
+  related: ["age-calculator", "lotto", "char-counter"]
+});
+
+(function () {
+  var target = document.getElementById("target");
+  var incl = document.getElementById("incl");
+  var result = document.getElementById("result");
+  var msCard = document.getElementById("milestone-card");
+  var msEl = document.getElementById("milestones");
+
+  function today0() { var d = new Date(); d.setHours(0,0,0,0); return d; }
+  function fmt(d) { return d.getFullYear() + "." + pad(d.getMonth()+1) + "." + pad(d.getDate()) + " (" + "일월화수목금토"[d.getDay()] + ")"; }
+  function pad(n) { return (n < 10 ? "0" : "") + n; }
+
+  function calc() {
+    if (!target.value) {
+      result.className = "result empty";
+      result.textContent = "목표 날짜를 선택해 주세요.";
+      msCard.style.display = "none";
+      return;
+    }
+    var t = new Date(target.value); t.setHours(0,0,0,0);
+    var now = today0();
+    var diff = Math.round((t - now) / 86400000);
+    if (incl.checked && diff >= 0) diff += 1; // 시작일 포함(1일째)
+
+    var label, sub;
+    if (!incl.checked) {
+      if (diff > 0) { label = "D-" + diff; sub = "목표일까지 " + diff + "일 남았어요"; }
+      else if (diff === 0) { label = "D-DAY"; sub = "바로 오늘이에요! 🎉"; }
+      else { label = "D+" + Math.abs(diff); sub = Math.abs(diff) + "일 지났어요"; }
+    } else {
+      label = diff + "일째";
+      sub = "오늘을 1일째로 세면 " + diff + "일째 되는 날이에요";
+    }
+
+    result.className = "result";
+    result.innerHTML = '<div class="big">' + label + '</div><div class="sub">' + sub +
+      '</div><div class="sub">' + fmt(t) + '</div>';
+
+    renderMilestones(new Date(target.value));
+  }
+
+  function renderMilestones(start) {
+    start.setHours(0,0,0,0);
+    var points = [100, 200, 300, 500, 1000, 2000];
+    var now = today0();
+    var rows = points.map(function (p) {
+      var d = new Date(start.getTime() + (p - 1) * 86400000); // 시작일=1일째
+      var left = Math.round((d - now) / 86400000);
+      var status = left > 0 ? "D-" + left : (left === 0 ? "오늘" : "지남");
+      return '<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line)">' +
+        '<b>' + p + '일</b><span>' + fmt(d) + '</span><span style="color:var(--muted)">' + status + '</span></div>';
+    }).join("");
+    msEl.innerHTML = rows;
+    msCard.style.display = "block";
+  }
+
+  document.getElementById("calc").addEventListener("click", calc);
+  target.addEventListener("change", calc);
+  incl.addEventListener("change", calc);
+})();
+</script>
+</body>
+</html>
