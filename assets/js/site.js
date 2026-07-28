@@ -248,6 +248,6 @@
 
   window.TECHA = {
     SITE: SITE, APPS: APPS, CATS: CATS,
-    initPage: initPage, renderHome: renderHome
+    initPage: initPage, renderHome: renderHome, renderShopCTA: renderShopCTA
   };
 })();

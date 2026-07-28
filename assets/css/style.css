@@ -158,6 +158,10 @@ textarea { min-height: 160px; resize: vertical; line-height: 1.6; }
 .article h3 { font-size: 16px; margin: 18px 0 6px; }
 .article p, .article li { color: var(--body-text); font-size: 15px; }
 .article ul { padding-left: 20px; }
+.compare-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; display: block; overflow-x: auto; }
+.compare-table th, .compare-table td { padding: 8px 12px; border: 1px solid var(--hairline); text-align: left; white-space: nowrap; }
+.compare-table th { background: var(--amber-soft); color: var(--amber-strong-ink); font-weight: 700; }
+.compare-table tr:nth-child(even) td { background: var(--surface-card); }
 .article img { max-width: 100%; height: auto; border-radius: var(--radius-md); margin: 18px 0; display: block; }
 .article figure { margin: 18px 0; }
 .article figcaption { font-size: 13px; color: var(--amber-muted-ink); text-align: center; margin-top: 8px; }
