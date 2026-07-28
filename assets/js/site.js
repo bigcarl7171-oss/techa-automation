@@ -12,7 +12,7 @@
     tagline: "일상의 자잘한 고민, 여기서 끝",
     base: "https://www.techa.kr",
     shopUrl: "https://smartstore.naver.com/itecha", // TECHA 선물샵 (탄생화·탄생석 등에 선물 CTA 자동 노출)
-    gaId: "", // GA4 측정 ID(G-XXXXXXXXXX). 값을 채우면 전 페이지에서 자동으로 애널리틱스가 활성화됨
+    gaId: "G-SEQ155EHQ7", // GA4 측정 ID. 값을 채우면 전 페이지에서 자동으로 애널리틱스가 활성화됨
     coupangPartnersId: "AF354247" // 쿠팡 파트너스 ID. 아직 미사용 — 실제 상품 링크 삽입 시 이 값과 함께 필수 고지 문구를 넣을 것
   };
 
@@ -82,7 +82,7 @@
     el.innerHTML =
       '<div class="wrap">' +
       '  <a class="logo" href="/">테<b>차</b> 서랍</a>' +
-      '  <nav class="header-nav"><a href="/">전체 도구</a><a href="/blog/">테차 매거진</a></nav>' +
+      '  <nav class="header-nav"><a href="/blog/">테차 매거진</a><a href="/">전체 도구</a></nav>' +
       '</div>';
   }
 

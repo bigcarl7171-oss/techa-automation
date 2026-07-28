@@ -45,7 +45,7 @@
 <main class="wrap" style="max-width:640px">
   <div class="page-head" style="padding-top:20px">
     <h1>🛠️ 운영 체크리스트</h1>
-    <p class="lead">애드센스 승인 전까지의 준비 상태를 한눈에. 항목을 누르면 체크되고 브라우저에 저장됩니다.
+    <p class="lead">브랜드 보조사이트 전환 진행 상태를 한눈에. 항목을 누르면 체크되고 브라우저에 저장됩니다.
        (이 페이지는 검색에 노출되지 않는 운영자 전용 페이지입니다.)</p>
   </div>
 
@@ -88,14 +88,21 @@ var DATA = [
   { key:"stage3", title:"3단계 · 트래픽·바이럴 장치", emoji:"📣", items:[
     { id:"share", label:"결과 공유 버튼", note:"이름궁합·운세·별자리궁합·탄생화·탄생석·로또·메뉴룰렛", done:true },
     { id:"internalLink", label:"내부 링크(관련 도구)", note:"전체 앱 적용", done:true },
-    { id:"analytics", label:"방문 분석(Google Analytics 등)", note:"스캐폴딩 준비 완료 — site.js의 gaId에 측정 ID만 넣으면 전 페이지 자동 활성화", done:false }
+    { id:"analytics", label:"방문 분석(Google Analytics 등)", note:"GA4 연결 완료 (G-SEQ155EHQ7), 전 페이지 자동 활성화됨", done:true }
   ]},
   { key:"stage4", title:"4단계 · 수익화", emoji:"💰", items:[
-    { id:"techaCta", label:"TECHA 자사상품 CTA 연결", note:"탄생화·탄생석·이름궁합·별자리궁합 4곳 라이브", done:true },
+    { id:"techaCta", label:"TECHA 자사상품 CTA 연결", note:"탄생화·탄생석·이름궁합·별자리궁합 + D-day·두 날짜·만나이·오늘의운세 8곳 라이브 (2026-07-28 브랜드 보조사이트 전환에 맞춰 확대)", done:true },
     { id:"domain", label:"커스텀 도메인 구매·연결", note:"www.techa.kr + techa.kr 모두 Cloudflare Workers Custom Domain 연결 완료, 라이브 확인됨", done:true },
-    { id:"adsense", label:"Google AdSense 신청·승인", note:"도메인 연결 완료 — 신청 가능", done:false },
-    { id:"coupang", label:"쿠팡파트너스 등 제휴 링크", note:"파트너스 ID 등록 · 미디어(사이트) URL을 www.techa.kr로 갱신 완료 · 실제 상품 링크·고지 문구 삽입은 미착수", done:false },
-    { id:"premiumNetwork", label:"Ezoic/Mediavine 등 전환", note:"트래픽 성장 후", done:false }
+    { id:"adsense", label:"Google AdSense 신청·승인", note:"보류 — 2026-07-28부터 사이트 목적을 광고 수익에서 TECHA 브랜드 보조사이트로 전환. 재개 여부는 3개월 플랜 종료 시점(docs/brand-growth-3month-plan.md) 재검토", done:false },
+    { id:"coupang", label:"쿠팡파트너스 등 제휴 링크", note:"보류 — 브랜드 전용 전환 기간 동안 후순위", done:false },
+    { id:"premiumNetwork", label:"Ezoic/Mediavine 등 전환", note:"보류 — 애드센스와 같은 사유", done:false }
+  ]},
+  { key:"stage5", title:"5단계 · 브랜드 보조사이트 전환 (신규, 2026-07-28~)", emoji:"🌸", items:[
+    { id:"blogPivot", label:"테차 매거진 섹션 오픈", note:"blog/ 정적 발행 구조 + SEO 가이드(docs/blog-seo-guide.md) 완료, 1번째 글 발행", done:true },
+    { id:"naverSetup", label:"Google + Naver 서치어드바이저 등록", note:"둘 다 소유확인·사이트맵 제출 완료", done:true },
+    { id:"heroNav", label:"홈/네비게이션 브랜드 강조 조정", note:"히어로에 테차 언급 추가, 네비 순서를 매거진 우선으로 변경", done:true },
+    { id:"ga4", label:"GA4 활성화", note:"측정 ID G-SEQ155EHQ7 연결 완료 (스트림: www.techa.kr)", done:true },
+    { id:"shortsLink", label:"숏츠·인스타 → techa.kr 유입 연결", note:"인스타 바이오/하이라이트 링크, 숏츠 캡션에 매거진 언급 추가 (3개월 플랜 Month 1~2)", done:false }
   ]}
 ];
 
