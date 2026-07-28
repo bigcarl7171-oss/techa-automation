@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" href="/assets/icons/icon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<title>{{글 제목}} — 테차 매거진</title>
+<meta name="description" content="{{150자 내외 요약. 핵심 키워드를 자연스럽게 포함}}">
+<link rel="canonical" href="https://www.techa.kr/blog/{{slug}}/">
+<meta property="og:image" content="https://www.techa.kr/assets/og/og-default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.techa.kr/assets/og/og-default.png">
+<meta property="og:type" content="article">
+<meta property="og:title" content="{{글 제목}} — 테차 매거진">
+<meta property="og:description" content="{{요약}}">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&display=swap">
+<link rel="stylesheet" href="/assets/css/style.css">
+<script type="application/ld+json">
+{ "@context":"https://schema.org","@type":"BlogPosting",
+  "headline":"{{글 제목}}",
+  "description":"{{요약}}",
+  "datePublished":"{{YYYY-MM-DD}}",
+  "author": { "@type":"Organization", "name":"테차" },
+  "publisher": { "@type":"Organization", "name":"테차 서랍" },
+  "mainEntityOfPage":"https://www.techa.kr/blog/{{slug}}/",
+  "image":"https://www.techa.kr/assets/og/og-default.png" }
+</script>
+</head>
+<body>
+<header id="site-header"></header>
+<div id="page-head"></div>
+
+<main class="wrap">
+  <article class="article">
+    <h2>{{소제목 1}}</h2>
+    <p>{{본문. 실제 정보·경험 위주로 최소 500자. 키워드는 억지로 반복하지 말고 자연스럽게 2~3회.}}</p>
+
+    <h2>{{소제목 2}}</h2>
+    <p>{{본문}}</p>
+
+    <!-- 필요 시 소제목/문단 추가 -->
+
+    <div id="techa-cta" data-text="{{이 글과 어울리는 테차 선물 문구 (선택, 없으면 div 자체를 지워도 됨)}}"></div>
+  </article>
+</main>
+
+<footer id="site-footer"></footer>
+
+<script src="/assets/js/site.js"></script>
+<script>
+  TECHA.initPage({ title: "{{글 제목}}", desc: "{{한 줄 요약, page-head 아래 소개문으로 노출}}" });
+</script>
+</body>
+</html>

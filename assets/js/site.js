@@ -82,7 +82,7 @@
     el.innerHTML =
       '<div class="wrap">' +
       '  <a class="logo" href="/">테<b>차</b> 서랍</a>' +
-      '  <nav class="header-nav"><a href="/">전체 도구</a></nav>' +
+      '  <nav class="header-nav"><a href="/">전체 도구</a><a href="/blog/">테차 매거진</a></nav>' +
       '</div>';
   }
 
