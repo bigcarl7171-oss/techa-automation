@@ -238,7 +238,7 @@
     if (SITE.shopUrl) {
       el.innerHTML = '<div style="' + base + '">' +
         '<div style="font-weight:700;color:var(--amber-strong-ink);margin-bottom:10px">🌸 ' + text + '</div>' +
-        '<a class="btn btn-primary btn-sm" href="' + SITE.shopUrl + '" target="_blank" rel="noopener">테차 선물 보러가기 →</a></div>';
+        '<a class="btn btn-primary btn-sm" href="' + SITE.shopUrl + '" target="_blank" rel="noopener">테차 꽃 선물 보러가기 →</a></div>';
     } else {
       el.innerHTML = '<div style="' + base + 'opacity:.85">' +
         '<div style="font-weight:700;color:var(--amber-strong-ink)">🌸 ' + text + '</div>' +
