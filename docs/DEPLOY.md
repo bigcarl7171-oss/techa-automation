@@ -1,10 +1,19 @@
 # 배포 가이드 (무료)
 
+> ✅ **현재 이미 배포되어 있음** (2026-07-28 기준, Cloudflare 대시보드로 확인됨)
+> - Cloudflare Pages/Workers 프로젝트명: **techa-automation** (GitHub 저장소가 `techa-drawer`로
+>   이름 변경된 뒤에도 연결은 안 끊김 — 저장소 ID 기준 연결이라 이름 변경엔 영향 없음)
+> - **Production 브랜치는 `main`** — 아래 나머지 방법 A/B/C의 절차는 이미 완료된 최초 설정
+>   과정을 위해 남겨둔 기록이다. **`main`에 push할 때마다 즉시 techa.kr에 반영되니, 사이트
+>   파일(ko/, assets/, index.html 등)을 지우거나 옮기는 커밋은 반드시 신중하게.**
+> - 커스텀 도메인 **techa.kr** 연결 완료
+
 이 사이트는 순수 정적 파일이라 **무료 호스팅**만으로 배포됩니다.
 ⚠️ HTML이 절대경로(`/assets`, `/ko`)를 쓰므로 **도메인 루트에서 서비스하는 호스트**를 써야 합니다.
 → Cloudflare Pages / Vercel / Netlify ✅ · GitHub Pages 프로젝트 사이트 ❌(하위경로라 경로 깨짐)
 
-- 배포 브랜치: `claude/multi-app-landing-page-vsr0o9` (또는 main에 병합 후 main)
+- 배포 브랜치: **`main`** (아래 절차에 나오는 `claude/multi-app-landing-page-vsr0o9`는 최초 개발용
+  브랜치였고, 이후 main으로 병합되어 지금은 main이 배포 기준)
 - 빌드 과정 없음 · 출력 폴더 = 저장소 루트
 
 ---
@@ -13,7 +22,8 @@
 
 1. https://dash.cloudflare.com 가입(무료) → 로그인
 2. 좌측 **Workers & Pages** → **Create application** → **Pages** 탭 → **Connect to Git**
-3. GitHub 계정 연결 → 저장소 **techa-automation** 선택
+3. GitHub 계정 연결 → 저장소 **techa-drawer** 선택 (2026-07-28 이전엔 techa-automation이라는
+   이름이었음 — Cloudflare에 이미 연결되어 있다면 이름 변경만으로는 안 끊기니 그대로 둬도 됨)
 4. 설정 입력:
    - **Production branch**: `claude/multi-app-landing-page-vsr0o9`
    - **Framework preset**: `None`
@@ -25,7 +35,7 @@
 ## 방법 B. Vercel
 
 1. https://vercel.com 가입(GitHub 계정으로) → **Add New → Project**
-2. **techa-automation** 저장소 Import
+2. **techa-drawer** 저장소 Import
 3. Framework Preset: **Other** / Build & Output: 비움(정적)
 4. Branch를 `claude/multi-app-landing-page-vsr0o9`로 지정 → **Deploy**
 5. `https://<프로젝트명>.vercel.app` 생성
@@ -33,7 +43,7 @@
 ## 방법 C. Netlify
 
 1. https://app.netlify.com 가입 → **Add new site → Import an existing project** → GitHub
-2. **techa-automation** 선택 → Branch: `claude/multi-app-landing-page-vsr0o9`
+2. **techa-drawer** 선택 → Branch: `claude/multi-app-landing-page-vsr0o9`
 3. Build command: 비움 / **Publish directory**: `.`
 4. **Deploy** → `https://<프로젝트명>.netlify.app` 생성
 
@@ -54,6 +64,6 @@
 
 ---
 
-## 참고: main 브랜치로 배포하고 싶다면
-장기적으로는 기능 브랜치보다 `main` 배포가 깔끔합니다. 원하면 이 브랜치를 main에 병합(PR 머지)한 뒤,
-위 호스트의 Production branch를 `main`으로 바꾸면 됩니다. (병합은 사용자 승인 후 진행)
+## 참고: main 브랜치 배포 (완료된 상태)
+`claude/multi-app-landing-page-vsr0o9` 브랜치는 이미 main에 병합됐고, Cloudflare의 Production
+branch도 `main`으로 전환 완료. 즉 지금은 **main = 실서비스**다.
