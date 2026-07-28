@@ -178,6 +178,10 @@ textarea { min-height: 160px; resize: vertical; line-height: 1.6; }
   color: #b6ac9c; font-size: 12px; background: #fbf9f4;
 }
 
+/* ---------- 브랜드 배너 (애드센스 승인 전, 광고 슬롯 대체) ---------- */
+.brand-banner { margin: 22px 0; }
+.brand-banner img { width: 100%; height: auto; border-radius: var(--radius-md); display: block; }
+
 /* ---------- 홈 허브 ---------- */
 .hero { text-align: center; padding: 48px 0 22px; }
 .hero h1 {
