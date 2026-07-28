@@ -18,6 +18,10 @@
 1. `docs/blog-post-template.html`을 복사해 `/blog/<slug>/index.html`로 저장하고 `{{ }}` 채우기
    - slug: 영문 소문자 + 하이픈, 제목이 유추되게 (예: `preserved-flower-care`)
    - 본문 최소 500자, 실제 정보/경험 위주로 (짧고 성의없는 글은 순위에 불리)
+   - **대표 이미지**: 실제 사진을 `/blog/<slug>/cover.jpg`로 함께 넣기. `alt` 텍스트에 핵심
+     키워드를 자연스럽게 포함 (이미지 검색 유입 + 체류시간에 도움, 텍스트 순위엔 간접적 영향).
+     사진이 아직 없으면 이미지 태그를 비워두지 말고, 준비되는 대로 채울 것 — 대표 이미지 없이
+     발행하면 SNS 공유 미리보기도 기본 `og-default.png`로만 노출됨.
 2. `/blog/index.html`의 `#magazine-grid` 안에서 `<div class="magazine-empty">...` 플레이스홀더를
    지우고, 대신 `<div class="grid post-grid">`로 감싼 카드를 추가 (최신 글이 위로):
    ```html

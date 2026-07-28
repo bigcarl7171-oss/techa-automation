@@ -39,6 +39,12 @@
 
 <main class="wrap">
   <article class="article">
+    <!-- 대표 이미지: 글 폴더 안에 cover.jpg로 저장하고 alt에 핵심 키워드를 자연스럽게 포함 -->
+    <figure>
+      <img src="/blog/{{slug}}/cover.jpg" alt="{{이미지 내용 설명 — 핵심 키워드 포함}}" width="900" height="600" loading="eager">
+      <figcaption>{{사진 설명, 선택}}</figcaption>
+    </figure>
+
     <h2>{{소제목 1}}</h2>
     <p>{{본문. 실제 정보·경험 위주로 최소 500자. 키워드는 억지로 반복하지 말고 자연스럽게 2~3회.}}</p>
 
