@@ -3,6 +3,7 @@
 .github
 node_modules
 /docs
+/scripts
 *.md
 build.js
 wrangler.toml

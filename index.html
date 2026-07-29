@@ -70,7 +70,7 @@
   <div class="shell-main">
     <div class="shell-topbar">
       <div class="shell-search">
-        <input type="text" id="tool-search" placeholder="도구 이름으로 검색..." autocomplete="off">
+        <input type="text" id="tool-search" placeholder="도구·매거진 검색..." autocomplete="off">
         <button type="button" class="shell-search-icon" id="tool-search-btn" aria-label="검색">🔍</button>
         <div class="shell-search-results" id="tool-search-results"></div>
       </div>
@@ -232,44 +232,71 @@
       revealEls.forEach(function (el) { io.observe(el); });
     }
 
-    // 도구 검색 (띄어쓰기 무시, 이름+설명 전체에서 매칭 — "만나이"로 검색해도
-    // "만 나이 계산기"나 설명 속 단어까지 매칭됨)
+    // 사이트 검색 (띄어쓰기 무시, 도구 + 매거진 글의 제목/설명은 물론 본문
+    // 텍스트까지 매칭 — "만나이"로 검색해도 "만 나이 계산기"나 본문 속
+    // 단어까지 찾아짐. 본문은 scripts/build-search-index.js가 만든
+    // assets/data/search-index.json에서 비동기로 채워짐)
     var searchInput = document.getElementById("tool-search");
     var resultsEl = document.getElementById("tool-search-results");
     var liveApps = APPS.filter(function (a) { return a.status === "live"; });
+    var searchIndex = liveApps.map(function (a) {
+      return { emoji: a.emoji, title: a.name, desc: a.desc, path: a.path, tag: CATS[a.cat] ? CATS[a.cat].title : "", body: "" };
+    }).concat((TECHA.POSTS || []).map(function (p) {
+      return { emoji: p.emoji, title: p.title, desc: p.desc, path: p.path, tag: "매거진", body: "" };
+    }));
+
+    fetch("/assets/data/search-index.json").then(function (r) {
+      return r.ok ? r.json() : [];
+    }).then(function (data) {
+      var byPath = {};
+      data.forEach(function (d) { byPath[d.path] = d; });
+      searchIndex.forEach(function (item) {
+        if (byPath[item.path]) item.body = byPath[item.path].body || "";
+      });
+    }).catch(function () { /* 본문 검색 없이도 제목·설명 검색은 계속 동작 */ });
 
     function closeResults() {
       resultsEl.classList.remove("is-open");
       resultsEl.innerHTML = "";
     }
 
-    function renderResults(q) {
-      var matches = liveApps.filter(function (a) {
-        return (a.name + " " + a.desc).toLowerCase().replace(/\s+/g, "").indexOf(q) > -1;
+    function snippetFor(item, rawQuery) {
+      if (!item.body) return item.desc;
+      var idx = item.body.toLowerCase().indexOf(rawQuery.toLowerCase());
+      if (idx === -1) return item.desc;
+      var start = Math.max(0, idx - 16);
+      var end = Math.min(item.body.length, idx + rawQuery.length + 40);
+      return (start > 0 ? "…" : "") + item.body.slice(start, end).trim() + (end < item.body.length ? "…" : "");
+    }
+
+    function renderResults(q, rawQuery) {
+      var matches = searchIndex.filter(function (item) {
+        return (item.title + " " + item.desc + " " + item.body).toLowerCase().replace(/\s+/g, "").indexOf(q) > -1;
       });
       if (!matches.length) {
-        resultsEl.innerHTML = '<div class="shell-search-empty">"' + q + '"에 해당하는 도구가 없어요</div>';
+        resultsEl.innerHTML = '<div class="shell-search-empty">"' + rawQuery + '"에 해당하는 결과가 없어요</div>';
         resultsEl.classList.add("is-open");
         return;
       }
       var shown = matches.slice(0, 8);
       resultsEl.innerHTML =
         '<div class="shell-search-count">' + matches.length + '개 결과</div>' +
-        shown.map(function (a) {
-          return '<a class="shell-search-result" href="' + a.path + '">' +
-            '<span class="shell-search-result-emoji">' + a.emoji + '</span>' +
+        shown.map(function (item) {
+          return '<a class="shell-search-result" href="' + item.path + '">' +
+            '<span class="shell-search-result-emoji">' + item.emoji + '</span>' +
             '<div class="shell-search-result-info">' +
-              '<div class="shell-search-result-name">' + a.name + '</div>' +
-              '<div class="shell-search-result-desc">' + a.desc + '</div>' +
+              '<div class="shell-search-result-name">' + item.title + '</div>' +
+              '<div class="shell-search-result-desc">' + snippetFor(item, rawQuery) + '</div>' +
             '</div>' +
-            '<span class="shell-search-result-cat">' + (CATS[a.cat] ? CATS[a.cat].title : "") + '</span>' +
+            '<span class="shell-search-result-cat">' + item.tag + '</span>' +
           '</a>';
         }).join("");
       resultsEl.classList.add("is-open");
     }
 
     searchInput.addEventListener("input", function (e) {
-      var q = e.target.value.trim().toLowerCase().replace(/\s+/g, "");
+      var raw = e.target.value.trim();
+      var q = raw.toLowerCase().replace(/\s+/g, "");
 
       // 아래 전체 도구 테이블도 함께 필터링 (스크롤해서 카테고리별로 훑어볼 때 대비)
       document.querySelectorAll(".shell-tool-row").forEach(function (row) {
@@ -282,11 +309,12 @@
       });
 
       if (!q) { closeResults(); return; }
-      renderResults(q);
+      renderResults(q, raw);
     });
     searchInput.addEventListener("focus", function () {
-      var q = searchInput.value.trim().toLowerCase().replace(/\s+/g, "");
-      if (q) renderResults(q);
+      var raw = searchInput.value.trim();
+      var q = raw.toLowerCase().replace(/\s+/g, "");
+      if (q) renderResults(q, raw);
     });
     document.addEventListener("click", function (e) {
       if (!e.target.closest(".shell-search")) closeResults();

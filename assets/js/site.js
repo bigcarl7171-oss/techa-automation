@@ -74,6 +74,15 @@
     life:    { title: "생활", emoji: "🏠" }
   };
 
+  // ---------- 매거진 글 레지스트리 (홈 검색용) ----------
+  // 새 글 추가 시 이 배열과 blog/index.html의 카드를 함께 추가할 것
+  var POSTS = [
+    { title: "프리저브드 꽃, 조화 아니야? 사실은 진짜 생화입니다", emoji: "🌹",
+      desc: "조화와 뭐가 다른지, 어떻게 시들지 않는지 정리했습니다", path: "/blog/preserved-flower-real-flower/", date: "2026-07-29" },
+    { title: "한여름 생화, 유독 빨리 시드는 이유와 오래 보는 법", emoji: "🌸",
+      desc: "줄기 손질, 물 교체 주기 등 여름철 생화 관리 팁 5가지", path: "/blog/summer-fresh-flower-care/", date: "2026-07-28" }
+  ];
+
   // ---------- 헤더 주입 ----------
   function renderHeader() {
     var el = document.getElementById("site-header");
@@ -247,7 +256,7 @@
   }
 
   window.TECHA = {
-    SITE: SITE, APPS: APPS, CATS: CATS,
+    SITE: SITE, APPS: APPS, CATS: CATS, POSTS: POSTS,
     initPage: initPage, renderHome: renderHome, renderShopCTA: renderShopCTA
   };
 })();
