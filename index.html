@@ -63,8 +63,9 @@
   <div class="shell-main">
     <div class="shell-topbar">
       <div class="shell-search">
-        <input type="text" id="tool-search" placeholder="도구 이름으로 검색...">
+        <input type="text" id="tool-search" placeholder="도구 이름으로 검색..." autocomplete="off">
         <button type="button" class="shell-search-icon" id="tool-search-btn" aria-label="검색">🔍</button>
+        <div class="shell-search-results" id="tool-search-results"></div>
       </div>
       <div class="shell-topbar-actions">
         <a class="shell-icon-btn" href="/blog/" title="테차 매거진">📖</a>
@@ -189,7 +190,7 @@
       html += '<div class="shell-table-group reveal" id="cat-' + key + '" style="transition-delay:' + (Math.min(groupIndex, 4) * 0.05) + 's">';
       html += '<div class="shell-table-cat">' + CATS[key].emoji + ' ' + CATS[key].title + '</div>';
       apps.forEach(function (a) {
-        html += '<a class="shell-tool-row" href="' + a.path + '" data-name="' + a.name.toLowerCase() + '">' +
+        html += '<a class="shell-tool-row" href="' + a.path + '" data-name="' + (a.name + " " + a.desc).toLowerCase() + '">' +
           '<span class="shell-tool-emoji">' + a.emoji + '</span>' +
           '<div class="shell-tool-info"><div class="shell-tool-name">' + a.name + '</div><div class="shell-tool-desc">' + a.desc + '</div></div>' +
           '<span class="shell-tool-cat-tag">' + CATS[key].title + '</span>' +
@@ -218,9 +219,46 @@
       revealEls.forEach(function (el) { io.observe(el); });
     }
 
-    // 도구 검색 필터 (띄어쓰기 무시 — "만나이"로 검색해도 "만 나이 계산기" 매칭)
-    document.getElementById("tool-search").addEventListener("input", function (e) {
+    // 도구 검색 (띄어쓰기 무시, 이름+설명 전체에서 매칭 — "만나이"로 검색해도
+    // "만 나이 계산기"나 설명 속 단어까지 매칭됨)
+    var searchInput = document.getElementById("tool-search");
+    var resultsEl = document.getElementById("tool-search-results");
+    var liveApps = APPS.filter(function (a) { return a.status === "live"; });
+
+    function closeResults() {
+      resultsEl.classList.remove("is-open");
+      resultsEl.innerHTML = "";
+    }
+
+    function renderResults(q) {
+      var matches = liveApps.filter(function (a) {
+        return (a.name + " " + a.desc).toLowerCase().replace(/\s+/g, "").indexOf(q) > -1;
+      });
+      if (!matches.length) {
+        resultsEl.innerHTML = '<div class="shell-search-empty">"' + q + '"에 해당하는 도구가 없어요</div>';
+        resultsEl.classList.add("is-open");
+        return;
+      }
+      var shown = matches.slice(0, 8);
+      resultsEl.innerHTML =
+        '<div class="shell-search-count">' + matches.length + '개 결과</div>' +
+        shown.map(function (a) {
+          return '<a class="shell-search-result" href="' + a.path + '">' +
+            '<span class="shell-search-result-emoji">' + a.emoji + '</span>' +
+            '<div class="shell-search-result-info">' +
+              '<div class="shell-search-result-name">' + a.name + '</div>' +
+              '<div class="shell-search-result-desc">' + a.desc + '</div>' +
+            '</div>' +
+            '<span class="shell-search-result-cat">' + (CATS[a.cat] ? CATS[a.cat].title : "") + '</span>' +
+          '</a>';
+        }).join("");
+      resultsEl.classList.add("is-open");
+    }
+
+    searchInput.addEventListener("input", function (e) {
       var q = e.target.value.trim().toLowerCase().replace(/\s+/g, "");
+
+      // 아래 전체 도구 테이블도 함께 필터링 (스크롤해서 카테고리별로 훑어볼 때 대비)
       document.querySelectorAll(".shell-tool-row").forEach(function (row) {
         var name = row.getAttribute("data-name").replace(/\s+/g, "");
         row.style.display = (!q || name.indexOf(q) > -1) ? "" : "none";
@@ -229,9 +267,22 @@
         var visible = g.querySelectorAll('.shell-tool-row:not([style*="none"])').length;
         g.style.display = visible ? "" : "none";
       });
+
+      if (!q) { closeResults(); return; }
+      renderResults(q);
+    });
+    searchInput.addEventListener("focus", function () {
+      var q = searchInput.value.trim().toLowerCase().replace(/\s+/g, "");
+      if (q) renderResults(q);
+    });
+    document.addEventListener("click", function (e) {
+      if (!e.target.closest(".shell-search")) closeResults();
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") closeResults();
     });
     document.getElementById("tool-search-btn").addEventListener("click", function () {
-      document.getElementById("tool-search").focus();
+      searchInput.focus();
     });
   })();
 </script>
