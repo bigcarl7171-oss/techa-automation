@@ -69,7 +69,16 @@ body.landing .site-footer .wrap { max-width: 1320px; }
   background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius-pill);
   padding: 10px 16px;
 }
-.shell-search span { font-size: 14px; opacity: .6; }
+.shell-search-icon {
+  font-size: 14px; opacity: .6; line-height: 1; flex: none;
+  border: none; background: none; padding: 6px; margin: -6px; border-radius: 50%;
+  cursor: pointer; font-family: inherit;
+  transition: opacity 150ms ease, background-color 150ms ease, transform 120ms var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .shell-search-icon:hover { opacity: 1; background: var(--white); }
+}
+.shell-search-icon:active { transform: scale(0.88); }
 .shell-search input {
   border: none; background: none; outline: none; flex: 1;
   font-size: 14px; font-family: inherit; color: var(--brown);

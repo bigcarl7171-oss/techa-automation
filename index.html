@@ -64,7 +64,7 @@
     <div class="shell-topbar">
       <div class="shell-search">
         <input type="text" id="tool-search" placeholder="도구 이름으로 검색...">
-        <span>🔍</span>
+        <button type="button" class="shell-search-icon" id="tool-search-btn" aria-label="검색">🔍</button>
       </div>
       <div class="shell-topbar-actions">
         <a class="shell-icon-btn" href="/blog/" title="테차 매거진">📖</a>
@@ -229,6 +229,9 @@
         var visible = g.querySelectorAll('.shell-tool-row:not([style*="none"])').length;
         g.style.display = visible ? "" : "none";
       });
+    });
+    document.getElementById("tool-search-btn").addEventListener("click", function () {
+      document.getElementById("tool-search").focus();
     });
   })();
 </script>
