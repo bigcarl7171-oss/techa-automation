@@ -218,11 +218,12 @@
       revealEls.forEach(function (el) { io.observe(el); });
     }
 
-    // 도구 검색 필터
+    // 도구 검색 필터 (띄어쓰기 무시 — "만나이"로 검색해도 "만 나이 계산기" 매칭)
     document.getElementById("tool-search").addEventListener("input", function (e) {
-      var q = e.target.value.trim().toLowerCase();
+      var q = e.target.value.trim().toLowerCase().replace(/\s+/g, "");
       document.querySelectorAll(".shell-tool-row").forEach(function (row) {
-        row.style.display = (!q || row.getAttribute("data-name").indexOf(q) > -1) ? "" : "none";
+        var name = row.getAttribute("data-name").replace(/\s+/g, "");
+        row.style.display = (!q || name.indexOf(q) > -1) ? "" : "none";
       });
       document.querySelectorAll(".shell-table-group").forEach(function (g) {
         var visible = g.querySelectorAll('.shell-tool-row:not([style*="none"])').length;
