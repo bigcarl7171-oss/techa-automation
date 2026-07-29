@@ -3,7 +3,8 @@
    브랜드 표준: 수국 블루 / 무드등 앰버 / 크림 페이퍼 / 공방 브라운 / 잎사귀 그린
    =========================================================== */
 :root {
-  --blue: #6E82A6;   /* 수국 블루 — 포인트·신뢰 */
+  --blue: #6E82A6;   /* 수국 블루 — 배경·테두리·아이콘 */
+  --blue-ink: #4F6288; /* 수국 블루보다 진한 글자용 (대비 확보) */
   --amber: #EFB054;  /* 무드등 앰버 — CTA */
   --paper: #FAF7F1;  /* 크림 페이퍼 — 배경 */
   --brown: #3A322B;  /* 공방 브라운 — 텍스트 */
@@ -15,8 +16,8 @@
   --amber-border: #f0dca8;
   --amber-muted-ink: #8a7a54;
   --line: #e7e1d6;
-  --muted: #857c70;
-  --muted-soft: #a89e8f;
+  --muted: #6B6157;
+  --muted-soft: #756C61;
   --body-text: #4a4137;  /* article 본문용 보조 텍스트 */
   --white: #fffdf9;
   --radius-sm: 10px;   /* 버튼·인풋 */
@@ -43,12 +44,14 @@ body {
   background-attachment: fixed;
   line-height: 1.65;
   font-size: 16px;
+  word-break: keep-all;
+  overflow-wrap: break-word;
 }
 h1, h2, h3, .serif {
   font-family: "Gowun Batang", "Pretendard", serif;
   letter-spacing: -0.01em;
 }
-a { color: var(--blue); text-decoration: none; }
+a { color: var(--blue-ink); text-decoration: none; }
 a:hover { text-decoration: underline; }
 
 /* ---------- 레이아웃 ---------- */
@@ -126,7 +129,7 @@ textarea { min-height: 160px; resize: vertical; line-height: 1.6; }
   color: var(--amber-cta-ink);
   box-shadow: 0 1px 1px rgba(255,255,255,.5) inset, 0 6px 16px rgba(239,176,84,.35);
 }
-.btn-ghost { background: var(--blue-soft); color: var(--blue); border: 1px solid #dfe5ef; }
+.btn-ghost { background: var(--blue-soft); color: var(--blue-ink); border: 1px solid #dfe5ef; }
 @media (hover: hover) and (pointer: fine) {
   .btn-primary:hover { filter: brightness(1.04); text-decoration: none; transform: translateY(-1px); box-shadow: 0 1px 1px rgba(255,255,255,.5) inset, 0 10px 20px rgba(239,176,84,.4); }
   .btn-ghost:hover { filter: brightness(0.98); text-decoration: none; transform: translateY(-1px); }
@@ -143,7 +146,7 @@ textarea { min-height: 160px; resize: vertical; line-height: 1.6; }
   border-radius: var(--radius-md);
   text-align: center;
 }
-.result .big { font-family: "Gowun Batang", serif; font-size: 34px; font-weight: 700; color: var(--blue); }
+.result .big { font-family: "Gowun Batang", serif; font-size: 34px; font-weight: 700; color: var(--blue-ink); }
 .result .sub { color: var(--muted); font-size: 14px; margin-top: 4px; }
 .result.empty { color: var(--muted); background: var(--paper); }
 

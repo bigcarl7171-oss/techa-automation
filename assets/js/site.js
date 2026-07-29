@@ -102,7 +102,7 @@
     if (!el) return;
     var cat = CATS[opts.category];
     var crumb = '<a href="/">홈</a> › ' +
-      (cat ? '<a href="/#' + opts.category + '">' + cat.title + '</a> › ' : '') +
+      (cat ? '<a href="/#cat-' + opts.category + '">' + cat.title + '</a> › ' : '') +
       '<span>' + opts.title + '</span>';
     el.innerHTML =
       '<div class="wrap">' +
@@ -117,7 +117,7 @@
   function renderAdSlots() {
     var slots = document.querySelectorAll(".ad-slot");
     slots.forEach(function (s) {
-      if (!s.innerHTML.trim()) s.innerHTML = "광고 영역 (AdSense)";
+      if (!s.innerHTML.trim()) s.style.display = "none"; // 애드센스 보류 중 — 빈 자리 문구 대신 완전히 숨김
       /* AdSense 예시:
          <ins class="adsbygoogle" style="display:block"
               data-ad-client="ca-pub-XXXX" data-ad-slot="YYYY"
