@@ -9,7 +9,7 @@
   // 사이트 기본 정보 (배포 시 도메인만 교체)
   var SITE = {
     name: "테차 서랍",
-    tagline: "일상의 자잘한 고민, 여기서 끝",
+    tagline: "필요한 순간 바로 꺼내 쓰는 생활 도구 서랍",
     base: "https://www.techa.kr",
     shopUrl: "https://smartstore.naver.com/itecha", // TECHA 선물샵 (탄생화·탄생석 등에 선물 CTA 자동 노출)
     gaId: "G-SEQ155EHQ7", // GA4 측정 ID. 값을 채우면 전 페이지에서 자동으로 애널리틱스가 활성화됨
