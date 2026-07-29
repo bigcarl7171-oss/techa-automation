@@ -7,8 +7,8 @@
 <link rel="icon" href="/assets/icons/icon-32.png" type="image/png" sizes="32x32">
 <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
-<title>대출 이자 계산기 — 원리금균등·원금균등 상환 | 테차 서랍</title>
-<meta name="description" content="대출 원금, 연이율, 기간을 넣으면 월 상환액과 총 이자를 계산합니다. 원리금균등·원금균등 상환 방식을 비교하세요.">
+<title>대출 이자 계산기 — 거치기간·중도상환수수료·DSR까지 | 테차 서랍</title>
+<meta name="description" content="원리금균등·원금균등·만기일시상환에 거치기간까지 반영한 대출 이자 계산은 물론, 중도상환수수료와 DSR 참고 계산까지 한 번에.">
 <link rel="canonical" href="https://www.techa.kr/ko/loan/">
 <meta property="og:image" content="https://www.techa.kr/assets/og/og-default.png">
 <meta property="og:image:width" content="1200">
@@ -19,7 +19,7 @@
 <link rel="alternate" hreflang="x-default" href="https://www.techa.kr/ko/loan/">
 <meta property="og:type" content="website">
 <meta property="og:title" content="대출 이자 계산기 | 테차 서랍">
-<meta property="og:description" content="원리금균등·원금균등 월 상환액·총 이자 계산.">
+<meta property="og:description" content="원리금균등·원금균등·만기일시상환·중도상환수수료·DSR 계산.">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&display=swap">
@@ -31,12 +31,13 @@
 </script>
 <style>
   .seg{display:flex;gap:8px;margin-top:6px}
-  .seg button{flex:1;border:1px solid var(--line);background:var(--white);border-radius:var(--radius-sm);padding:10px;font-weight:600;cursor:pointer;color:var(--brown)}
+  .seg button{flex:1;border:1px solid var(--line);background:var(--white);border-radius:var(--radius-sm);padding:10px;font-weight:600;cursor:pointer;color:var(--brown);font-size:13px}
   .seg button.on{background:var(--blue);color:#fff;border-color:var(--blue)}
   .brk{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-top:14px}
   .brk .stat{background:var(--blue-soft);border-radius:var(--radius-sm);padding:12px;text-align:center}
   .brk .n{font-family:"Gowun Batang",serif;font-size:20px;font-weight:700;color:var(--blue)}
   .brk .l{font-size:12px;color:var(--muted)}
+  .card h3{margin:0 0 10px;font-size:16px}
 </style>
 </head>
 <body>
@@ -51,70 +52,163 @@
       💡 이 결과는 일반적인 기준으로 산출한 참고값입니다. 실제 금액은 개인별 조건과 최신 법령에 따라
       달라질 수 있으니, 정확한 확인은 홈택스·금융기관이나 전문가 상담을 통해 진행해 주세요.
     </div>
+    <h3>① 대출 이자 계산기</h3>
     <label class="field">상환 방식</label>
     <div class="seg" id="seg">
       <button class="on" data-m="equal">원리금균등</button>
       <button data-m="principal">원금균등</button>
+      <button data-m="bullet">만기일시상환</button>
     </div>
     <div class="row" style="margin-top:14px">
       <div><label class="field" for="p">대출 원금 (원)</label><input type="number" id="p" value="30000000" step="any"></div>
       <div><label class="field" for="r">연이율 (%)</label><input type="number" id="r" value="5" step="any"></div>
     </div>
-    <label class="field" for="y" style="margin-top:12px">대출 기간 (개월)</label>
-    <input type="number" id="y" value="36" step="1">
+    <div class="row" style="margin-top:12px">
+      <div><label class="field" for="y">대출 기간 (개월)</label><input type="number" id="y" value="36" step="1"></div>
+      <div id="graceWrap"><label class="field" for="grace">거치 기간 (개월) <span class="hint">(이자만 납부)</span></label><input type="number" id="grace" value="0" step="1"></div>
+    </div>
 
-    <div style="margin-top:16px"><button class="btn btn-primary btn-block" id="calc">계산하기</button></div>
-
-    <div class="result empty" id="result" style="margin-top:16px">값을 입력하고 계산하세요.</div>
+    <div class="result empty" id="result" style="margin-top:16px">값을 입력하면 계산됩니다.</div>
     <div class="brk" id="brk" style="display:none">
       <div class="stat"><div class="n" id="totalInt">-</div><div class="l">총 이자</div></div>
       <div class="stat"><div class="n" id="totalPay">-</div><div class="l">총 상환액</div></div>
     </div>
   </section>
 
+  <section class="card">
+    <h3>② 중도상환수수료 계산기</h3>
+    <div class="row">
+      <div>
+        <label class="field" for="peType">대출 종류</label>
+        <select id="peType">
+          <option value="0.75">부동산담보대출 · 고정형 (0.75%)</option>
+          <option value="0.55">부동산담보대출 · 변동형 (0.55%)</option>
+          <option value="0.18">신용대출 · 고정형 (0.18%)</option>
+          <option value="0.11">신용대출 · 변동형 (0.11%)</option>
+          <option value="custom">직접 입력</option>
+        </select>
+      </div>
+      <div><label class="field" for="peRate">수수료율 (%)</label><input type="number" id="peRate" value="0.75" step="any"></div>
+    </div>
+    <div class="row" style="margin-top:12px">
+      <div><label class="field" for="peAmount">중도상환 금액 (원)</label><input type="number" id="peAmount" value="10000000" step="any"></div>
+      <div><label class="field" for="peDays">대출 실행일로부터 경과일수</label><input type="number" id="peDays" value="365" step="1"></div>
+    </div>
+
+    <div class="result empty" id="peResult" style="margin-top:16px">값을 입력하면 계산됩니다.</div>
+    <p class="hint" style="margin-top:10px">대출 후 3년(1,095일)이 지나면 수수료가 없습니다. "매년 원금 10%
+      이내 면제" 특약은 <b>주로 주택담보대출</b>에 있고 신용대출엔 없는 경우가 많으니 약정서를 확인하세요.
+      인터넷전문은행 신용대출은 수수료 자체가 없는 경우도 많습니다.</p>
+  </section>
+
+  <section class="card">
+    <h3>③ DSR 참고 계산기</h3>
+    <label class="field" for="dsrIncome">연 소득 (원)</label>
+    <input type="number" id="dsrIncome" value="50000000" step="any">
+    <div class="row" style="margin-top:12px">
+      <div><label class="field" for="dsrOther">기존 대출 연간 원리금상환액</label><input type="number" id="dsrOther" value="0" step="any"></div>
+      <div><label class="field" for="dsrThis">이 대출의 연간 원리금상환액</label><input type="number" id="dsrThis" value="0" step="any"></div>
+    </div>
+    <label class="field" for="dsrLimit" style="margin-top:12px">적용 한도</label>
+    <select id="dsrLimit">
+      <option value="40">은행권 (40%)</option>
+      <option value="50">비은행권 (50%)</option>
+    </select>
+
+    <div class="result empty" id="dsrResult" style="margin-top:16px">값을 입력하면 계산됩니다.</div>
+    <p class="hint" style="margin-top:10px">2025-07 시행된 스트레스 DSR 3단계부터는 자동차 할부·학자금 등
+      모든 대출을 합산하고, 미래 금리 상승분(가산금리)까지 반영해 더 보수적으로 계산됩니다. 정확한 한도는
+      금융기관에서 확인하세요.</p>
+  </section>
+
   <div class="ad-slot"></div>
 
   <article class="article">
     <h2>대출 이자 계산기 사용법</h2>
-    <p>상환 방식을 고르고 대출 원금, 연이율, 기간(개월)을 입력하면 <b>매달 갚아야 할 금액과 총 이자, 총 상환액</b>이
-       한 번에 계산됩니다. 주택담보대출, 전세자금대출, 신용대출, 자동차 할부 등 원리금을 나눠 갚는 모든 대출의
-       상환 계획을 세우는 데 활용할 수 있습니다. 금리나 기간을 바꿔가며 비교하면 나에게 맞는 조건을 찾기 쉽습니다.</p>
+    <p>이 페이지는 3가지를 제공합니다. <b>① 대출 이자 계산</b>(원리금균등·원금균등·만기일시상환 + 거치기간),
+       <b>② 중도상환수수료 계산</b>, <b>③ DSR 참고 계산</b>까지 대출 상환 계획에 필요한 계산을 한 곳에서
+       끝낼 수 있습니다.</p>
 
-    <h2>원리금균등 vs 원금균등, 무엇이 다를까?</h2>
-    <p>대출 상환 방식은 크게 두 가지로 나뉘며, 매달 내는 돈과 총 이자가 서로 다릅니다.</p>
+    <h2>세 가지 상환 방식 비교</h2>
     <ul>
-      <li><b>원리금균등상환</b>: 원금과 이자를 합쳐 <b>매달 같은 금액</b>을 냅니다. 초반에는 이자 비중이 크고
-          갚아나갈수록 원금 비중이 커집니다. 매달 지출이 일정해 가계 계획을 세우기 쉬워 가장 많이 쓰이는 방식입니다.</li>
-      <li><b>원금균등상환</b>: <b>매달 갚는 원금은 동일</b>하고, 이자는 남은 원금에만 붙어 점점 줄어듭니다.
-          그래서 첫 달 상환액이 가장 크고 매달 조금씩 줄어듭니다. 초반 부담은 크지만 <b>전체 이자는 더 적게</b> 냅니다.</li>
+      <li><b>원리금균등상환</b>: 원금과 이자를 합쳐 매달 같은 금액을 냅니다. 매달 지출이 일정해 가장 많이
+         쓰이는 방식입니다.</li>
+      <li><b>원금균등상환</b>: 매달 갚는 원금은 동일하고 이자는 남은 원금에만 붙어 점점 줄어듭니다. 초반
+         부담은 크지만 전체 이자는 더 적습니다.</li>
+      <li><b>만기일시상환</b>: 만기까지 <b>이자만</b> 내다가, 만기일에 원금을 한 번에 상환합니다. 매달
+         부담은 가장 적지만 원금이 줄지 않아 <b>총 이자 부담은 세 방식 중 가장 큽니다.</b></li>
     </ul>
+
+    <h2>거치기간이란</h2>
+    <p>거치기간 동안은 원금 상환 없이 <b>이자만</b> 납부하고, 거치기간이 끝난 뒤부터 남은 기간 동안
+       원금(+이자)을 갚기 시작합니다. 원금이 줄지 않는 기간이 늘어나는 만큼 총 이자는 늘어나지만, 초기
+       상환 부담을 줄일 수 있어 사업자금·전세자금 대출 등에서 자주 활용됩니다.</p>
 
     <h2>계산 공식</h2>
     <p><b>원리금균등:</b> 월 상환액 = 원금 × 월이율 × (1+월이율)<sup>개월</sup> ÷ ((1+월이율)<sup>개월</sup> − 1)</p>
     <p><b>원금균등:</b> 매달 원금 = 원금 ÷ 개월, 매달 이자 = 남은 원금 × 월이율</p>
-    <p>여기서 월이율 = 연이율 ÷ 12 ÷ 100 입니다.</p>
+    <p><b>만기일시상환:</b> 월 이자 = 원금 × 월이율, 만기 시 원금 전액 + 마지막 달 이자 상환</p>
+    <p>여기서 월이율 = 연이율 ÷ 12 ÷ 100 입니다. 거치기간이 있으면 거치 동안은 이자만 계산하고, 남은
+       기간(전체 기간 − 거치기간)에 대해 위 공식을 적용합니다.</p>
 
-    <h3>예시</h3>
-    <p>3,000만 원을 연 5%로 36개월(3년) 빌리는 경우, 원리금균등 방식이면 매달 약 899,127원씩 갚고
-       총 이자는 약 236만 원입니다. 같은 조건에서 원금균등이면 첫 달이 가장 크고 점점 줄어들며 총 이자는 더 적습니다.</p>
+    <h2>중도상환수수료 계산 방법</h2>
+    <p><b>수수료 = 상환금액 × 수수료율 × (잔여일수 ÷ 1,095일)</b> — 대출 후 날짜가 지날수록 수수료가
+       매일 조금씩 줄어드는 슬라이딩 방식입니다. 2026년 기준 수수료율은 부동산담보대출 변동형 0.55%/고정형
+       0.75%, 신용대출 변동형 0.11%/고정형 0.18% 수준이며, 상품·은행마다 다를 수 있습니다.</p>
+
+    <h2>DSR(총부채원리금상환비율)이란</h2>
+    <p>DSR = (모든 대출의 연간 원리금상환액 합계) ÷ 연 소득 × 100. 은행권은 40%, 비은행권은 50%가 일반적인
+       한도입니다. 2025-07 시행된 <b>스트레스 DSR 3단계</b>부터는 미래 금리 상승분을 가산금리(수도권 기준
+       약 1.5%p)로 얹어 더 보수적으로 계산하기 때문에, 실제 대출 한도가 이전보다 10~15% 정도 줄어드는
+       경우가 많습니다.</p>
+
+    <h2>참고: 2026년 시장금리 예시 (변동성 큰 정보)</h2>
+    <table class="compare-table">
+      <thead><tr><th>대출 종류</th><th>금리대(예시)</th></tr></thead>
+      <tbody>
+        <tr><td>주택담보대출 (혼합형)</td><td>연 4.1~6.3%</td></tr>
+        <tr><td>신용대출 (1년 만기)</td><td>연 4.0~5.4%</td></tr>
+      </tbody>
+    </table>
+    <div class="note">시장금리는 매주 바뀌는 정보라 위 표는 참고 예시일 뿐입니다. 정확한 최신 금리는
+       전국은행연합회 소비자포털(portal.kfb.or.kr)에서 은행별로 비교하세요.</div>
+
+    <h2>정책서민금융상품 (햇살론, 2026년 개편)</h2>
+    <p>저신용·저소득자를 위한 정책 대출도 참고할 만합니다. 2026년부터 <b>일반보증(저신용자)</b>과
+       <b>특례보증(최저신용자)</b> 2종으로 통합됐습니다.</p>
+    <ul>
+      <li><b>대상</b>: 연소득 3,500만원 이하(신용점수 무관), 또는 연소득 4,500만원 이하이면서 신용점수 하위 20%</li>
+      <li><b>한도·금리</b>: 최대 1,500만원, 연 10% 이내, 최대 5년</li>
+      <li><b>중도상환수수료 없음</b> — 여유가 생기면 언제든 부담 없이 갚을 수 있습니다</li>
+    </ul>
 
     <h2>이자를 줄이는 팁</h2>
     <ul>
       <li>여유가 있다면 <b>상환 기간을 짧게</b> 잡을수록 총 이자가 줄어듭니다.</li>
       <li>초반 부담을 감당할 수 있다면 <b>원금균등</b>이 총 이자 면에서 유리합니다.</li>
       <li>우대금리(급여이체·카드실적 등) 조건을 챙기면 실질 금리를 낮출 수 있습니다.</li>
-      <li>여윳돈으로 <b>중도상환</b>하면 남은 이자를 아낄 수 있으나, 중도상환수수료를 함께 따져봐야 합니다.</li>
+      <li>여윳돈으로 중도상환할 계획이라면, <b>3년이 지난 뒤</b> 갚으면 수수료가 없습니다. "매년 원금 10%
+         이내는 면제"라는 조건은 <b>주로 주택담보대출</b>에 있는 특약이라 신용대출엔 적용 안 되는 경우가
+         많으니 약정서를 확인하세요.</li>
+      <li>카카오뱅크·케이뱅크·토스뱅크 같은 <b>인터넷전문은행 신용대출은 중도상환수수료 자체가 없는</b>
+         경우가 많아, 중도상환 계획이 있다면 비교해볼 만합니다.</li>
     </ul>
 
     <h2>자주 묻는 질문 (FAQ)</h2>
-    <h3>Q. 거치기간이 있으면 계산이 달라지나요?</h3>
-    <p>네. 거치기간에는 이자만 내고 원금은 그대로 남습니다. 이 계산기는 거치 없이 바로 원리금을 갚는 기준이므로,
-       거치기간이 있는 상품은 실제 상환액이 달라질 수 있습니다.</p>
     <h3>Q. 고정금리와 변동금리는 어떻게 반영하나요?</h3>
     <p>이 계산기는 입력한 금리가 만기까지 유지된다고 가정합니다. 변동금리는 시장에 따라 바뀌므로,
        예상 금리를 넣어 시나리오별로 비교해 보는 용도로 활용하세요.</p>
+    <h3>Q. 만기일시상환은 왜 총 이자가 더 많이 나오나요?</h3>
+    <p>원금이 만기까지 전혀 줄지 않고 그대로 유지되기 때문에, 매달 내는 이자가 항상 "원금 전액 기준"으로
+       계산됩니다. 원금균등·원리금균등은 갚아나갈수록 이자가 붙는 원금이 줄어들어 총 이자가 더 적습니다.</p>
+    <h3>Q. DSR에 포함되지 않는 대출도 있나요?</h3>
+    <p>네, 다음은 개인별 DSR 산정에서 제외되는 대표적인 경우입니다: <b>무주택자의 전세자금대출</b>(1주택자가
+       추가로 받는 전세대출은 포함), 분양주택 <b>중도금대출</b>, 재건축·재개발 <b>이주비대출</b>, <b>주택연금
+       (역모기지론)</b>, <b>300만원 이하 소액 신용대출</b>, 새희망홀씨 등 <b>서민금융상품</b>. 정확한 포함
+       여부는 대출 심사 시 금융기관에서 최종 안내받으세요.</p>
 
-    <div class="note">실제 대출은 중도상환수수료·우대금리·거치기간·수수료 등에 따라 달라질 수 있습니다. 참고용으로 활용하고 정확한 조건은 금융기관에 확인하세요.</div>
+    <div class="note">실제 대출은 중도상환수수료·우대금리·거치기간·DSR 산정 방식 등에 따라 달라질 수
+       있습니다. 참고용으로 활용하고 정확한 조건은 금융기관에 확인하세요.</div>
   </article>
 
   <div id="related"></div>
@@ -124,43 +218,101 @@
 
 <script src="/assets/js/site.js"></script>
 <script>
-TECHA.initPage({ title:"대출 이자 계산기", desc:"원리금균등·원금균등 방식의 월 상환액과 총 이자를 계산합니다.", category:"money", slug:"loan", related:["compound","vat","margin"] });
+TECHA.initPage({ title:"대출 이자 계산기", desc:"거치기간·중도상환수수료·DSR까지 계산합니다.", category:"money", slug:"loan", related:["compound","vat","margin"] });
 (function(){
+  // ---------- ① 대출 이자 계산 ----------
   var mode="equal";
-  var seg=document.getElementById("seg");
+  var seg=document.getElementById("seg"), graceWrap=document.getElementById("graceWrap");
   seg.querySelectorAll("button").forEach(function(b){
-    b.addEventListener("click",function(){ mode=b.dataset.m; seg.querySelectorAll("button").forEach(function(x){x.classList.toggle("on",x===b);}); calc(); });
+    b.addEventListener("click",function(){
+      mode=b.dataset.m;
+      seg.querySelectorAll("button").forEach(function(x){x.classList.toggle("on",x===b);});
+      graceWrap.style.display = (mode==="bullet") ? "none" : "";
+      calc();
+    });
   });
   function won(n){ return Math.round(n).toLocaleString()+"원"; }
+  function num(el){ return parseFloat(el.value)||0; }
   var result=document.getElementById("result"), brk=document.getElementById("brk");
   function calc(){
-    var P=parseFloat(document.getElementById("p").value);
+    var P=num(document.getElementById("p"));
     var annual=parseFloat(document.getElementById("r").value);
     var n=parseInt(document.getElementById("y").value);
+    var grace=Math.max(0, parseInt(document.getElementById("grace").value)||0);
     if(!P||!n||n<1||isNaN(annual)){ result.className="result empty"; result.textContent="값을 정확히 입력하세요."; brk.style.display="none"; return; }
     var i=annual/12/100;
-    var totalInterest, firstPay, sub;
-    if(mode==="equal"){
-      var pay = i===0 ? P/n : P*i*Math.pow(1+i,n)/(Math.pow(1+i,n)-1);
-      totalInterest = pay*n - P;
+    var totalInterest;
+
+    if(mode==="bullet"){
+      var monthlyInt = P*i;
+      totalInterest = monthlyInt*n;
       result.className="result";
-      result.innerHTML='<div class="big">월 '+won(pay)+'</div><div class="sub">매달 동일 상환 · '+n+'개월</div>';
+      result.innerHTML='<div class="big">월 이자 '+won(monthlyInt)+'</div><div class="sub">만기(마지막 달)에 원금 '+won(P)+' + 이자 '+won(monthlyInt)+' 상환</div>';
     } else {
-      var principalEach = P/n;
-      firstPay = principalEach + P*i;      // 첫 달(가장 큼)
-      var lastPay = principalEach + principalEach*i; // 마지막 달
-      // 총 이자 = 원금 * i * (n+1)/2 (원금균등)
-      totalInterest = P*i*(n+1)/2;
-      result.className="result";
-      result.innerHTML='<div class="big">첫 달 '+won(firstPay)+'</div><div class="sub">매달 감소 · 마지막 달 '+won(lastPay)+'</div>';
+      grace = Math.min(grace, n-1);
+      var repayMonths = n - grace;
+      var graceInterestTotal = P*i*grace;
+      if(mode==="equal"){
+        var pay = i===0 ? P/repayMonths : P*i*Math.pow(1+i,repayMonths)/(Math.pow(1+i,repayMonths)-1);
+        var afterGraceInterest = pay*repayMonths - P;
+        totalInterest = graceInterestTotal + afterGraceInterest;
+        result.className="result";
+        result.innerHTML = grace>0
+          ? '<div class="big">거치 후 월 '+won(pay)+'</div><div class="sub">거치 '+grace+'개월(월 이자 '+won(P*i)+') → 이후 '+repayMonths+'개월 균등상환</div>'
+          : '<div class="big">월 '+won(pay)+'</div><div class="sub">매달 동일 상환 · '+n+'개월</div>';
+      } else {
+        var principalEach = P/repayMonths;
+        var firstPay = principalEach + P*i;
+        var lastPay = principalEach + principalEach*i;
+        var afterGraceInterest2 = P*i*(repayMonths+1)/2;
+        totalInterest = graceInterestTotal + afterGraceInterest2;
+        result.className="result";
+        result.innerHTML = grace>0
+          ? '<div class="big">거치 후 첫 달 '+won(firstPay)+'</div><div class="sub">거치 '+grace+'개월(월 이자 '+won(P*i)+') → 이후 매달 감소, 마지막 달 '+won(lastPay)+'</div>'
+          : '<div class="big">첫 달 '+won(firstPay)+'</div><div class="sub">매달 감소 · 마지막 달 '+won(lastPay)+'</div>';
+      }
     }
     document.getElementById("totalInt").textContent=won(totalInterest);
     document.getElementById("totalPay").textContent=won(P+totalInterest);
     brk.style.display="grid";
   }
-  ["p","r","y"].forEach(function(id){ document.getElementById(id).addEventListener("input",calc); });
-  document.getElementById("calc").addEventListener("click",calc);
+  ["p","r","y","grace"].forEach(function(id){ document.getElementById(id).addEventListener("input",calc); });
   calc();
+
+  // ---------- ② 중도상환수수료 계산기 ----------
+  var peType=document.getElementById("peType"), peRate=document.getElementById("peRate");
+  var peAmount=document.getElementById("peAmount"), peDays=document.getElementById("peDays"), peResult=document.getElementById("peResult");
+  peType.addEventListener("change", function(){
+    if (peType.value === "custom") return;
+    peRate.value = peType.value;
+    peCalc();
+  });
+  function peCalc(){
+    var amount=num(peAmount), days=num(peDays), rate=num(peRate);
+    if (amount<=0){ peResult.className="result empty"; peResult.textContent="중도상환 금액을 입력하세요."; return; }
+    var remainDays = Math.max(0, 1095-days);
+    var fee = amount * rate/100 * (remainDays/1095);
+    peResult.className="result";
+    peResult.innerHTML = remainDays<=0
+      ? '<div class="big">수수료 없음</div><div class="sub">대출 후 3년(1,095일)이 지나 중도상환수수료가 면제됩니다</div>'
+      : '<div class="big">수수료 '+won(fee)+'</div><div class="sub">잔여일수 '+remainDays+'일 / 1,095일 기준</div>';
+  }
+  [peAmount,peDays,peRate].forEach(function(el){ el.addEventListener("input", peCalc); });
+  peCalc();
+
+  // ---------- ③ DSR 참고 계산기 ----------
+  var dsrIncome=document.getElementById("dsrIncome"), dsrOther=document.getElementById("dsrOther"), dsrThis=document.getElementById("dsrThis");
+  var dsrLimit=document.getElementById("dsrLimit"), dsrResult=document.getElementById("dsrResult");
+  function dsrCalc(){
+    var income=num(dsrIncome), other=num(dsrOther), thisLoan=num(dsrThis), limit=parseFloat(dsrLimit.value)||0;
+    if (income<=0){ dsrResult.className="result empty"; dsrResult.textContent="연 소득을 입력하세요."; return; }
+    var dsr = (other+thisLoan)/income*100;
+    var over = dsr > limit;
+    dsrResult.className="result";
+    dsrResult.innerHTML = '<div class="big">DSR '+(Math.round(dsr*10)/10)+'%</div><div class="sub">'+(over ? "⚠️ 한도("+limit+"%) 초과" : "한도("+limit+"%) 이내")+'</div>';
+  }
+  [dsrIncome,dsrOther,dsrThis,dsrLimit].forEach(function(el){ el.addEventListener("input", dsrCalc); el.addEventListener("change", dsrCalc); });
+  dsrCalc();
 })();
 </script>
 </body>
