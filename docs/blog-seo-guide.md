@@ -7,12 +7,17 @@
 ## 구조 원칙 (왜 게시판이 아닌가)
 - DB·로그인 있는 게시판 없음. 글 하나 = 정적 HTML 파일 하나 (`/blog/<slug>/index.html`).
   사이트 전체가 빌드 과정 없는 정적 HTML이라 (`build-principles.md`), 이 원칙을 그대로 따른다.
-- **글 목록(`/blog/index.html`)과 홈 티저(`index.html`의 `#magazine-teaser`)에 들어가는
-  글 링크는 반드시 HTML 소스에 직접 작성한다. JS로 생성하지 않는다.**
+- **글 목록(`/blog/index.html`)과 홈페이지(`index.html`)에 들어가는 글 링크는 반드시
+  HTML 소스에 직접 작성한다. JS로 생성하지 않는다.**
   → 네이버 크롤러(Yeti)는 구글봇보다 JS 렌더링을 신뢰할 수 없게 처리한다. JS가
   런타임에 만들어내는 `<a>` 링크는 네이버가 아예 못 볼 수 있음. (2026-07-28 이전에는
   `site.js`의 `POSTS` 배열 + JS 렌더링 방식이었으나, 이 문제 때문에 정적 HTML 방식으로
   변경함 — `renderMagazineTeaser`/`renderMagazineList`/`POSTS` 삭제됨.)
+- **2026-07-29 랜딩페이지 리디자인**: `index.html`이 대시보드형 구조(사이드바 + 상단
+  검색바 + 히어로 + 통계칩 + 매거진 카루셀 + 도구 테이블 + 오른쪽 위젯)로 바뀌면서,
+  `#magazine-teaser`는 더 이상 존재하지 않는다. 홈페이지에서 글 링크가 나오는 곳은
+  두 군데다 — 아래 "새 글 발행 절차" 3번 참고. 스타일은 `assets/css/landing.css`
+  (이 페이지 전용, 다른 페이지에 영향 없음)에 있다.
 
 ## 발행 전 확인 (필수)
 글 파일을 만들었다고 바로 commit/push하지 않는다. **초안(본문 + 이미지)을 먼저 보여주고,
@@ -77,8 +82,26 @@
    </div>
    ```
    (플레이스홀더를 `.grid` 안에 넣지 말 것 — 카드 1개만 있을 때 그리드 트랙 폭에 눌려 좁게 보임.)
-3. `index.html`의 `#magazine-teaser` 안 `.grid.post-grid`에도 같은 카드를 추가 —
-   단, 홈 티저는 **최신 2~3개만** 유지하고 오래된 카드는 제거한다.
+3. `index.html`에는 글 링크가 **두 군데** 있다. 둘 다 최신 글 기준으로 갱신하고, 오래된
+   카드는 지운다 (현재 둘 다 정확히 2개씩 유지):
+   - `.shell-carousel` 안 (테차 매거진 섹션) — 카드 형태, 커버 이미지 필요:
+     ```html
+     <a class="shell-mag-card" href="/blog/<slug>/">
+       <img src="/blog/<slug>/cover.jpg" alt="{{이미지 설명}}" loading="lazy">
+       <span class="shell-mag-tag">🌸 {{태그}}</span>
+       <div class="shell-mag-body">
+         <div class="shell-mag-title">{{글 제목}}</div>
+         <div class="shell-mag-byline"><span class="shell-mag-avatar">🌿</span> 테차 매거진</div>
+       </div>
+     </a>
+     ```
+   - `.shell-right`의 "테차 매거진" 위젯 안 (`.shell-widget-head` 다음) — 목록 행 형태, 이미지 불필요:
+     ```html
+     <a class="shell-mag-row" href="/blog/<slug>/">
+       <span class="shell-mag-row-icon">🌸</span>
+       <div><div class="shell-mag-row-title">{{글 제목(짧게)}}</div><div class="shell-mag-row-date">{{YYYY-MM-DD}}</div></div>
+     </a>
+     ```
 4. `sitemap.xml`에 새 URL 한 줄 추가 (`<url><loc>https://www.techa.kr/blog/<slug>/</loc>...`)
 5. **구글**: Search Console → URL 검사 → 색인 생성 요청 (자동 크롤링을 기다리지 않고 직접 요청하면 반영이 빠름)
 6. **네이버**: 서치어드바이저(searchadvisor.naver.com) → 요청 → 웹 페이지 수집 요청으로

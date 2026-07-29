@@ -25,60 +25,188 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&display=swap">
 <link rel="stylesheet" href="/assets/css/style.css">
+<link rel="stylesheet" href="/assets/css/landing.css">
 <script type="application/ld+json">
 { "@context":"https://schema.org","@type":"WebSite","name":"테차 서랍",
   "url":"/","description":"일상의 자잘한 고민, 여기서 끝" }
 </script>
 </head>
-<body>
-<header id="site-header"></header>
+<body class="landing">
 
-<main class="wrap">
-  <section id="magazine-teaser" class="magazine-teaser">
-    <div class="magazine-teaser-head">
-      <span class="magazine-teaser-title">📖 테차 매거진</span>
-      <a class="magazine-more" href="/blog/">전체 보기 →</a>
-    </div>
-    <div class="grid post-grid">
-      <a class="app-card post-card" href="/blog/preserved-flower-real-flower/">
-        <div class="emoji">🌹</div>
-        <div class="name">프리저브드 꽃, 조화 아니야? — 사실은 진짜 생화입니다</div>
-        <div class="desc">조화와 뭐가 다른지, 어떻게 시들지 않는지 정리했습니다</div>
-        <div class="post-date">2026-07-29</div>
-      </a>
-      <a class="app-card post-card" href="/blog/summer-fresh-flower-care/">
-        <div class="emoji">🌸</div>
-        <div class="name">한여름 생화, 유독 빨리 시드는 이유와 오래 보는 법</div>
-        <div class="desc">줄기 손질, 물 교체 주기 등 여름철 생화 관리 팁 5가지</div>
-        <div class="post-date">2026-07-28</div>
-      </a>
-    </div>
-  </section>
+<div class="shell">
+  <aside class="shell-sidebar">
+    <a class="shell-logo" href="/">🌿 <b>테차</b> 서랍</a>
 
-  <!-- OWNER-ONLY: 애드센스 승인 후 이 div 전체(owner-banner) 삭제할 것 -->
-  <div id="owner-banner" style="margin:16px 0 0;padding:10px 16px;border-radius:10px;background:#eef1f6;border:1px solid #dfe5ef;font-size:13px;color:#556;text-align:center">
-    🛠️ <a href="/status/" style="font-weight:700">운영 체크리스트 보기</a> — 브랜드 보조사이트 전환 진행 상태 확인 (검색에는 노출되지 않음)
+    <nav class="shell-nav">
+      <div class="shell-nav-label">카테고리</div>
+      <a href="#cat-date">📆 날짜·시간</a>
+      <a href="#cat-calc">🧮 계산·변환</a>
+      <a href="#cat-money">💰 금융·재테크</a>
+      <a href="#cat-health">💪 건강</a>
+      <a href="#cat-fortune">🔮 운세·감성</a>
+      <a href="#cat-text">✍️ 텍스트 도구</a>
+      <a href="#cat-fun">🎲 재미·추첨</a>
+    </nav>
+
+    <nav class="shell-nav">
+      <div class="shell-nav-label">테차</div>
+      <a href="/blog/">📖 테차 매거진</a>
+      <a href="https://smartstore.naver.com/itecha" target="_blank" rel="noopener">🌸 테차 선물샵</a>
+    </nav>
+
+    <nav class="shell-nav shell-nav-bottom">
+      <div class="shell-nav-label">안내</div>
+      <a href="/about/">ℹ️ 사이트 소개</a>
+      <a href="/contact/">✉️ 문의하기</a>
+    </nav>
+  </aside>
+
+  <div class="shell-main">
+    <div class="shell-topbar">
+      <div class="shell-search">
+        <span>🔍</span>
+        <input type="text" id="tool-search" placeholder="도구 이름으로 검색...">
+      </div>
+      <div class="shell-topbar-actions">
+        <a class="shell-icon-btn" href="/blog/" title="테차 매거진">📖</a>
+        <a class="shell-icon-btn" href="/contact/" title="문의하기">✉️</a>
+        <a class="shell-cta-pill" href="https://smartstore.naver.com/itecha" target="_blank" rel="noopener">🌸 테차 선물샵</a>
+      </div>
+    </div>
+
+    <!-- OWNER-ONLY: 브랜드 보조사이트 전환 완료 후 이 div 전체(owner-banner) 삭제할 것 -->
+    <div id="owner-banner" style="margin:0 0 16px;padding:10px 16px;border-radius:10px;background:#eef1f6;border:1px solid #dfe5ef;font-size:13px;color:#556;text-align:center">
+      🛠️ <a href="/status/" style="font-weight:700">운영 체크리스트 보기</a> — 브랜드 보조사이트 전환 진행 상태 확인 (검색에는 노출되지 않음)
+    </div>
+
+    <section class="shell-hero">
+      <span class="shell-hero-badge">FREE ONLINE TOOLS</span>
+      <h1>일상의 자잘한 고민,<br>여기서 끝</h1>
+      <p>설치도 회원가입도 없이, 필요한 계산과 도구를 바로 사용하세요.</p>
+      <a class="shell-hero-cta" href="#tool-table-head">도구 둘러보기 →</a>
+      <p class="shell-hero-note">🌿 시들지 않는 꽃, <b>테차</b>가 만든 도구 서랍입니다 · <a href="/blog/" style="color:#fff;text-decoration:underline">테차 매거진 보기</a></p>
+    </section>
+
+    <div class="shell-stats" id="shell-stats"></div>
+
+    <div class="shell-section-head">
+      <h2>📖 테차 매거진</h2>
+      <a href="/blog/">전체 보기 →</a>
+    </div>
+    <div class="shell-carousel">
+      <a class="shell-mag-card" href="/blog/preserved-flower-real-flower/">
+        <img src="/blog/preserved-flower-real-flower/bouquet-blue-rose-detail.jpg" alt="파란 장미와 수국이 담긴 프리저브드 플라워 꽃다발" loading="lazy">
+        <span class="shell-mag-tag">🌸 시들지 않는 꽃</span>
+        <div class="shell-mag-body">
+          <div class="shell-mag-title">프리저브드 꽃, 조화 아니야? — 사실은 진짜 생화입니다</div>
+          <div class="shell-mag-byline"><span class="shell-mag-avatar">🌿</span> 테차 매거진</div>
+        </div>
+      </a>
+      <a class="shell-mag-card" href="/blog/summer-fresh-flower-care/">
+        <img src="/blog/summer-fresh-flower-care/cover.jpg" alt="한여름 시든 생화 꽃다발과 꽃병" loading="lazy">
+        <span class="shell-mag-tag">🌿 생화 관리</span>
+        <div class="shell-mag-body">
+          <div class="shell-mag-title">한여름 생화, 유독 빨리 시드는 이유와 오래 보는 법</div>
+          <div class="shell-mag-byline"><span class="shell-mag-avatar">🌿</span> 테차 매거진</div>
+        </div>
+      </a>
+    </div>
+
+    <div class="shell-section-head">
+      <h2 id="tool-table-head">🗂️ 전체 도구</h2>
+    </div>
+    <div id="tool-table"></div>
   </div>
 
-  <section class="hero">
-    <h1>일상의 자잘한 고민, 여기서 끝</h1>
-    <p>설치도 회원가입도 없이, 필요한 계산과 도구를 바로 사용하세요.</p>
-    <p style="margin-top:6px;font-size:13px">시들지 않는 꽃, <b>테차</b>가 만든 도구 서랍입니다 · <a href="/blog/">테차 매거진 보기 →</a></p>
-  </section>
+  <aside class="shell-right">
+    <div class="shell-widget">
+      <div class="shell-greeting-icon">🌿</div>
+      <div class="shell-greeting-text">오늘도 좋은 하루예요</div>
+      <div class="shell-greeting-sub">테차와 함께 하루의 고민을 가볍게 덜어보세요</div>
+      <div id="cat-bars"></div>
+    </div>
 
-  <div class="brand-banner"><img src="/assets/banners/workshop.jpg" alt="테차 공방 작업대 위 프리저브드 수국과 무드등" width="1650" height="592" loading="eager"></div>
-
-  <section id="home-grid"></section>
-
-  <div class="brand-banner"><img src="/assets/banners/lifestyle.jpg" alt="크래프트지로 포장된 프리저브드 꽃다발과 켜진 무드등" width="1475" height="672" loading="lazy"></div>
-</main>
+    <div class="shell-widget">
+      <div class="shell-widget-head">테차 매거진 <a href="/blog/">전체 보기</a></div>
+      <a class="shell-mag-row" href="/blog/preserved-flower-real-flower/">
+        <span class="shell-mag-row-icon">🌹</span>
+        <div><div class="shell-mag-row-title">프리저브드 꽃, 조화 아니야?</div><div class="shell-mag-row-date">2026-07-29</div></div>
+      </a>
+      <a class="shell-mag-row" href="/blog/summer-fresh-flower-care/">
+        <span class="shell-mag-row-icon">🌸</span>
+        <div><div class="shell-mag-row-title">한여름 생화, 오래 보는 법</div><div class="shell-mag-row-date">2026-07-28</div></div>
+      </a>
+      <a class="shell-widget-btn" href="/blog/">전체 글 보기</a>
+    </div>
+  </aside>
+</div>
 
 <footer id="site-footer"></footer>
 
 <script src="/assets/js/site.js"></script>
 <script>
   TECHA.initPage({});
-  TECHA.renderHome();
+
+  (function () {
+    var CATS = TECHA.CATS, APPS = TECHA.APPS;
+    var counts = Object.keys(CATS)
+      .map(function (k) {
+        return { key: k, title: CATS[k].title, emoji: CATS[k].emoji, n: APPS.filter(function (a) { return a.cat === k; }).length };
+      })
+      .filter(function (c) { return c.n > 0; })
+      .sort(function (a, b) { return b.n - a.n; });
+
+    // 상단 통계 칩 (도구 많은 순 3개)
+    var statsEl = document.getElementById("shell-stats");
+    statsEl.innerHTML = counts.slice(0, 3).map(function (c) {
+      return '<div class="shell-stat-chip">' +
+        '<span class="shell-stat-icon">' + c.emoji + '</span>' +
+        '<div><b>' + c.n + '개</b><span class="shell-stat-label">' + c.title + '</span></div>' +
+        '</div>';
+    }).join("");
+
+    // 오른쪽 카테고리 막대 리스트
+    var max = counts.length ? counts[0].n : 1;
+    var barsEl = document.getElementById("cat-bars");
+    barsEl.innerHTML = counts.map(function (c) {
+      var pct = Math.round((c.n / max) * 100);
+      return '<div class="shell-bar-row"><span>' + c.emoji + ' ' + c.title + '</span>' +
+        '<div class="shell-bar-track"><div class="shell-bar-fill" style="width:' + pct + '%"></div></div>' +
+        '<b>' + c.n + '</b></div>';
+    }).join("");
+
+    // 전체 도구 테이블 (카테고리별)
+    var tableEl = document.getElementById("tool-table");
+    var html = "";
+    Object.keys(CATS).forEach(function (key) {
+      var apps = APPS.filter(function (a) { return a.cat === key && a.status === "live"; });
+      if (!apps.length) return;
+      html += '<div class="shell-table-group" id="cat-' + key + '">';
+      html += '<div class="shell-table-cat">' + CATS[key].emoji + ' ' + CATS[key].title + '</div>';
+      apps.forEach(function (a) {
+        html += '<a class="shell-tool-row" href="' + a.path + '" data-name="' + a.name.toLowerCase() + '">' +
+          '<span class="shell-tool-emoji">' + a.emoji + '</span>' +
+          '<div class="shell-tool-info"><div class="shell-tool-name">' + a.name + '</div><div class="shell-tool-desc">' + a.desc + '</div></div>' +
+          '<span class="shell-tool-cat-tag">' + CATS[key].title + '</span>' +
+          '<span class="shell-tool-arrow">→</span>' +
+          '</a>';
+      });
+      html += '</div>';
+    });
+    tableEl.innerHTML = html;
+
+    // 도구 검색 필터
+    document.getElementById("tool-search").addEventListener("input", function (e) {
+      var q = e.target.value.trim().toLowerCase();
+      document.querySelectorAll(".shell-tool-row").forEach(function (row) {
+        row.style.display = (!q || row.getAttribute("data-name").indexOf(q) > -1) ? "" : "none";
+      });
+      document.querySelectorAll(".shell-table-group").forEach(function (g) {
+        var visible = g.querySelectorAll('.shell-tool-row:not([style*="none"])').length;
+        g.style.display = visible ? "" : "none";
+      });
+    });
+  })();
 </script>
 </body>
 </html>
