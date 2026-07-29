@@ -26,6 +26,8 @@
   --shadow: 0 2px 14px rgba(58, 50, 43, 0.07);
   --shadow-lg: 0 1px 2px rgba(58,50,43,.06), 0 10px 24px rgba(58,50,43,.09);
   --maxw: 760px;
+  --ease-out: cubic-bezier(.16, 1, .3, 1);      /* entrances, lifts, presses */
+  --ease-in-out: cubic-bezier(.77, 0, .175, 1); /* on-screen morphs (card flip) */
 }
 
 * { box-sizing: border-box; }
@@ -101,6 +103,7 @@ input[type="text"], input[type="number"], input[type="date"], textarea, select {
   color: var(--brown);
   font-size: 16px;
   font-family: inherit;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
 }
 input:focus, textarea:focus, select:focus {
   outline: none; border-color: var(--blue);
@@ -115,17 +118,20 @@ textarea { min-height: 160px; resize: vertical; line-height: 1.6; }
   display: inline-flex; align-items: center; justify-content: center; gap: 6px;
   border: none; border-radius: var(--radius-sm); cursor: pointer;
   font-size: 15px; font-weight: 700; font-family: inherit;
-  padding: 12px 20px; transition: filter .15s, transform .05s;
+  padding: 12px 20px;
+  transition: transform 140ms var(--ease-out), filter 180ms ease, box-shadow 180ms ease;
 }
-.btn:active { transform: translateY(1px); }
 .btn-primary {
   background: linear-gradient(180deg, #f3c169 0%, var(--amber) 100%);
   color: var(--amber-cta-ink);
   box-shadow: 0 1px 1px rgba(255,255,255,.5) inset, 0 6px 16px rgba(239,176,84,.35);
 }
-.btn-primary:hover { filter: brightness(1.04); text-decoration: none; transform: translateY(-1px); box-shadow: 0 1px 1px rgba(255,255,255,.5) inset, 0 10px 20px rgba(239,176,84,.4); }
 .btn-ghost { background: var(--blue-soft); color: var(--blue); border: 1px solid #dfe5ef; }
-.btn-ghost:hover { filter: brightness(0.98); text-decoration: none; transform: translateY(-1px); }
+@media (hover: hover) and (pointer: fine) {
+  .btn-primary:hover { filter: brightness(1.04); text-decoration: none; transform: translateY(-1px); box-shadow: 0 1px 1px rgba(255,255,255,.5) inset, 0 10px 20px rgba(239,176,84,.4); }
+  .btn-ghost:hover { filter: brightness(0.98); text-decoration: none; transform: translateY(-1px); }
+}
+.btn:active { transform: scale(0.97); }
 .btn-block { width: 100%; }
 .btn-sm { padding: 8px 14px; font-size: 13px; }
 
@@ -202,9 +208,9 @@ textarea { min-height: 160px; resize: vertical; line-height: 1.6; }
   background: linear-gradient(180deg, #fffefc 0%, var(--white) 100%);
   border: 1px solid var(--line); border-radius: var(--radius);
   padding: 18px; box-shadow: var(--shadow);
-  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+  transition: transform 180ms var(--ease-out), box-shadow 180ms var(--ease-out), border-color 180ms ease;
   display: block; color: var(--brown);
-  animation: card-in .4s ease backwards;
+  animation: card-in .4s var(--ease-out) backwards;
 }
 .grid .app-card:nth-child(1) { animation-delay: .02s; }
 .grid .app-card:nth-child(2) { animation-delay: .05s; }
@@ -212,7 +218,10 @@ textarea { min-height: 160px; resize: vertical; line-height: 1.6; }
 .grid .app-card:nth-child(4) { animation-delay: .11s; }
 .grid .app-card:nth-child(n+5) { animation-delay: .13s; }
 @keyframes card-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-.app-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); border-color: #d9cdb8; text-decoration: none; }
+@media (hover: hover) and (pointer: fine) {
+  .app-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); border-color: #d9cdb8; text-decoration: none; }
+}
+.app-card:active { transform: scale(0.98); }
 .app-card .emoji {
   font-size: 22px; width: 42px; height: 42px; display: inline-flex; align-items: center; justify-content: center;
   border-radius: 50%; background: radial-gradient(circle at 30% 30%, var(--blue-soft), #fff);
@@ -232,6 +241,7 @@ textarea { min-height: 160px; resize: vertical; line-height: 1.6; }
 .related-list a {
   background: var(--white); border: 1px solid var(--line); border-radius: var(--radius-pill);
   padding: 7px 14px; font-size: 13px; color: var(--brown);
+  transition: border-color 150ms ease;
 }
 .related-list a:hover { border-color: var(--blue); text-decoration: none; }
 
