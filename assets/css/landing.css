@@ -34,11 +34,12 @@ body.landing .site-footer .wrap { max-width: 1320px; }
   position: sticky; top: 0; align-self: flex-start;
   max-height: 100vh; overflow-y: auto;
 }
-.shell-brand-logo { display: block; padding: 4px 10px 0; }
-.shell-brand-logo img { display: block; height: 22px; width: auto; }
+.shell-brand-logo { display: block; text-align: center; padding: 6px 10px 2px; }
+.shell-brand-logo img { display: inline-block; height: 18px; width: auto; }
 .shell-logo {
+  display: block; text-align: center;
   font-family: "Gowun Batang", serif; font-weight: 700; font-size: 18px;
-  color: var(--brown); padding: 10px 10px 0;
+  color: var(--brown); padding: 4px 10px 0;
 }
 .shell-logo:hover { text-decoration: none; }
 .shell-logo b { color: var(--blue); }
