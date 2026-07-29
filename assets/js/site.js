@@ -214,7 +214,7 @@
     btn.style.marginTop = "12px";
     btn.addEventListener("click", function () {
       var resultText = (el.textContent || "").replace(/\s+/g, " ").trim();
-      var title = (document.title.split("—")[0] || "테차 서랍").trim();
+      var title = (document.title.split(":")[0] || "테차 서랍").trim();
       var url = location.href;
       var text = (resultText ? resultText + "\n" : "") + title + " | 테차 서랍";
       if (navigator.share) {

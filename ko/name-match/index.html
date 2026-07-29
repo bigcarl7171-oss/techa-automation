@@ -7,7 +7,7 @@
 <link rel="icon" href="/assets/icons/icon-32.png" type="image/png" sizes="32x32">
 <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
-<title>이름 궁합 테스트 — 두 사람 이름으로 보는 궁합 | 테차 서랍</title>
+<title>이름 궁합 테스트: 두 사람 이름으로 보는 궁합 | 테차 서랍</title>
 <meta name="description" content="두 사람의 이름을 넣으면 초성 오행·공통 글자·이름 길이·모음조화·받침 궁합, 다섯 가지 근거로 점수를 계산하고 계산 과정까지 보여드립니다. 친구·연인·썸 상대와 재미로 확인해 보세요.">
 <link rel="canonical" href="https://www.techa.kr/ko/name-match/">
 <meta property="og:image" content="https://www.techa.kr/assets/og/og-default.png">
@@ -64,13 +64,13 @@
     <h2>이름 궁합, 어떻게 나오나요?</h2>
     <p>이 테스트는 다섯 가지 근거를 더해 점수를 계산하고, 계산 과정을 결과 화면에 그대로 보여드립니다.</p>
     <ul>
-      <li><b>① 초성 오행 궁합</b> — 훈민정음은 자음을 소리 나는 위치에 따라 아음(ㄱㅋㄲ)·설음(ㄴㄷㄹㅌㄸ)·순음(ㅁㅂㅍㅃ)·치음(ㅅㅈㅊㅆㅉ)·후음(ㅇㅎ) 다섯 갈래로 나눕니다.
+      <li><b>① 초성 오행 궁합</b>: 훈민정음은 자음을 소리 나는 위치에 따라 아음(ㄱㅋㄲ)·설음(ㄴㄷㄹㅌㄸ)·순음(ㅁㅂㅍㅃ)·치음(ㅅㅈㅊㅆㅉ)·후음(ㅇㅎ) 다섯 갈래로 나눕니다.
          이걸 전통 오행(목·화·토·금·수)에 대응시켜, 두 이름 첫 글자의 초성이 상생 관계(예: 나무→불)면 높은 기본 점수, 상극 관계(예: 나무→흙)면 낮은 기본 점수를 줍니다.</li>
-      <li><b>② 공통 글자 보너스</b> — 두 이름에 겹치는 글자가 있으면 글자당 6점씩(최대 3개, 18점) 더합니다.</li>
-      <li><b>③ 이름 길이 균형</b> — 두 이름의 글자 수 차이가 1 이하면 4점을 더합니다.</li>
-      <li><b>④ 모음조화</b> — 훈민정음의 중성(모음) 21자는 양성모음(ㅏㅗ 계열)·음성모음(ㅓㅜ 계열)·중성모음(ㅡㅣ 계열)으로 나뉩니다.
+      <li><b>② 공통 글자 보너스</b>: 두 이름에 겹치는 글자가 있으면 글자당 6점씩(최대 3개, 18점) 더합니다.</li>
+      <li><b>③ 이름 길이 균형</b>: 두 이름의 글자 수 차이가 1 이하면 4점을 더합니다.</li>
+      <li><b>④ 모음조화</b>: 훈민정음의 중성(모음) 21자는 양성모음(ㅏㅗ 계열)·음성모음(ㅓㅜ 계열)·중성모음(ㅡㅣ 계열)으로 나뉩니다.
          두 이름 첫 글자의 모음이 같은 계열이면 +6점, 한쪽이 중성모음이면 +4점, 양성·음성이 서로 다르면 +2점을 더합니다.</li>
-      <li><b>⑤ 받침 궁합</b> — 두 이름의 마지막 글자에 받침이 둘 다 있거나 둘 다 없으면 +5점, 한쪽만 있으면(서로 다른 느낌을 채워준다는 의미로) +7점을 더합니다.</li>
+      <li><b>⑤ 받침 궁합</b>: 두 이름의 마지막 글자에 받침이 둘 다 있거나 둘 다 없으면 +5점, 한쪽만 있으면(서로 다른 느낌을 채워준다는 의미로) +7점을 더합니다.</li>
     </ul>
     <p>다섯 값을 모두 더한 게 최종 점수입니다. 순서를 바꿔 입력해도(예: "철수, 영희" ↔ "영희, 철수") 다섯 근거가 모두 그대로라 결과가 항상 동일합니다.</p>
 
@@ -224,12 +224,12 @@ TECHA.initPage({ title:"이름 궁합 테스트", desc:"두 사람의 이름으�
       '<div style="text-align:left;margin-top:14px;padding:16px;border:1px solid var(--line);border-radius:var(--radius-md);background:var(--paper)">'+
       '<div style="font-weight:700;color:var(--blue);margin-bottom:8px">💡 이렇게 계산했어요</div>'+
       '<div style="font-size:14px;line-height:1.8;color:var(--body-text)">'+
-        '① 초성 오행 — '+elA.emoji+a[0]+'('+elA.name+') × '+elB.emoji+b[0]+'('+elB.name+') → <b>'+relLabel+'</b><br>'+
+        '① 초성 오행: '+elA.emoji+a[0]+'('+elA.name+') × '+elB.emoji+b[0]+'('+elB.name+') → <b>'+relLabel+'</b><br>'+
         '　　'+reasonOf(ea.idx,eb.idx)+' → 기본 '+base+'점<br>'+
-        '② 공통 글자 — '+(common.length?('"'+common.join(', ')+'" '+common.length+'개'):'없음')+' → +'+bonus+'점<br>'+
-        '③ 이름 길이 균형 — '+(balance? '두 이름 길이가 비슷해요':'길이 차이가 있어요')+' → +'+balance+'점<br>'+
-        '④ 모음조화 — '+vowelText+' → +'+vowelPts+'점<br>'+
-        '⑤ 받침 궁합 — '+batchimText+' → +'+batchimPts+'점<br>'+
+        '② 공통 글자: '+(common.length?('"'+common.join(', ')+'" '+common.length+'개'):'없음')+' → +'+bonus+'점<br>'+
+        '③ 이름 길이 균형: '+(balance? '두 이름 길이가 비슷해요':'길이 차이가 있어요')+' → +'+balance+'점<br>'+
+        '④ 모음조화: '+vowelText+' → +'+vowelPts+'점<br>'+
+        '⑤ 받침 궁합: '+batchimText+' → +'+batchimPts+'점<br>'+
         '<b>= '+base+' + '+bonus+' + '+balance+' + '+vowelPts+' + '+batchimPts+' = '+score+'%</b>'+
       '</div></div>';
 

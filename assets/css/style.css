@@ -210,7 +210,7 @@ textarea { min-height: 160px; resize: vertical; line-height: 1.6; }
   padding: 18px; box-shadow: var(--shadow);
   transition: transform 180ms var(--ease-out), box-shadow 180ms var(--ease-out), border-color 180ms ease;
   display: block; color: var(--brown);
-  animation: card-in .4s var(--ease-out) backwards;
+  animation: card-in .24s var(--ease-out) backwards;
 }
 .grid .app-card:nth-child(1) { animation-delay: .02s; }
 .grid .app-card:nth-child(2) { animation-delay: .05s; }
@@ -241,9 +241,10 @@ textarea { min-height: 160px; resize: vertical; line-height: 1.6; }
 .related-list a {
   background: var(--white); border: 1px solid var(--line); border-radius: var(--radius-pill);
   padding: 7px 14px; font-size: 13px; color: var(--brown);
-  transition: border-color 150ms ease;
+  transition: border-color 150ms ease, transform 120ms var(--ease-out);
 }
 .related-list a:hover { border-color: var(--blue); text-decoration: none; }
+.related-list a:active { transform: scale(0.96); }
 
 /* ---------- 푸터 ---------- */
 .site-footer {

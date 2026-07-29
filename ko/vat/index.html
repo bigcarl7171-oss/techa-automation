@@ -7,7 +7,7 @@
 <link rel="icon" href="/assets/icons/icon-32.png" type="image/png" sizes="32x32">
 <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
-<title>부가가치세 계산기 — 간이과세자·가산세·신고기한까지 | 테차 서랍</title>
+<title>부가가치세 계산기: 간이과세자·가산세·신고기한까지 | 테차 서랍</title>
 <meta name="description" content="공급가↔합계 변환은 물론 간이과세자 세액, 무신고·과소신고·납부지연 가산세, 2026년 신고기한까지 한 번에 계산합니다. 자영업자 필수 도구.">
 <link rel="canonical" href="https://www.techa.kr/ko/vat/">
 <meta property="og:image" content="https://www.techa.kr/assets/og/og-default.png">
@@ -141,7 +141,7 @@
   <section class="card">
     <h3>④ 2026년 부가세 신고기한</h3>
     <p class="hint" style="margin:0 0 10px">개인사업자·소규모법인은 "예정신고"일에 보통 직접 신고 없이
-      예정고지 금액만 납부합니다 — 아래 본문 "2026년 신고기한 표"에서 자세히 확인하세요.</p>
+      예정고지 금액만 납부합니다. 아래 본문 "2026년 신고기한 표"에서 자세히 확인하세요.</p>
     <div id="deadlines"></div>
   </section>
 
@@ -185,7 +185,7 @@
       <li><b>납부지연가산세</b>: 미납세액의 3%(기본) + 미납 기간에 대한 이자 성격 가산세.
          <b>2026년 7월 1일부터</b> 이 이자 부분이 "1일당 10만분의 22(연 약 8.03%)"에서
          <b>"1개월당 0.67%"</b>로, 일 단위에서 월 단위 계산으로 바뀌었습니다.</li>
-      <li><b>자진 기한후신고 감면</b>: 법정기한이 지난 뒤라도 스스로 신고하면 가산세를 감면받습니다 —
+      <li><b>자진 기한후신고 감면</b>: 법정기한이 지난 뒤라도 스스로 신고하면 가산세를 감면받습니다.
          1개월 이내 50%, 3개월 이내 30%, 6개월 이내 20%.</li>
     </ul>
 
@@ -283,7 +283,7 @@ TECHA.initPage({ title:"부가가치세 계산기", desc:"공급가↔합계, �
 
     siResult.className="result";
     siResult.innerHTML = exempt
-      ? '<div class="big">납부의무 면제</div><div class="sub">연 공급대가 4,800만원 미만 — 신고는 필요, 납부세액은 없습니다</div>'
+      ? '<div class="big">납부의무 면제</div><div class="sub">연 공급대가 4,800만원 미만 · 신고는 필요, 납부세액은 없습니다</div>'
       : '<div class="big">납부세액 '+won(payTax)+'</div><div class="sub">매출세액 '+won(salesTax)+' − 세액공제 '+won(deductTotal)+'</div>';
     document.getElementById("siSalesTax").textContent=won(salesTax);
     document.getElementById("siDeduct").textContent=won(deductTotal);
