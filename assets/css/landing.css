@@ -111,8 +111,10 @@ body.landing .site-footer .wrap { max-width: 1320px; }
   padding: 11px 20px; border-radius: var(--radius-pill);
 }
 .shell-hero-cta:hover { text-decoration: none; filter: brightness(1.2); }
-.shell-hero-note { margin: 14px 0 0; font-size: 12px; color: rgba(255,255,255,.75); }
-.shell-hero-note b { color: #fff; }
+
+/* ---------- 브랜드 한 줄 소개 (히어로 밖) ---------- */
+.shell-brand-note { text-align: center; font-size: 13px; color: var(--muted); margin: 0 0 20px; }
+.shell-brand-note b { color: var(--blue); }
 
 /* ---------- 통계 칩 ---------- */
 .shell-stats { display: flex; gap: 12px; margin-bottom: 26px; flex-wrap: wrap; }
@@ -191,15 +193,21 @@ body.landing .site-footer .wrap { max-width: 1320px; }
   background: var(--blue-soft); display: flex; align-items: center; justify-content: center; font-size: 24px;
 }
 .shell-greeting-text { text-align: center; font-weight: 700; font-family: "Gowun Batang", serif; font-size: 16px; }
-.shell-greeting-sub { text-align: center; font-size: 12px; color: var(--muted); margin: 4px 0 18px; }
-.shell-bar-row { display: flex; align-items: center; gap: 8px; font-size: 12px; margin-bottom: 8px; }
-.shell-bar-row span {
-  width: 84px; flex: none; color: var(--muted);
-  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+.shell-greeting-sub { text-align: center; font-size: 12px; color: var(--muted); margin: 4px 0 0; }
+
+/* ---------- 카테고리 목록 (오른쪽 위젯) ---------- */
+.shell-cat-pills { display: flex; flex-direction: column; gap: 1px; }
+.shell-cat-pill-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px; border-radius: var(--radius-sm); color: var(--brown); font-size: 13px;
 }
-.shell-bar-track { flex: 1; height: 6px; border-radius: 4px; background: var(--line); overflow: hidden; }
-.shell-bar-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--blue), var(--amber)); }
-.shell-bar-row b { width: 16px; text-align: right; flex: none; }
+.shell-cat-pill-row:hover { background: var(--white); text-decoration: none; }
+.shell-cat-pill-icon { flex: none; font-size: 14px; }
+.shell-cat-pill-title { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.shell-cat-pill-count {
+  flex: none; font-size: 11px; font-weight: 700; color: var(--blue); background: var(--blue-soft);
+  padding: 2px 9px; border-radius: var(--radius-pill);
+}
 
 .shell-widget-head { display: flex; justify-content: space-between; align-items: baseline; font-weight: 700; font-size: 14px; margin-bottom: 10px; }
 .shell-widget-head a { font-size: 12px; font-weight: 400; color: var(--muted); }
@@ -218,6 +226,13 @@ body.landing .site-footer .wrap { max-width: 1320px; }
   padding: 9px; font-size: 13px; font-weight: 700; color: var(--blue);
 }
 .shell-widget-btn:hover { border-color: var(--blue); text-decoration: none; }
+
+/* ---------- 스크롤 등장 애니메이션 ---------- */
+.reveal { opacity: 0; transform: translateY(14px); transition: opacity .5s cubic-bezier(.16,1,.3,1), transform .5s cubic-bezier(.16,1,.3,1); }
+.reveal.is-visible { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+}
 
 /* ---------- 반응형 ---------- */
 @media (max-width: 1080px) {
@@ -248,4 +263,5 @@ body.landing .site-footer .wrap { max-width: 1320px; }
   .shell-hero p { max-width: none; }
   .shell-stats { flex-direction: column; }
   .shell-tool-desc { display: none; }
+  .shell-tool-cat-tag { display: none; }
 }

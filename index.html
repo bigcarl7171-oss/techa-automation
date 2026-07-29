@@ -51,7 +51,6 @@
     <nav class="shell-nav">
       <div class="shell-nav-label">테차</div>
       <a href="/blog/">📖 테차 매거진</a>
-      <a href="https://smartstore.naver.com/itecha" target="_blank" rel="noopener">🌸 테차 선물샵</a>
     </nav>
 
     <nav class="shell-nav shell-nav-bottom">
@@ -80,12 +79,13 @@
     </div>
 
     <section class="shell-hero">
-      <span class="shell-hero-badge">FREE ONLINE TOOLS</span>
+      <span class="shell-hero-badge">무료 온라인 도구</span>
       <h1>일상의 자잘한 고민,<br>여기서 끝</h1>
       <p>설치도 회원가입도 없이, 필요한 계산과 도구를 바로 사용하세요.</p>
       <a class="shell-hero-cta" href="#tool-table-head">도구 둘러보기 →</a>
-      <p class="shell-hero-note">🌿 시들지 않는 꽃, <b>테차</b>가 만든 도구 서랍입니다 · <a href="/blog/" style="color:#fff;text-decoration:underline">테차 매거진 보기</a></p>
     </section>
+
+    <p class="shell-brand-note">🌿 시들지 않는 꽃, <b>테차</b>가 만든 도구 서랍입니다.</p>
 
     <div class="shell-stats" id="shell-stats"></div>
 
@@ -94,7 +94,7 @@
       <a href="/blog/">전체 보기 →</a>
     </div>
     <div class="shell-carousel">
-      <a class="shell-mag-card" href="/blog/preserved-flower-real-flower/">
+      <a class="shell-mag-card reveal" href="/blog/preserved-flower-real-flower/">
         <img src="/blog/preserved-flower-real-flower/bouquet-blue-rose-detail.jpg" alt="파란 장미와 수국이 담긴 프리저브드 플라워 꽃다발" loading="lazy">
         <span class="shell-mag-tag">🌸 시들지 않는 꽃</span>
         <div class="shell-mag-body">
@@ -102,7 +102,7 @@
           <div class="shell-mag-byline"><span class="shell-mag-avatar">🌿</span> 테차 매거진</div>
         </div>
       </a>
-      <a class="shell-mag-card" href="/blog/summer-fresh-flower-care/">
+      <a class="shell-mag-card reveal" style="transition-delay:.06s" href="/blog/summer-fresh-flower-care/">
         <img src="/blog/summer-fresh-flower-care/cover.jpg" alt="한여름 시든 생화 꽃다발과 꽃병" loading="lazy">
         <span class="shell-mag-tag">🌿 생화 관리</span>
         <div class="shell-mag-body">
@@ -123,7 +123,11 @@
       <div class="shell-greeting-icon">🌿</div>
       <div class="shell-greeting-text">오늘도 좋은 하루예요</div>
       <div class="shell-greeting-sub">테차와 함께 하루의 고민을 가볍게 덜어보세요</div>
-      <div id="cat-bars"></div>
+    </div>
+
+    <div class="shell-widget">
+      <div class="shell-widget-head">카테고리</div>
+      <div id="cat-pills" class="shell-cat-pills"></div>
     </div>
 
     <div class="shell-widget">
@@ -158,30 +162,31 @@
 
     // 상단 통계 칩 (도구 많은 순 3개)
     var statsEl = document.getElementById("shell-stats");
-    statsEl.innerHTML = counts.slice(0, 3).map(function (c) {
-      return '<div class="shell-stat-chip">' +
+    statsEl.innerHTML = counts.slice(0, 3).map(function (c, i) {
+      return '<div class="shell-stat-chip reveal" style="transition-delay:' + (i * 0.05) + 's">' +
         '<span class="shell-stat-icon">' + c.emoji + '</span>' +
         '<div><b>' + c.n + '개</b><span class="shell-stat-label">' + c.title + '</span></div>' +
         '</div>';
     }).join("");
 
-    // 오른쪽 카테고리 막대 리스트
-    var max = counts.length ? counts[0].n : 1;
-    var barsEl = document.getElementById("cat-bars");
-    barsEl.innerHTML = counts.map(function (c) {
-      var pct = Math.round((c.n / max) * 100);
-      return '<div class="shell-bar-row"><span>' + c.emoji + ' ' + c.title + '</span>' +
-        '<div class="shell-bar-track"><div class="shell-bar-fill" style="width:' + pct + '%"></div></div>' +
-        '<b>' + c.n + '</b></div>';
+    // 오른쪽 카테고리 목록 (개수 배지)
+    var pillsEl = document.getElementById("cat-pills");
+    pillsEl.innerHTML = counts.map(function (c) {
+      return '<a class="shell-cat-pill-row" href="#cat-' + c.key + '">' +
+        '<span class="shell-cat-pill-icon">' + c.emoji + '</span>' +
+        '<span class="shell-cat-pill-title">' + c.title + '</span>' +
+        '<span class="shell-cat-pill-count">' + c.n + '</span>' +
+        '</a>';
     }).join("");
 
     // 전체 도구 테이블 (카테고리별)
     var tableEl = document.getElementById("tool-table");
     var html = "";
+    var groupIndex = 0;
     Object.keys(CATS).forEach(function (key) {
       var apps = APPS.filter(function (a) { return a.cat === key && a.status === "live"; });
       if (!apps.length) return;
-      html += '<div class="shell-table-group" id="cat-' + key + '">';
+      html += '<div class="shell-table-group reveal" id="cat-' + key + '" style="transition-delay:' + (Math.min(groupIndex, 4) * 0.05) + 's">';
       html += '<div class="shell-table-cat">' + CATS[key].emoji + ' ' + CATS[key].title + '</div>';
       apps.forEach(function (a) {
         html += '<a class="shell-tool-row" href="' + a.path + '" data-name="' + a.name.toLowerCase() + '">' +
@@ -192,8 +197,26 @@
           '</a>';
       });
       html += '</div>';
+      groupIndex++;
     });
     tableEl.innerHTML = html;
+
+    // 스크롤 등장 애니메이션 (동작 축소 설정 시 즉시 표시)
+    var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var revealEls = document.querySelectorAll(".reveal");
+    if (reduceMotion || !("IntersectionObserver" in window)) {
+      revealEls.forEach(function (el) { el.classList.add("is-visible"); });
+    } else {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            io.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.15, rootMargin: "0px 0px -40px 0px" });
+      revealEls.forEach(function (el) { io.observe(el); });
+    }
 
     // 도구 검색 필터
     document.getElementById("tool-search").addEventListener("input", function (e) {
