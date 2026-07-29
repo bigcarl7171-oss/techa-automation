@@ -71,6 +71,7 @@
     <div class="shell-topbar">
       <div class="shell-search">
         <input type="text" id="tool-search" placeholder="도구·매거진 검색..." autocomplete="off">
+        <button type="button" class="shell-search-icon" id="tool-search-clear" aria-label="검색어 지우기" hidden>✕</button>
         <button type="button" class="shell-search-icon" id="tool-search-btn" aria-label="검색">🔍</button>
         <div class="shell-search-results" id="tool-search-results"></div>
       </div>
@@ -294,11 +295,10 @@
       resultsEl.classList.add("is-open");
     }
 
-    searchInput.addEventListener("input", function (e) {
-      var raw = e.target.value.trim();
-      var q = raw.toLowerCase().replace(/\s+/g, "");
+    var clearBtn = document.getElementById("tool-search-clear");
 
-      // 아래 전체 도구 테이블도 함께 필터링 (스크롤해서 카테고리별로 훑어볼 때 대비)
+    function applyFilter(raw, q) {
+      // 전체 도구 테이블도 함께 필터링 (스크롤해서 카테고리별로 훑어볼 때 대비)
       document.querySelectorAll(".shell-tool-row").forEach(function (row) {
         var name = row.getAttribute("data-name").replace(/\s+/g, "");
         row.style.display = (!q || name.indexOf(q) > -1) ? "" : "none";
@@ -307,14 +307,30 @@
         var visible = g.querySelectorAll('.shell-tool-row:not([style*="none"])').length;
         g.style.display = visible ? "" : "none";
       });
+      clearBtn.hidden = !raw;
 
       if (!q) { closeResults(); return; }
       renderResults(q, raw);
+    }
+
+    function resetSearch() {
+      searchInput.value = "";
+      applyFilter("", "");
+      closeResults();
+    }
+
+    searchInput.addEventListener("input", function (e) {
+      var raw = e.target.value.trim();
+      applyFilter(raw, raw.toLowerCase().replace(/\s+/g, ""));
     });
     searchInput.addEventListener("focus", function () {
       var raw = searchInput.value.trim();
       var q = raw.toLowerCase().replace(/\s+/g, "");
       if (q) renderResults(q, raw);
+    });
+    clearBtn.addEventListener("click", function () {
+      resetSearch();
+      searchInput.focus();
     });
     document.addEventListener("click", function (e) {
       if (!e.target.closest(".shell-search")) closeResults();
@@ -322,6 +338,10 @@
     document.addEventListener("keydown", function (e) {
       if (e.key === "Escape") closeResults();
     });
+
+    // 뒤로가기(bfcache 포함)로 홈에 돌아왔을 때 이전 검색 상태가
+    // 그대로 남아있지 않도록 항상 초기화
+    window.addEventListener("pageshow", resetSearch);
     document.getElementById("tool-search-btn").addEventListener("click", function () {
       searchInput.focus();
     });
