@@ -86,13 +86,67 @@ button:focus-visible,
   position: sticky; top: 0; z-index: 50;
 }
 .site-header .wrap {
-  display: flex; align-items: center; justify-content: space-between;
+  display: flex; align-items: center; gap: 14px;
   height: 60px;
 }
-.logo { font-family: "Gowun Batang", serif; font-size: 20px; font-weight: 700; color: var(--brown); }
+.logo { font-family: "Gowun Batang", serif; font-size: 20px; font-weight: 700; color: var(--brown); flex: none; }
 .logo b { color: var(--blue); }
 .logo:hover { text-decoration: none; }
+.header-nav { margin-left: auto; flex: none; }
 .header-nav a { color: var(--muted); font-size: 14px; margin-left: 16px; }
+
+/* ---------- 헤더 검색 (도구 페이지 등 site-header를 쓰는 모든 곳) ----------
+   홈페이지는 자체 검색바(.shell-search)를 쓰므로 site-header를 로드하지 않는다 —
+   같은 화면에 검색창이 두 개 뜨는 일은 없다. */
+.header-search { position: relative; }
+.header-search-toggle {
+  width: 36px; height: 36px; border-radius: 50%; border: none; flex: none;
+  background: var(--blue-soft); color: var(--blue-ink); font-size: 15px; cursor: pointer;
+  transition: background-color 150ms ease, transform 140ms var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .header-search-toggle:hover { background: #e2e8f2; }
+}
+.header-search-toggle:active { transform: scale(0.94); }
+.header-search-panel {
+  position: absolute; top: calc(100% + 10px); left: 0;
+  width: min(420px, calc(100vw - 36px));
+  background: var(--white); border: 1px solid var(--line); border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg); padding: 10px; z-index: 60;
+  opacity: 0; visibility: hidden; transform: translateY(-6px);
+  transition: opacity 160ms var(--ease-out), transform 160ms var(--ease-out), visibility 160ms;
+}
+.header-search-panel.is-open { opacity: 1; visibility: visible; transform: none; }
+@media (max-width: 640px) {
+  /* 토글 버튼은 헤더 왼쪽 쪽에 있어서, 패널을 그 위치 기준 왼쪽 정렬로 두면
+     좁은 화면에서 오른쪽으로 넘친다. 뷰포트 자체에 고정해 항상 페이지 여백(18px) 안에 들어오게 한다. */
+  .header-search-panel {
+    position: fixed; top: 68px; left: 18px; right: 18px; width: auto;
+  }
+}
+.header-search-panel input {
+  width: 100%; padding: 10px 14px; border: 1px solid var(--line); border-radius: var(--radius-pill);
+  background: var(--paper); color: var(--brown); font-size: 14px; font-family: inherit;
+}
+.header-search-panel input:focus {
+  outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px var(--blue-soft);
+}
+.header-search-results { margin-top: 8px; max-height: 320px; overflow-y: auto; }
+.header-search-result {
+  display: flex; align-items: center; gap: 10px; padding: 9px 8px;
+  border-radius: var(--radius-sm); color: var(--brown);
+}
+@media (hover: hover) and (pointer: fine) {
+  .header-search-result:hover { background: var(--paper); text-decoration: none; }
+}
+.header-search-result-emoji { font-size: 16px; width: 26px; text-align: center; flex: none; }
+.header-search-result-info { min-width: 0; flex: 1; }
+.header-search-result-name { font-weight: 700; font-size: 13.5px; }
+.header-search-result-desc {
+  font-size: 12px; color: var(--muted); margin-top: 1px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.header-search-empty { padding: 10px 8px; font-size: 13px; color: var(--muted); text-align: center; }
 
 /* ---------- 브레드크럼 ---------- */
 .breadcrumb { font-size: 13px; color: var(--muted); padding: 14px 0 2px; }

@@ -84,6 +84,9 @@
   ];
 
   // ---------- 헤더 주입 ----------
+  // 모든 페이지(도구 21개·매거진·안내)가 이 함수 하나를 공유한다.
+  // 검색을 여기 넣으면 "도구 페이지에서 다른 도구로 가려면 홈으로 돌아가야
+  // 한다"는 문제가 파일 21개를 각각 고치지 않고도 한 번에 풀린다.
   function renderHeader() {
     var el = document.getElementById("site-header");
     if (!el) return;
@@ -91,8 +94,74 @@
     el.innerHTML =
       '<div class="wrap">' +
       '  <a class="logo" href="/">테<b>차</b> 서랍</a>' +
+      '  <div class="header-search">' +
+      '    <button type="button" class="header-search-toggle" id="header-search-toggle" aria-label="도구·매거진 검색" aria-expanded="false">🔍</button>' +
+      '    <div class="header-search-panel" id="header-search-panel">' +
+      '      <input type="text" id="header-search-input" placeholder="도구·매거진 검색..." autocomplete="off">' +
+      '      <div class="header-search-results" id="header-search-results"></div>' +
+      '    </div>' +
+      '  </div>' +
       '  <nav class="header-nav"><a href="/blog/">테차 매거진</a><a href="/">전체 도구</a></nav>' +
       '</div>';
+    initHeaderSearch();
+  }
+
+  // ---------- 헤더 검색 (모든 페이지 공용) ----------
+  function initHeaderSearch() {
+    var toggle = document.getElementById("header-search-toggle");
+    var panel = document.getElementById("header-search-panel");
+    var input = document.getElementById("header-search-input");
+    var results = document.getElementById("header-search-results");
+    if (!toggle || !panel || !input || !results) return;
+
+    var liveApps = APPS.filter(function (a) { return a.status === "live"; });
+    var index = liveApps.map(function (a) {
+      return { emoji: a.emoji, title: a.name, desc: a.desc, path: a.path, tag: CATS[a.cat] ? CATS[a.cat].title : "" };
+    }).concat(POSTS.map(function (p) {
+      return { emoji: p.emoji, title: p.title, desc: p.desc, path: p.path, tag: "매거진" };
+    }));
+
+    function open() {
+      panel.classList.add("is-open");
+      toggle.setAttribute("aria-expanded", "true");
+      input.focus();
+    }
+    function close() {
+      panel.classList.remove("is-open");
+      toggle.setAttribute("aria-expanded", "false");
+    }
+    function render(q) {
+      if (!q) { results.innerHTML = ""; return; }
+      var matches = index.filter(function (item) {
+        return (item.title + " " + item.desc).toLowerCase().replace(/\s+/g, "").indexOf(q) > -1;
+      });
+      if (!matches.length) {
+        results.innerHTML = '<div class="header-search-empty">해당하는 결과가 없어요</div>';
+        return;
+      }
+      results.innerHTML = matches.slice(0, 8).map(function (item) {
+        return '<a class="header-search-result" href="' + item.path + '">' +
+          '<span class="header-search-result-emoji">' + item.emoji + '</span>' +
+          '<div class="header-search-result-info">' +
+            '<div class="header-search-result-name">' + item.title + '</div>' +
+            '<div class="header-search-result-desc">' + item.desc + '</div>' +
+          '</div>' +
+        '</a>';
+      }).join("");
+    }
+
+    toggle.addEventListener("click", function () {
+      panel.classList.contains("is-open") ? close() : open();
+    });
+    input.addEventListener("input", function (e) {
+      render(e.target.value.trim().toLowerCase().replace(/\s+/g, ""));
+    });
+    document.addEventListener("click", function (e) {
+      if (!e.target.closest(".header-search")) close();
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") close();
+    });
   }
 
   // ---------- 브레드크럼 + 페이지 헤드 ----------

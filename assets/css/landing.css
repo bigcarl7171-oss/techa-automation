@@ -160,7 +160,8 @@ body.landing .site-footer .wrap { max-width: 1320px; }
 .shell-hero p { margin: 0 0 18px; color: rgba(255,255,255,.88); font-size: 14px; max-width: 420px; }
 .shell-hero-cta {
   display: inline-flex; align-items: center; gap: 6px;
-  background: #23222b; color: #fff; font-weight: 700; font-size: 14px;
+  background: linear-gradient(180deg, #f3c169 0%, var(--amber) 100%);
+  color: var(--amber-cta-ink); font-weight: 700; font-size: 14px;
   padding: 11px 20px; border-radius: var(--radius-pill);
   transition: filter 150ms ease, transform 140ms var(--ease-out);
 }
