@@ -54,6 +54,25 @@ h1, h2, h3, .serif {
 a { color: var(--blue-ink); text-decoration: none; }
 a:hover { text-decoration: underline; }
 
+/* 키보드 포커스 — 마우스 클릭 시에는 뜨지 않는다 */
+a:focus-visible,
+button:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--blue-ink);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* 동작 축소 설정 존중. 도구 페이지는 landing.css를 로드하지 않으므로 여기에도 둔다 */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 /* ---------- 레이아웃 ---------- */
 .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 18px; }
 
