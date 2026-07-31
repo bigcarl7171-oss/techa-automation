@@ -36,6 +36,15 @@
   .brk .l{font-size:12px;color:var(--muted)}
   .grp-title{font-size:13px;font-weight:700;color:var(--muted);margin:20px 0 2px;padding-top:14px;border-top:1px dashed var(--line)}
   .grp-title:first-of-type{margin-top:16px;padding-top:0;border-top:none}
+
+  input[type=number]::-webkit-inner-spin-button,
+  input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+  input[type=number]{-moz-appearance:textfield}
+  .result{transition:box-shadow 200ms var(--ease-out)}
+  .result.flash{box-shadow:0 0 0 3px var(--amber-border)}
+  .result.loss .big, .result.loss .sub{color:#9B3B2F}
+  .result.loss .sub{font-weight:700}
+  .brk .stat.neg .n{color:#9B3B2F}
 </style>
 </head>
 <body>
@@ -53,21 +62,21 @@
     </div>
     <div class="grp-title">매출</div>
     <div class="row">
-      <div><label class="field" for="price">판매가격 (원)</label><input type="number" id="price" value="20000" step="any"></div>
-      <div><label class="field" for="shipRevenue">배송비 <span class="hint">(고객 결제분)</span></label><input type="number" id="shipRevenue" value="0" step="any"></div>
+      <div><label class="field" for="price">판매가격 (원)</label><input type="text" inputmode="numeric" id="price" value="20,000"></div>
+      <div><label class="field" for="shipRevenue">배송비 <span class="hint">(고객 결제분)</span></label><input type="text" inputmode="numeric" id="shipRevenue" value="0"></div>
     </div>
 
     <div class="grp-title">매입</div>
     <div class="row">
-      <div><label class="field" for="cost">매입가격 (원)</label><input type="number" id="cost" value="12000" step="any"></div>
-      <div><label class="field" for="costShip">매입운송비</label><input type="number" id="costShip" value="0" step="any"></div>
+      <div><label class="field" for="cost">매입가격 (원)</label><input type="text" inputmode="numeric" id="cost" value="12,000"></div>
+      <div><label class="field" for="costShip">매입운송비</label><input type="text" inputmode="numeric" id="costShip" value="0"></div>
     </div>
     <div class="row">
-      <div><label class="field" for="costEtc">기타 <span class="hint">(포장비·사은품 등)</span></label><input type="number" id="costEtc" value="0" step="any"></div>
-      <div><label class="field" for="outboundShip">운임비 <span class="hint">(택배비용)</span></label><input type="number" id="outboundShip" value="0" step="any"></div>
+      <div><label class="field" for="costEtc">기타 <span class="hint">(포장비·사은품 등)</span></label><input type="text" inputmode="numeric" id="costEtc" value="0"></div>
+      <div><label class="field" for="outboundShip">운임비 <span class="hint">(택배비용)</span></label><input type="text" inputmode="numeric" id="outboundShip" value="0"></div>
     </div>
     <label class="field" for="adCost">광고비 <span class="hint">(마케팅)</span></label>
-    <input type="number" id="adCost" value="0" step="any">
+    <input type="text" inputmode="numeric" id="adCost" value="0">
 
     <div class="grp-title">수수료</div>
     <div style="margin:2px 0 12px;padding:10px 14px;border-radius:var(--radius-sm);background:var(--amber-soft);color:var(--amber-strong-ink);font-size:13px">
@@ -198,6 +207,26 @@
 <script>
 TECHA.initPage({ title:"마진율 계산기", desc:"플랫폼 수수료·부가세까지 반영해 정산금액과 마진율을 계산합니다.", category:"money", slug:"margin", related:["vat","loan","compound"] });
 (function(){
+  function attachComma(input){
+    input.addEventListener("input", function(){
+      var caretFromEnd = input.value.length - input.selectionStart;
+      var digits = input.value.replace(/[^\d]/g, "");
+      input.value = digits ? Number(digits).toLocaleString() : "";
+      var pos = Math.max(0, input.value.length - caretFromEnd);
+      input.setSelectionRange(pos, pos);
+    });
+  }
+  ["price","shipRevenue","cost","costShip","costEtc","outboundShip","adCost"].forEach(function(id){
+    attachComma(document.getElementById(id));
+  });
+  function flash(el){
+    el.classList.remove("flash");
+    void el.offsetWidth;
+    el.classList.add("flash");
+    clearTimeout(el._flashTimer);
+    el._flashTimer = setTimeout(function(){ el.classList.remove("flash"); }, 260);
+  }
+
   var TAX_RATES = { general: 10, free: 0 };
 
   var price=document.getElementById("price"), shipRevenue=document.getElementById("shipRevenue");
@@ -210,7 +239,7 @@ TECHA.initPage({ title:"마진율 계산기", desc:"플랫폼 수수료·부가�
 
   function won(n){ return Math.round(n).toLocaleString()+"원"; }
   function pct(n){ return (Math.round(n*10)/10)+"%"; }
-  function num(el){ return parseFloat(el.value)||0; }
+  function num(el){ return parseFloat((el.value||"").toString().replace(/,/g,""))||0; }
 
   taxType.addEventListener("change", function(){
     if (taxType.value === "custom") return;
@@ -232,12 +261,16 @@ TECHA.initPage({ title:"마진율 계산기", desc:"플랫폼 수수료·부가�
     var marginRate = profit/revenue*100;
     var markupRate = c>0 ? profit/c*100 : 0;
 
-    result.className="result";
-    result.innerHTML='<div class="big">순이익 '+won(profit)+'</div><div class="sub">'+(profit<0?"손실이 발생합니다":"정산금액 "+won(settle))+'</div>';
+    var loss = profit<0;
+    result.className="result"+(loss?" loss":"");
+    result.innerHTML='<div class="big">순이익 '+won(profit)+'</div><div class="sub">'+(loss?"손실이 발생합니다":"정산금액 "+won(settle))+'</div>';
     document.getElementById("settleAmount").textContent=won(settle);
     document.getElementById("marginRate").textContent=pct(marginRate);
     document.getElementById("markup").textContent=(c>0?pct(markupRate):"-");
+    document.getElementById("marginRate").closest(".stat").classList.toggle("neg", marginRate<0);
+    document.getElementById("markup").closest(".stat").classList.toggle("neg", c>0 && markupRate<0);
     brk.style.display="grid";
+    flash(result);
   }
 
   [price,shipRevenue,cost,costShip,costEtc,outboundShip,adCost,feeCategory,feeLink,feeShip,vatRate].forEach(function(el){

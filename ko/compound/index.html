@@ -34,6 +34,12 @@
   .brk .stat{background:var(--blue-soft);border-radius:var(--radius-sm);padding:12px;text-align:center}
   .brk .n{font-family:"Gowun Batang",serif;font-size:18px;font-weight:700;color:var(--blue)}
   .brk .l{font-size:12px;color:var(--muted)}
+
+  input[type=number]::-webkit-inner-spin-button,
+  input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+  input[type=number]{-moz-appearance:textfield}
+  .result{transition:box-shadow 200ms var(--ease-out)}
+  .result.flash{box-shadow:0 0 0 3px var(--amber-border)}
 </style>
 </head>
 <body>
@@ -49,8 +55,8 @@
       달라질 수 있으니, 정확한 확인은 홈택스·금융기관이나 전문가 상담을 통해 진행해 주세요.
     </div>
     <div class="row">
-      <div><label class="field" for="p">초기 원금 (원)</label><input type="number" id="p" value="10000000" step="any"></div>
-      <div><label class="field" for="m">월 적립액 (원)</label><input type="number" id="m" value="500000" step="any"></div>
+      <div><label class="field" for="p">초기 원금 (원)</label><input type="text" inputmode="numeric" id="p" value="10,000,000"></div>
+      <div><label class="field" for="m">월 적립액 (원)</label><input type="text" inputmode="numeric" id="m" value="500,000"></div>
     </div>
     <div class="row" style="margin-top:12px">
       <div><label class="field" for="r">연이율 (%)</label><input type="number" id="r" value="6" step="any"></div>
@@ -138,11 +144,29 @@
 <script>
 TECHA.initPage({ title:"복리 계산기", desc:"적립·투자의 복리 미래가치와 총 이자, 72법칙을 계산합니다.", category:"money", slug:"compound", related:["loan","vat","margin"] });
 (function(){
+  function attachComma(input){
+    input.addEventListener("input", function(){
+      var caretFromEnd = input.value.length - input.selectionStart;
+      var digits = input.value.replace(/[^\d]/g, "");
+      input.value = digits ? Number(digits).toLocaleString() : "";
+      var pos = Math.max(0, input.value.length - caretFromEnd);
+      input.setSelectionRange(pos, pos);
+    });
+  }
+  ["p","m"].forEach(function(id){ attachComma(document.getElementById(id)); });
+  function flash(el){
+    el.classList.remove("flash");
+    void el.offsetWidth;
+    el.classList.add("flash");
+    clearTimeout(el._flashTimer);
+    el._flashTimer = setTimeout(function(){ el.classList.remove("flash"); }, 260);
+  }
+
   function won(n){ return Math.round(n).toLocaleString()+"원"; }
   var result=document.getElementById("result"), brk=document.getElementById("brk");
   function calc(){
-    var P=parseFloat(document.getElementById("p").value)||0;
-    var PMT=parseFloat(document.getElementById("m").value)||0;
+    var P=parseFloat((document.getElementById("p").value||"").replace(/,/g,""))||0;
+    var PMT=parseFloat((document.getElementById("m").value||"").replace(/,/g,""))||0;
     var annual=parseFloat(document.getElementById("r").value);
     var years=parseFloat(document.getElementById("y").value);
     if(isNaN(annual)||!years||years<=0){ result.className="result empty"; result.textContent="연이율과 기간을 입력하세요."; brk.style.display="none"; return; }
@@ -156,6 +180,7 @@ TECHA.initPage({ title:"복리 계산기", desc:"적립·투자의 복리 미래
     document.getElementById("interest").textContent=won(interest);
     document.getElementById("double").textContent = annual>0 ? (Math.round(72/annual*10)/10)+"년" : "-";
     brk.style.display="grid";
+    flash(result);
   }
   ["p","m","r","y"].forEach(function(id){ document.getElementById(id).addEventListener("input",calc); });
   document.getElementById("calc").addEventListener("click",calc);

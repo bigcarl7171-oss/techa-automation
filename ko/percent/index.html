@@ -33,8 +33,12 @@
   .mini { border:1px solid var(--line); border-radius:var(--radius-md); padding:16px; margin-bottom:14px; background:var(--white); }
   .mini h3 { margin:0 0 10px; font-size:15px; }
   .mini .q { display:flex; align-items:center; flex-wrap:wrap; gap:8px; font-size:15px; }
-  .mini input { width:90px; flex:none; text-align:center; }
+  .mini input { width:100px; flex:none; text-align:center; }
   .mini .ans { margin-top:10px; font-weight:700; color:var(--blue); font-size:17px; }
+
+  input[type=number]::-webkit-inner-spin-button,
+  input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+  input[type=number]{-moz-appearance:textfield}
 </style>
 </head>
 <body>
@@ -47,7 +51,7 @@
   <section class="card">
     <div class="mini">
       <h3>① 어떤 값의 몇 %는?</h3>
-      <div class="q"><input type="number" id="a1" value="30000" step="any">의
+      <div class="q"><input type="text" inputmode="numeric" id="a1" value="30,000">의
         <input type="number" id="a2" value="10" step="any">% 는</div>
       <div class="ans" id="ansA">= 3,000</div>
     </div>
@@ -179,7 +183,17 @@ TECHA.initPage({
 });
 
 (function () {
-  function num(id){ return parseFloat(document.getElementById(id).value); }
+  function num(id){ return parseFloat((document.getElementById(id).value||"").toString().replace(/,/g,"")); }
+  (function(){
+    var a1 = document.getElementById("a1");
+    a1.addEventListener("input", function(){
+      var caretFromEnd = a1.value.length - a1.selectionStart;
+      var digits = a1.value.replace(/[^\d]/g, "");
+      a1.value = digits ? Number(digits).toLocaleString() : "";
+      var pos = Math.max(0, a1.value.length - caretFromEnd);
+      a1.setSelectionRange(pos, pos);
+    });
+  })();
   function fmt(n){ if(!isFinite(n)) return "-"; return (Math.round(n*100)/100).toLocaleString(undefined,{maximumFractionDigits:2}); }
 
   function calcA(){

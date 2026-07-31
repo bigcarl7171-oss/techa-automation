@@ -31,8 +31,9 @@
 </script>
 <style>
   .seg{display:flex;gap:8px;margin-top:6px}
-  .seg button{flex:1;border:1px solid var(--line);background:var(--white);border-radius:var(--radius-sm);padding:10px;font-weight:600;cursor:pointer;color:var(--brown)}
+  .seg button{flex:1;border:1px solid var(--line);background:var(--white);border-radius:var(--radius-sm);padding:10px;font-weight:600;cursor:pointer;color:var(--brown);transition:background-color 150ms ease,color 150ms ease,border-color 150ms ease,transform 120ms var(--ease-out)}
   .seg button.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+  .seg button:active{transform:scale(0.96)}
   .brk{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
   .brk .stat{background:var(--blue-soft);border-radius:var(--radius-sm);padding:12px;text-align:center}
   .brk .n{font-family:"Gowun Batang",serif;font-size:19px;font-weight:700;color:var(--blue)}
@@ -41,6 +42,12 @@
   .deadline{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--line);font-size:14px}
   .deadline:last-child{border-bottom:none}
   .deadline.next{background:var(--blue-soft);border-radius:var(--radius-sm);padding:10px 12px;font-weight:700}
+
+  input[type=number]::-webkit-inner-spin-button,
+  input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+  input[type=number]{-moz-appearance:textfield}
+  .result{transition:box-shadow 200ms var(--ease-out)}
+  .result.flash{box-shadow:0 0 0 3px var(--amber-border)}
 </style>
 </head>
 <body>
@@ -63,7 +70,7 @@
       <button data-m="extract">합계 → 공급가</button>
     </div>
     <label class="field" for="amt" id="amtLabel" style="margin-top:14px">공급가액 (원)</label>
-    <input type="number" id="amt" value="100000" step="any">
+    <input type="text" inputmode="numeric" id="amt" value="100,000">
 
     <div class="brk" id="brk" style="margin-top:16px">
       <div class="stat"><div class="n" id="supply">-</div><div class="l">공급가액</div></div>
@@ -80,7 +87,7 @@
       여부가 궁금하면 세무서·홈택스에서 확인하세요.
     </div>
     <label class="field" for="siYearSales">연간 매출액 (공급대가, 원)</label>
-    <input type="number" id="siYearSales" value="50000000" step="any">
+    <input type="text" inputmode="numeric" id="siYearSales" value="50,000,000">
 
     <label class="field" for="siType" style="margin-top:14px">업종</label>
     <select id="siType">
@@ -94,8 +101,8 @@
     <input type="number" id="siRate" value="15" step="any">
 
     <div class="row" style="margin-top:12px">
-      <div><label class="field" for="siPurchase">세금계산서 수취 매입액</label><input type="number" id="siPurchase" value="0" step="any"></div>
-      <div><label class="field" for="siCard">신용카드매출전표 발급액 <span class="hint">(연 1,000만원 한도 1.3% 공제 · 소매업·음식점업 등 소비자 대상 업종만 해당)</span></label><input type="number" id="siCard" value="0" step="any"></div>
+      <div><label class="field" for="siPurchase">세금계산서 수취 매입액</label><input type="text" inputmode="numeric" id="siPurchase" value="0"></div>
+      <div><label class="field" for="siCard">신용카드매출전표 발급액 <span class="hint">(연 1,000만원 한도 1.3% 공제 · 소매업·음식점업 등 소비자 대상 업종만 해당)</span></label><input type="text" inputmode="numeric" id="siCard" value="0"></div>
     </div>
     <p class="hint" style="margin-top:6px">⚠️ 이 공제는 소매업·음식점업·숙박업·미용업 등 <b>소비자를 직접 상대하는 업종</b>만 받을 수 있습니다.
       도매업·제조업(일부 예외 제외)은 해당하지 않으니, 업종이 다르면 이 칸은 0으로 두세요.</p>
@@ -110,7 +117,7 @@
   <section class="card">
     <h3>③ 가산세 계산기</h3>
     <label class="field" for="gsTax">미납·과소신고 세액 (원)</label>
-    <input type="number" id="gsTax" value="1000000" step="any">
+    <input type="text" inputmode="numeric" id="gsTax" value="1,000,000">
 
     <div class="row" style="margin-top:12px">
       <div>
@@ -238,6 +245,27 @@
 <script>
 TECHA.initPage({ title:"부가가치세 계산기", desc:"공급가↔합계, 간이과세자 세액, 가산세, 신고기한까지 계산합니다.", category:"money", slug:"vat", related:["margin","loan","compound"] });
 (function(){
+  // ---------- 큰 금액 입력칸에 천 단위 콤마 자동 표시 ----------
+  function attachComma(input){
+    input.addEventListener("input", function(){
+      var caretFromEnd = input.value.length - input.selectionStart;
+      var digits = input.value.replace(/[^\d]/g, "");
+      input.value = digits ? Number(digits).toLocaleString() : "";
+      var pos = Math.max(0, input.value.length - caretFromEnd);
+      input.setSelectionRange(pos, pos);
+    });
+  }
+  ["amt","siYearSales","siPurchase","siCard","gsTax"].forEach(function(id){
+    attachComma(document.getElementById(id));
+  });
+  function flash(el){
+    el.classList.remove("flash");
+    void el.offsetWidth;
+    el.classList.add("flash");
+    clearTimeout(el._flashTimer);
+    el._flashTimer = setTimeout(function(){ el.classList.remove("flash"); }, 260);
+  }
+
   // ---------- ① 공급가 ↔ 합계 ----------
   var mode="add";
   var seg=document.getElementById("seg"), amtLabel=document.getElementById("amtLabel"), amt=document.getElementById("amt");
@@ -247,10 +275,10 @@ TECHA.initPage({ title:"부가가치세 계산기", desc:"공급가↔합계, �
   });
   function won(n){ return Math.round(n).toLocaleString()+"원"; }
   function pct(n){ return (Math.round(n*10)/10)+"%"; }
-  function num(el){ return parseFloat(el.value)||0; }
+  function num(el){ return parseFloat((el.value||"").toString().replace(/,/g,""))||0; }
   function calc(){
-    var v=parseFloat(amt.value);
-    if(isNaN(v)){ ["supply","vat","total"].forEach(function(id){document.getElementById(id).textContent="-";}); return; }
+    var v=num(amt);
+    if(!v){ ["supply","vat","total"].forEach(function(id){document.getElementById(id).textContent="-";}); return; }
     var supply, vat, total;
     if(mode==="add"){ supply=v; vat=v*0.1; total=v*1.1; }
     else { total=v; supply=v/1.1; vat=total-supply; }
@@ -288,6 +316,7 @@ TECHA.initPage({ title:"부가가치세 계산기", desc:"공급가↔합계, �
     document.getElementById("siSalesTax").textContent=won(salesTax);
     document.getElementById("siDeduct").textContent=won(deductTotal);
     siBrk.style.display="grid";
+    flash(siResult);
   }
   [siYearSales,siRate,siPurchase,siCard].forEach(function(el){ el.addEventListener("input", siCalc); });
   siCalc();
@@ -310,6 +339,7 @@ TECHA.initPage({ title:"부가가치세 계산기", desc:"공급가↔합계, �
     document.getElementById("gsPenalty1").textContent=won(penalty1);
     document.getElementById("gsPenalty2").textContent=won(penalty2);
     gsBrk.style.display="grid";
+    flash(gsResult);
   }
   [gsTax,gsType,gsMonths,gsReduction].forEach(function(el){ el.addEventListener("input", gsCalc); el.addEventListener("change", gsCalc); });
   gsCalc();
