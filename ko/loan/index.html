@@ -31,13 +31,27 @@
 </script>
 <style>
   .seg{display:flex;gap:8px;margin-top:6px}
-  .seg button{flex:1;border:1px solid var(--line);background:var(--white);border-radius:var(--radius-sm);padding:10px;font-weight:600;cursor:pointer;color:var(--brown);font-size:13px}
+  .seg button{flex:1;border:1px solid var(--line);background:var(--white);border-radius:var(--radius-sm);padding:10px;font-weight:600;cursor:pointer;color:var(--brown);font-size:13px;transition:background-color 150ms ease,color 150ms ease,border-color 150ms ease,transform 120ms var(--ease-out)}
   .seg button.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+  .seg button:active{transform:scale(0.96)}
   .brk{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-top:14px}
   .brk .stat{background:var(--blue-soft);border-radius:var(--radius-sm);padding:12px;text-align:center}
   .brk .n{font-family:"Gowun Batang",serif;font-size:20px;font-weight:700;color:var(--blue)}
   .brk .l{font-size:12px;color:var(--muted)}
   .card h3{margin:0 0 10px;font-size:16px}
+
+  /* 숫자 입력 스피너 화살표 숨기기 (큰 금액 입력에는 불필요) */
+  input[type=number]::-webkit-inner-spin-button,
+  input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+  input[type=number]{-moz-appearance:textfield}
+
+  /* 결과 갱신 시 살짝 강조되는 피드백 */
+  .result{transition:box-shadow 200ms var(--ease-out)}
+  .result.flash{box-shadow:0 0 0 3px var(--amber-border)}
+
+  /* DSR 한도 초과 경고 강조 */
+  .result.over .big, .result.over .sub{color:#9B3B2F}
+  .result.over .sub{font-weight:700}
 </style>
 </head>
 <body>
@@ -61,7 +75,7 @@
       <button data-m="bullet">만기일시상환</button>
     </div>
     <div class="row" style="margin-top:14px">
-      <div><label class="field" for="p">대출 원금 (원)</label><input type="number" id="p" value="30000000" step="any"></div>
+      <div><label class="field" for="p">대출 원금 (원)</label><input type="text" inputmode="numeric" id="p" value="30,000,000"></div>
       <div><label class="field" for="r">연이율 (%)</label><input type="number" id="r" value="5" step="any"></div>
     </div>
     <div class="row" style="margin-top:12px">
@@ -92,7 +106,7 @@
       <div><label class="field" for="peRate">수수료율 (%)</label><input type="number" id="peRate" value="0.75" step="any"></div>
     </div>
     <div class="row" style="margin-top:12px">
-      <div><label class="field" for="peAmount">중도상환 금액 (원)</label><input type="number" id="peAmount" value="10000000" step="any"></div>
+      <div><label class="field" for="peAmount">중도상환 금액 (원)</label><input type="text" inputmode="numeric" id="peAmount" value="10,000,000"></div>
       <div><label class="field" for="peDays">대출 실행일로부터 경과일수</label><input type="number" id="peDays" value="365" step="1"></div>
     </div>
 
@@ -106,10 +120,10 @@
   <section class="card">
     <h3>③ DSR 참고 계산기</h3>
     <label class="field" for="dsrIncome">연 소득 (원)</label>
-    <input type="number" id="dsrIncome" value="50000000" step="any">
+    <input type="text" inputmode="numeric" id="dsrIncome" value="50,000,000">
     <div class="row" style="margin-top:12px">
-      <div><label class="field" for="dsrOther">기존 대출 연간 원리금상환액</label><input type="number" id="dsrOther" value="0" step="any"></div>
-      <div><label class="field" for="dsrThis">이 대출의 연간 원리금상환액</label><input type="number" id="dsrThis" value="0" step="any"></div>
+      <div><label class="field" for="dsrOther">기존 대출 연간 원리금상환액</label><input type="text" inputmode="numeric" id="dsrOther" value="0"></div>
+      <div><label class="field" for="dsrThis">이 대출의 연간 원리금상환액</label><input type="text" inputmode="numeric" id="dsrThis" value="0"></div>
     </div>
     <label class="field" for="dsrLimit" style="margin-top:12px">적용 한도</label>
     <select id="dsrLimit">
@@ -226,6 +240,29 @@
 <script>
 TECHA.initPage({ title:"대출 이자 계산기", desc:"거치기간·중도상환수수료·DSR까지 계산합니다.", category:"money", slug:"loan", related:["compound","vat","margin"] });
 (function(){
+  // ---------- 큰 금액 입력칸에 천 단위 콤마 자동 표시 ----------
+  function attachComma(input){
+    input.addEventListener("input", function(){
+      var caretFromEnd = input.value.length - input.selectionStart;
+      var digits = input.value.replace(/[^\d]/g, "");
+      input.value = digits ? Number(digits).toLocaleString() : "";
+      var pos = Math.max(0, input.value.length - caretFromEnd);
+      input.setSelectionRange(pos, pos);
+    });
+  }
+  ["p","peAmount","dsrIncome","dsrOther","dsrThis"].forEach(function(id){
+    attachComma(document.getElementById(id));
+  });
+
+  // ---------- 결과가 갱신될 때 살짝 강조되는 피드백 ----------
+  function flash(el){
+    el.classList.remove("flash");
+    void el.offsetWidth; // 리플로우를 강제해 애니메이션 재시작
+    el.classList.add("flash");
+    clearTimeout(el._flashTimer);
+    el._flashTimer = setTimeout(function(){ el.classList.remove("flash"); }, 260);
+  }
+
   // ---------- ① 대출 이자 계산 ----------
   var mode="equal";
   var seg=document.getElementById("seg"), graceWrap=document.getElementById("graceWrap");
@@ -238,7 +275,7 @@ TECHA.initPage({ title:"대출 이자 계산기", desc:"거치기간·중도상�
     });
   });
   function won(n){ return Math.round(n).toLocaleString()+"원"; }
-  function num(el){ return parseFloat(el.value)||0; }
+  function num(el){ return parseFloat((el.value||"").toString().replace(/,/g,""))||0; }
   var result=document.getElementById("result"), brk=document.getElementById("brk");
   function calc(){
     var P=num(document.getElementById("p"));
@@ -281,6 +318,7 @@ TECHA.initPage({ title:"대출 이자 계산기", desc:"거치기간·중도상�
     document.getElementById("totalInt").textContent=won(totalInterest);
     document.getElementById("totalPay").textContent=won(P+totalInterest);
     brk.style.display="grid";
+    flash(result);
   }
   ["p","r","y","grace"].forEach(function(id){ document.getElementById(id).addEventListener("input",calc); });
   calc();
@@ -302,6 +340,7 @@ TECHA.initPage({ title:"대출 이자 계산기", desc:"거치기간·중도상�
     peResult.innerHTML = remainDays<=0
       ? '<div class="big">수수료 없음</div><div class="sub">대출 후 3년(1,095일)이 지나 중도상환수수료가 면제됩니다</div>'
       : '<div class="big">수수료 '+won(fee)+'</div><div class="sub">잔여일수 '+remainDays+'일 / 1,095일 기준</div>';
+    flash(peResult);
   }
   [peAmount,peDays,peRate].forEach(function(el){ el.addEventListener("input", peCalc); });
   peCalc();
@@ -314,8 +353,9 @@ TECHA.initPage({ title:"대출 이자 계산기", desc:"거치기간·중도상�
     if (income<=0){ dsrResult.className="result empty"; dsrResult.textContent="연 소득을 입력하세요."; return; }
     var dsr = (other+thisLoan)/income*100;
     var over = dsr > limit;
-    dsrResult.className="result";
+    dsrResult.className="result"+(over?" over":"");
     dsrResult.innerHTML = '<div class="big">DSR '+(Math.round(dsr*10)/10)+'%</div><div class="sub">'+(over ? "⚠️ 한도("+limit+"%) 초과" : "한도("+limit+"%) 이내")+'</div>';
+    flash(dsrResult);
   }
   [dsrIncome,dsrOther,dsrThis,dsrLimit].forEach(function(el){ el.addEventListener("input", dsrCalc); el.addEventListener("change", dsrCalc); });
   dsrCalc();
