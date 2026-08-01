@@ -104,6 +104,33 @@
     </div>
 
     <div class="shell-section-head">
+      <h2>🎁 이런 날, 챙기고 계신가요?</h2>
+    </div>
+    <p class="shell-situation-lead">날짜를 눌러 며칠 남았는지 세어보세요. 미리 알아두면 덜 급해집니다.</p>
+    <div class="shell-situations">
+      <a class="shell-situation" href="/ko/dday/?for=mother-birthday" data-situation="mother-birthday">
+        <span class="shell-situation-icon" aria-hidden="true">🎂</span>
+        <b>어머니 생신</b><span>며칠 남았을까요</span>
+      </a>
+      <a class="shell-situation" href="/ko/dday/?for=parents-day" data-situation="parents-day">
+        <span class="shell-situation-icon" aria-hidden="true">💐</span>
+        <b>어버이날</b><span>5월 8일까지</span>
+      </a>
+      <a class="shell-situation" href="/ko/dday/?for=couple" data-situation="couple">
+        <span class="shell-situation-icon" aria-hidden="true">💕</span>
+        <b>100일·1주년</b><span>만난 날부터</span>
+      </a>
+      <a class="shell-situation" href="/ko/dday/?for=teachers-day" data-situation="teachers-day">
+        <span class="shell-situation-icon" aria-hidden="true">🎓</span>
+        <b>스승의날</b><span>5월 15일까지</span>
+      </a>
+      <a class="shell-situation" href="/ko/dday/?for=housewarming" data-situation="housewarming">
+        <span class="shell-situation-icon" aria-hidden="true">🏠</span>
+        <b>집들이·개업</b><span>그날까지</span>
+      </a>
+    </div>
+
+    <div class="shell-section-head">
       <h2>테차 매거진 · 꽃과 선물 이야기</h2>
       <a href="/blog/">전체 보기 →</a>
     </div>
@@ -182,6 +209,13 @@
     // 전체 도구 개수 (섹션 제목 옆)
     document.getElementById("tool-count").textContent =
       counts.reduce(function (sum, c) { return sum + c.n; }, 0) + "개";
+
+    // 상황 카드 클릭 기록 — 어떤 상황에 수요가 있는지가 다음 상품 기획의 근거가 된다
+    document.querySelectorAll(".shell-situation").forEach(function (el) {
+      el.addEventListener("click", function () {
+        TECHA.track("situation_click", { situation: el.dataset.situation });
+      });
+    });
 
     // 오른쪽 카테고리 목록 (개수 배지)
     var pillsEl = document.getElementById("cat-pills");

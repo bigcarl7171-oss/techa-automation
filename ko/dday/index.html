@@ -142,6 +142,52 @@ TECHA.initPage({
   var msEl = document.getElementById("milestones");
 
   function today0() { var d = new Date(); d.setHours(0,0,0,0); return d; }
+
+  // ---------- 상황별 진입 (홈의 "이런 날 챙기고 계신가요?"에서 넘어옴) ----------
+  // 날짜가 고정된 기념일은 올해(지났으면 내년) 날짜를 미리 채워둔다.
+  // hint 안의 {y}는 실제 계산된 연도로 바뀐다. 올해 날짜가 이미 지났으면
+  // 내년으로 넘어가므로 "올해"라고 못 박으면 틀린 안내가 된다.
+  var SITUATIONS = {
+    "mother-birthday": { label:"어머니 생신", hint:"어머니 생신 날짜를 넣어보세요.",
+      cta:"어머니께 드릴, 시들지 않는 꽃 보기" },
+    "parents-day":     { label:"어버이날", month:5, day:8, hint:"{y}년 어버이날까지 남은 날이에요.",
+      cta:"어버이날 선물 미리 준비하기" },
+    "couple":          { label:"100일·1주년", incl:true, hint:"처음 만난 날을 넣으면 100일·1000일을 알려드려요.",
+      cta:"그날을 오래 남기는 선물 보기" },
+    "teachers-day":    { label:"스승의날", month:5, day:15, hint:"{y}년 스승의날까지 남은 날이에요.",
+      cta:"감사를 오래 전하는 선물 보기" },
+    "housewarming":    { label:"집들이·개업", hint:"그날 날짜를 넣어보세요.",
+      cta:"집들이·개업 선물 보기" }
+  };
+
+  function pad2(n){ return (n<10?"0":"")+n; }
+
+  var forKey = new URLSearchParams(location.search).get("for");
+  var situation = SITUATIONS[forKey];
+  if (situation) {
+    // 날짜가 고정된 기념일은 미리 채워준다 (올해가 지났으면 내년으로)
+    var targetYear = null;
+    if (situation.month) {
+      var now = today0();
+      var y = now.getFullYear();
+      var d = new Date(y, situation.month - 1, situation.day);
+      if (d < now) d = new Date(y + 1, situation.month - 1, situation.day);
+      targetYear = d.getFullYear();
+      target.value = targetYear + "-" + pad2(d.getMonth()+1) + "-" + pad2(d.getDate());
+    }
+    if (situation.incl) incl.checked = true;
+
+    // 안내 문구를 그 상황(과 실제 연도)에 맞게
+    var lead = document.querySelector("#page-head .lead");
+    if (lead) {
+      lead.textContent = situation.label + " · " +
+        situation.hint.replace("{y}", targetYear === null ? "" : targetYear);
+    }
+
+    // 선물 CTA 문구도 상황에 맞게 (탄생화·탄생석과 같은 방식)
+    var ctaEl = document.getElementById("techa-cta");
+    if (ctaEl) { ctaEl.setAttribute("data-text", situation.cta); TECHA.renderShopCTA(); }
+  }
   function fmt(d) { return d.getFullYear() + "." + pad(d.getMonth()+1) + "." + pad(d.getDate()) + " (" + "일월화수목금토"[d.getDay()] + ")"; }
   function pad(n) { return (n < 10 ? "0" : "") + n; }
 
@@ -192,6 +238,9 @@ TECHA.initPage({
   document.getElementById("calc").addEventListener("click", calc);
   target.addEventListener("change", calc);
   incl.addEventListener("change", calc);
+
+  // 상황별 진입으로 날짜가 미리 채워졌다면 바로 계산해서 보여준다
+  if (target.value) calc();
 })();
 </script>
 </body>

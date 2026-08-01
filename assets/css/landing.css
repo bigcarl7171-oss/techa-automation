@@ -188,6 +188,28 @@ body.landing .site-footer .wrap { max-width: 1320px; }
 .shell-trust b { display: block; font-size: 14px; margin-bottom: 3px; }
 .shell-trust span { font-size: 12.5px; color: var(--muted); }
 
+/* ---------- 상황별 진입 (D-Day 계산기로 연결) ---------- */
+.shell-situation-lead { font-size: 13px; color: var(--muted); margin: -6px 0 14px; }
+.shell-situations {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(128px, 1fr));
+  gap: 10px; margin-bottom: 30px;
+}
+.shell-situation {
+  display: block; padding: 16px 16px 14px; color: var(--brown);
+  background: var(--white); border: 1px solid var(--line); border-radius: var(--radius);
+  transition: border-color 150ms ease, box-shadow 200ms var(--ease-out), transform 120ms var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .shell-situation:hover { border-color: var(--blue); box-shadow: var(--shadow); text-decoration: none; }
+}
+.shell-situation:active { transform: scale(0.98); }
+.shell-situation-icon {
+  width: 34px; height: 34px; border-radius: 50%; margin-bottom: 10px;
+  background: var(--blue-soft); display: inline-flex; align-items: center; justify-content: center; font-size: 16px;
+}
+.shell-situation b { display: block; font-size: 14.5px; margin-bottom: 2px; }
+.shell-situation span { font-size: 12.5px; color: var(--muted); }
+
 /* ---------- 섹션 헤더 ---------- */
 .shell-section-head { display: flex; align-items: baseline; justify-content: space-between; margin: 0 0 14px; }
 .shell-section-head h2 { font-size: 18px; margin: 0; }
@@ -326,4 +348,11 @@ body.landing .site-footer .wrap { max-width: 1320px; }
     display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2;
     overflow: hidden; white-space: normal; text-overflow: clip;
   }
+  /* 좁은 화면에서 5칸 그리드는 항상 마지막 한 칸이 외따로 남는다.
+     매거진 카루셀과 같은 가로 스와이프 방식으로 바꾼다. */
+  .shell-situations {
+    display: flex; overflow-x: auto; gap: 10px; padding-bottom: 6px;
+    scroll-snap-type: x proximity; -webkit-overflow-scrolling: touch;
+  }
+  .shell-situation { flex: none; width: 132px; scroll-snap-align: start; }
 }

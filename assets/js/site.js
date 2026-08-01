@@ -266,6 +266,19 @@
     window.gtag = gtag;
   }
 
+  // ---------- 이벤트 기록 ----------
+  // GA4가 꺼져 있거나 광고차단으로 안 뜬 경우에도 조용히 넘어간다.
+  // 쓰는 이벤트:
+  //   situation_click   상황 카드 클릭      { situation }
+  //   care_view         관리법 조회         { product }
+  //   anniversary_save  기념일 저장 시도    { situation }
+  //   shop_click        스마트스토어 이동   { placement }
+  function track(name, params) {
+    try {
+      if (typeof window.gtag === "function") window.gtag("event", name, params || {});
+    } catch (e) { /* 측정 실패가 기능을 막지 않도록 무시 */ }
+  }
+
   // ---------- 공통 초기화 ----------
   function initPage(opts) {
     opts = opts || {};
@@ -317,6 +330,11 @@
       el.innerHTML = '<div style="' + base + '">' +
         '<div style="font-weight:700;color:var(--amber-strong-ink);margin-bottom:10px">🌸 ' + text + '</div>' +
         '<a class="btn btn-primary btn-sm" href="' + SITE.shopUrl + '" target="_blank" rel="noopener">테차 꽃 선물 보러가기 →</a></div>';
+      // 어느 페이지의 CTA가 실제로 스토어로 보내는지 측정
+      var link = el.querySelector("a");
+      if (link) link.addEventListener("click", function () {
+        track("shop_click", { placement: document.body.dataset.placement || location.pathname });
+      });
     } else {
       el.innerHTML = '<div style="' + base + 'opacity:.85">' +
         '<div style="font-weight:700;color:var(--amber-strong-ink)">🌸 ' + text + '</div>' +
@@ -326,6 +344,7 @@
 
   window.TECHA = {
     SITE: SITE, APPS: APPS, CATS: CATS, POSTS: POSTS,
-    initPage: initPage, renderHome: renderHome, renderShopCTA: renderShopCTA
+    initPage: initPage, renderHome: renderHome, renderShopCTA: renderShopCTA,
+    track: track
   };
 })();
