@@ -147,17 +147,15 @@ TECHA.initPage({
   // 날짜가 고정된 기념일은 올해(지났으면 내년) 날짜를 미리 채워둔다.
   // hint 안의 {y}는 실제 계산된 연도로 바뀐다. 올해 날짜가 이미 지났으면
   // 내년으로 넘어가므로 "올해"라고 못 박으면 틀린 안내가 된다.
+  // 각 상황은 실제로 뭔가를 자동으로 해줘야 카드로 둘 값어치가 있다.
+  // 날짜만 직접 입력하게 하고 문구만 바뀌는 상황은 그냥 기본 화면과 같으므로 두지 않는다.
   var SITUATIONS = {
-    "mother-birthday": { label:"어머니 생신", hint:"어머니 생신 날짜를 넣어보세요.",
-      cta:"어머니께 드릴, 시들지 않는 꽃 보기" },
-    "parents-day":     { label:"어버이날", month:5, day:8, hint:"{y}년 어버이날까지 남은 날이에요.",
+    "parents-day":  { label:"어버이날", month:5, day:8, hint:"{y}년 어버이날까지 남은 날이에요.",
       cta:"어버이날 선물 미리 준비하기" },
-    "couple":          { label:"100일·1주년", incl:true, hint:"처음 만난 날을 넣으면 100일·1000일을 알려드려요.",
-      cta:"그날을 오래 남기는 선물 보기" },
-    "teachers-day":    { label:"스승의날", month:5, day:15, hint:"{y}년 스승의날까지 남은 날이에요.",
+    "teachers-day": { label:"스승의날", month:5, day:15, hint:"{y}년 스승의날까지 남은 날이에요.",
       cta:"감사를 오래 전하는 선물 보기" },
-    "housewarming":    { label:"집들이·개업", hint:"그날 날짜를 넣어보세요.",
-      cta:"집들이·개업 선물 보기" }
+    "couple":       { label:"100일·1주년", incl:true, hint:"처음 만난 날을 넣으면 100일·1000일을 알려드려요.",
+      cta:"그날을 오래 남기는 선물 보기" }
   };
 
   function pad2(n){ return (n<10?"0":"")+n; }

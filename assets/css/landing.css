@@ -348,11 +348,4 @@ body.landing .site-footer .wrap { max-width: 1320px; }
     display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2;
     overflow: hidden; white-space: normal; text-overflow: clip;
   }
-  /* 좁은 화면에서 5칸 그리드는 항상 마지막 한 칸이 외따로 남는다.
-     매거진 카루셀과 같은 가로 스와이프 방식으로 바꾼다. */
-  .shell-situations {
-    display: flex; overflow-x: auto; gap: 10px; padding-bottom: 6px;
-    scroll-snap-type: x proximity; -webkit-overflow-scrolling: touch;
-  }
-  .shell-situation { flex: none; width: 132px; scroll-snap-align: start; }
 }
