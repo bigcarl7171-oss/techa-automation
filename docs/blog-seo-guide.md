@@ -82,9 +82,8 @@
    </div>
    ```
    (플레이스홀더를 `.grid` 안에 넣지 말 것 — 카드 1개만 있을 때 그리드 트랙 폭에 눌려 좁게 보임.)
-3. `index.html`에는 글 링크가 **두 군데** 있다. 둘 다 최신 글 기준으로 갱신하고, 오래된
-   카드는 지운다 (현재 둘 다 정확히 2개씩 유지):
-   - `.shell-carousel` 안 (테차 매거진 섹션) — 카드 형태, 커버 이미지 필요:
+3. `index.html`에는 글 링크가 **두 군데** 있다. 둘 다 최신 글이 맨 위(맨 왼쪽)에 오도록 갱신한다:
+   - `.shell-carousel` 안 (테차 매거진 섹션) — 카드 형태, 커버 이미지 필요. 전체 글을 최신순으로 유지:
      ```html
      <a class="shell-mag-card" href="/blog/<slug>/">
        <img src="/blog/<slug>/cover.jpg" alt="{{이미지 설명}}" loading="lazy">
@@ -95,7 +94,8 @@
        </div>
      </a>
      ```
-   - `.shell-right`의 "테차 매거진" 위젯 안 (`.shell-widget-head` 다음) — 목록 행 형태, 이미지 불필요:
+   - `.shell-right`의 "테차 매거진" 위젯 안 (`.shell-widget-head` 다음) — 목록 행 형태, 이미지 불필요.
+     **최신순 최대 5개**까지만 유지하고, 6번째로 밀려나는 가장 오래된 행은 지운다:
      ```html
      <a class="shell-mag-row" href="/blog/<slug>/">
        <span class="shell-mag-row-icon">🌸</span>
