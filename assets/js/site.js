@@ -269,10 +269,10 @@
   // ---------- 이벤트 기록 ----------
   // GA4가 꺼져 있거나 광고차단으로 안 뜬 경우에도 조용히 넘어간다.
   // 쓰는 이벤트:
-  //   situation_click   상황 카드 클릭      { situation }
-  //   care_view         관리법 조회         { product }
-  //   anniversary_save  기념일 저장 시도    { situation }
-  //   shop_click        스마트스토어 이동   { placement }
+  //   situation_click   상황 카드 클릭        { situation }
+  //   care_view         관리법 조회           { product }
+  //   news_signup_click 소식받기 유도 클릭    { situation }
+  //   shop_click        스마트스토어 이동     { placement }
   function track(name, params) {
     try {
       if (typeof window.gtag === "function") window.gtag("event", name, params || {});

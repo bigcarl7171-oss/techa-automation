@@ -92,13 +92,13 @@
     <div class="result empty" id="daysResult" style="margin-top:14px">날짜를 선택해 주세요.</div>
   </section>
 
-  <!-- ③ 데이터 수집: 핵심 전환 -->
+  <!-- ③ 전환: 스마트스토어 소식받기로 연결 (개인정보를 새로 받지 않는다) -->
   <div class="save-box">
-    <h2>다음에 챙길 날, 저장해두시겠어요?</h2>
-    <p>생신·기념일을 남겨두시면 그날이 오기 전에 미리 알려드려요.
-       매년 달력을 뒤지지 않아도 됩니다.</p>
-    <a class="btn-save" id="saveAnniversary" href="/ko/dday/" target="_blank" rel="noopener">기념일 저장하기 →</a>
-    <p class="hintline">알림 외 다른 용도로는 사용하지 않습니다.</p>
+    <h2>다음에 챙길 날, 미리 알려드릴까요?</h2>
+    <p>테차 스마트스토어에서 <b>소식받기</b>를 눌러두시면, 어버이날·스승의날 같은
+       날이 오기 전에 먼저 알려드려요. 따로 정보를 남기실 필요 없어요.</p>
+    <a class="btn-save" id="newsSignup" href="https://smartstore.naver.com/itecha" target="_blank" rel="noopener">테차 소식받기 →</a>
+    <p class="hintline">스토어 페이지 좌측 상단의 '소식받기'를 눌러주시면 됩니다.</p>
   </div>
 
   <!-- ④ 재방문 유인 -->
@@ -139,10 +139,6 @@
 TECHA.initPage({ title:"시들지 않는 꽃 관리법", desc:"오래 예쁘게 두는 방법을 정리했습니다.", category:null });
 
 (function () {
-  // ⚠️ 기념일 수집 폼 주소를 여기에 넣으세요 (네이버폼·구글폼).
-  //    비워두면 D-Day 계산기로 보냅니다.
-  var ANNIVERSARY_FORM_URL = "";
-
   // ---------- ① 제품군별 관리법 ----------
   var CARE = {
     preserved: {
@@ -246,11 +242,9 @@ TECHA.initPage({ title:"시들지 않는 꽃 관리법", desc:"오래 예쁘게 
       '<div class="sub">함께한 지 ' + days.toLocaleString() + '일 되었어요</div>';
   });
 
-  // ---------- ③ 기념일 저장 ----------
-  var saveBtn = document.getElementById("saveAnniversary");
-  if (ANNIVERSARY_FORM_URL) saveBtn.href = ANNIVERSARY_FORM_URL;
-  saveBtn.addEventListener("click", function () {
-    TECHA.track("anniversary_save", { situation: "care_page" });
+  // ---------- ③ 소식받기 유도 ----------
+  document.getElementById("newsSignup").addEventListener("click", function () {
+    TECHA.track("news_signup_click", { situation: "care_page" });
   });
 })();
 </script>
