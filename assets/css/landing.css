@@ -215,10 +215,10 @@ body.landing .site-footer .wrap { max-width: 1320px; }
 .shell-section-head h2 { font-size: 18px; margin: 0; }
 .shell-section-head a { font-size: 13px; color: var(--muted); }
 
-/* ---------- 매거진 카루셀 ---------- */
-.shell-carousel { display: flex; gap: 16px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 30px; }
+/* ---------- 매거진 카루셀 (최신 3개, 3열 그리드로 고정 정렬) ---------- */
+.shell-carousel { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 30px; }
 .shell-mag-card {
-  flex: none; width: 260px; display: block; position: relative;
+  display: block; position: relative;
   border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden;
   background: var(--white); box-shadow: var(--shadow); color: var(--brown);
   transition: box-shadow 200ms var(--ease-out), transform 200ms var(--ease-out);
@@ -334,9 +334,11 @@ body.landing .site-footer .wrap { max-width: 1320px; }
 }
 @media (max-width: 860px) {
   .shell-hero-media { display: none; }
+  .shell-carousel { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 640px) {
   .shell-main, .shell-right, .shell-sidebar { padding: 18px; }
+  .shell-carousel { grid-template-columns: 1fr; }
   .shell-topbar { flex-wrap: wrap; }
   .shell-cta-pill { display: none; }
   .shell-hero-content { padding: 24px; }
