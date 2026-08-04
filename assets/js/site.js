@@ -60,7 +60,9 @@
     { slug: "birth-flower", name: "월별 탄생화·꽃말", emoji: "🌸", cat: "fortune",
       desc: "태어난 달의 꽃과 꽃말", status: "live", path: "/ko/birth-flower/" },
     { slug: "birth-stone", name: "월별 탄생석", emoji: "💎", cat: "fortune",
-      desc: "태어난 달의 보석과 의미", status: "live", path: "/ko/birth-stone/" }
+      desc: "태어난 달의 보석과 의미", status: "live", path: "/ko/birth-stone/" },
+    { slug: "gift-finder", name: "상황별 선물 큐레이션", emoji: "🎁", cat: "life",
+      desc: "누구에게·어떤 상황·얼마짜리 고르면 딱 맞는 선물 추천", status: "live", path: "/ko/gift-finder/" }
   ];
 
   var CATS = {
@@ -273,6 +275,8 @@
   //   care_view         관리법 조회           { product }
   //   news_signup_click 소식받기 유도 클릭    { situation }
   //   shop_click        스마트스토어 이동     { placement }
+  //   gift_finder_filter        선물 큐레이션 필터 변경   { recipient, occasion, price }
+  //   gift_finder_product_click 선물 큐레이션 구매 링크 클릭 { line }
   function track(name, params) {
     try {
       if (typeof window.gtag === "function") window.gtag("event", name, params || {});
