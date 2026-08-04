@@ -210,6 +210,38 @@ body.landing .site-footer .wrap { max-width: 1320px; }
 .shell-situation b { display: block; font-size: 14.5px; margin-bottom: 2px; }
 .shell-situation span { font-size: 12.5px; color: var(--muted); }
 
+/* 강조 카드 — 그리드 전체 폭을 차지하는 배너형, 나머지 타일과 확실히 구분 */
+.shell-situation-featured {
+  grid-column: 1 / -1;
+  display: flex; align-items: center; gap: 16px;
+  padding: 18px 22px;
+  background: linear-gradient(120deg, var(--amber-soft) 0%, #fffefc 75%);
+  border: 1.5px solid var(--amber-border);
+  box-shadow: 0 4px 18px rgba(239,176,84,.2);
+  animation: featured-pulse 2.6s ease-in-out .6s 2;
+}
+@media (hover: hover) and (pointer: fine) {
+  .shell-situation-featured:hover {
+    border-color: var(--amber); box-shadow: 0 8px 24px rgba(239,176,84,.32); transform: translateY(-2px);
+  }
+}
+.shell-situation-featured .shell-situation-icon {
+  width: 46px; height: 46px; font-size: 22px; margin-bottom: 0; flex: none;
+  background: linear-gradient(160deg, #f3c169, var(--amber));
+  box-shadow: 0 3px 10px rgba(239,176,84,.4);
+}
+.shell-situation-featured .shell-situation-body { flex: 1; min-width: 0; }
+.shell-situation-featured b { font-size: 16.5px; }
+.shell-situation-featured span { font-size: 13px; }
+.shell-situation-featured .shell-situation-arrow { font-size: 20px; color: var(--amber-cta-ink); flex: none; }
+@keyframes featured-pulse {
+  0%, 100% { box-shadow: 0 4px 18px rgba(239,176,84,.2); }
+  50% { box-shadow: 0 4px 24px rgba(239,176,84,.4); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .shell-situation-featured { animation: none; }
+}
+
 /* ---------- 섹션 헤더 ---------- */
 .shell-section-head { display: flex; align-items: baseline; justify-content: space-between; margin: 0 0 14px; }
 .shell-section-head h2 { font-size: 18px; margin: 0; }

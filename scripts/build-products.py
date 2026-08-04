@@ -207,7 +207,7 @@ LINES = [
 # URL_MAP은 xlsx에 없는 라인(예: 플라워클래스처럼 EXTRA_LINES에만 있는 것)을 위한
 # 수동 폴백이다 — xlsx 쪽에 값이 있으면 그게 항상 우선한다.
 URL_MAP = {
-    # "flower-class": "",
+    "flower-class": "https://smartstore.naver.com/itecha/products/10537190482",
 }
 
 # xlsx에 없지만 실제 운영 중인 상품 (script-guide.md 기준)
