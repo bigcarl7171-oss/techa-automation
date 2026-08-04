@@ -48,6 +48,7 @@ body.landing .site-footer .wrap { max-width: 1320px; }
   color: var(--muted-soft); padding: 0 10px; margin-bottom: 8px;
 }
 .shell-nav { display: flex; flex-direction: column; gap: 2px; }
+.shell-nav + .shell-nav { border-top: 1px solid var(--line); padding-top: 16px; }
 .shell-nav a {
   display: flex; align-items: center; gap: 10px;
   padding: 9px 10px; border-radius: var(--radius-sm);
@@ -356,6 +357,7 @@ body.landing .site-footer .wrap { max-width: 1320px; }
   }
   .shell-logo { flex: none; }
   .shell-nav { flex-direction: row; flex: none; }
+  .shell-nav + .shell-nav { border-top: none; border-left: 1px solid var(--line); padding-top: 0; padding-left: 16px; }
   .shell-nav-label { display: none; }
   .shell-nav-bottom { margin-top: 0; }
   .shell-right {
