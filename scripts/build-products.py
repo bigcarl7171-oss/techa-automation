@@ -4,13 +4,15 @@
 147개 SKU를 제품 라인으로 묶고, 라인 단위로 다축 태그를 붙인다.
 색상/사이즈/전원방식 같은 변형은 라인 아래 variants로 매단다.
 """
-import openpyxl, json, io, sys, re
+import openpyxl, json, io, sys, re, os
 from collections import OrderedDict
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 
-SRC = 'c:/ClaudeCode/테차상품가격리스트.xlsx'
-OUT = 'c:/ClaudeCode/techa-drawer/assets/data/techa-products.json'
+# 이 스크립트(scripts/) 기준 상대경로 — 어느 컴퓨터에서 어느 위치로 clone해도 그대로 동작
+REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+SRC = os.path.join(REPO_ROOT, 'docs', '테차상품가격리스트.xlsx')
+OUT = os.path.join(REPO_ROOT, 'assets', 'data', 'techa-products.json')
 
 # ---------------------------------------------------------------------------
 # 제품 라인 정의
@@ -190,6 +192,15 @@ LINES = [
          reason="크래프트 카드에 미니 드라이플라워를 붙여, 카드 자체가 작은 꽃다발이 돼요."),
 ]
 
+# 라인별 스마트스토어 구매 링크. 값을 지어낼 수 없어 전부 비워둔 채 스캐폴딩만 해둔다.
+# 채우는 법: 아래 { } 안에 "라인id": "실제 URL" 형태로 한 줄씩 추가하면 다음 실행 때
+# 각 라인의 "url" 필드에 그대로 들어간다. 라인 id는 위 LINES의 id 값과 동일해야 한다.
+# 예: "money-cake": "https://smartstore.naver.com/itecha/products/1234567890",
+URL_MAP = {
+    # "rose-hydrangea-bouquet": "",
+    # "money-cake": "",
+}
+
 # xlsx에 없지만 실제 운영 중인 상품 (script-guide.md 기준)
 EXTRA_LINES = [
     dict(id="flower-class", name="플라워클래스 (원데이)", cat="체험",
@@ -282,6 +293,7 @@ def main():
             ("recipient", ln['recipient']), ("occasion", ln['occasion']),
             ("giftType", ln['giftType']),
             ("situation", ln['situation']), ("reason", ln['reason']),
+            ("url", URL_MAP.get(ln['id'])),
             ("skuCount", len(group)), ("variants", variants),
         ]))
 
@@ -296,6 +308,7 @@ def main():
             ("recipient", ln['recipient']), ("occasion", ln['occasion']),
             ("giftType", ln['giftType']),
             ("situation", ln['situation']), ("reason", ln['reason']),
+            ("url", URL_MAP.get(ln['id'])),
             ("note", ln['note']),
             ("skuCount", len(ln['variants'])), ("variants", ln['variants']),
         ]))

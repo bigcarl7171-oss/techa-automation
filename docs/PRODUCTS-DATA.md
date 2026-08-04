@@ -4,7 +4,8 @@
 
 - **데이터**: `assets/data/techa-products.json`
 - **생성 스크립트**: `scripts/build-products.py`
-- **가격 원본**: `c:\ClaudeCode\테차상품가격리스트.xlsx` (레포 밖)
+- **가격 원본**: `docs/테차상품가격리스트.xlsx` (2026-08-04 레포 안으로 이동 — 어느 컴퓨터에서
+  clone해도 그대로 재생성 가능. `.assetsignore`에 `/docs`가 있어 사이트로는 서빙 안 됨)
 
 ---
 
@@ -30,6 +31,7 @@
   "giftType": ["현금동봉형"],
   "situation": "현금만 드리기엔 민망하고 거창한 이벤트는 부담스러울 때",
   "reason": "케이크 모양에 현금을 꽂고 LED 조명까지 들어가, 촛불 대신 불을 켜고…",
+  "url": null,
   "skuCount": 6,
   "variants": [
     { "sku": "용돈케이크 라벤더퍼플 머니박스 1단 중대형",
@@ -84,6 +86,20 @@ python scripts/build-products.py
 추천 태그(recipient/occasion/giftType/situation/reason)를 고칠 때는
 `scripts/build-products.py` 안의 `LINES` 정의를 고친다. **JSON을 직접 편집하지 말 것** —
 다음 실행 때 덮어써진다.
+
+## 스마트스토어 링크 (url 필드 — 현재 전부 비어있음)
+
+각 라인에 `"url": null` 필드를 미리 만들어뒀다. 채우는 법:
+
+1. `scripts/build-products.py` 상단의 `URL_MAP` 딕셔너리에 `"라인id": "실제URL"`을 한 줄씩 추가
+   (라인 id는 JSON의 `id` 값과 동일 — 예: `"money-cake": "https://smartstore.naver.com/itecha/products/..."`)
+2. `python scripts/build-products.py` 재실행 → 25개 라인의 `url`에 자동 반영
+
+**147개 SKU 각각이 아니라 25개 라인당 1개면 된다** — 스마트스토어 한 상품 페이지 안에서
+색상·사이즈를 옵션으로 고르는 구조라면 라인 = 실제 상품 페이지 1개와 대응하는 경우가
+많을 것이다(라인마다 실제로 몇 개 페이지로 나뉘어 있는지는 확인 필요).
+
+URL은 직접 채워야 한다 — 실제 판매 링크를 지어낼 수 없어 스캐폴딩만 해뒀다.
 
 ## 주의
 
