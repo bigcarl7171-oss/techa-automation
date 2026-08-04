@@ -192,13 +192,13 @@ LINES = [
          reason="크래프트 카드에 미니 드라이플라워를 붙여, 카드 자체가 작은 꽃다발이 돼요."),
 ]
 
-# 라인별 스마트스토어 구매 링크. 값을 지어낼 수 없어 전부 비워둔 채 스캐폴딩만 해둔다.
-# 채우는 법: 아래 { } 안에 "라인id": "실제 URL" 형태로 한 줄씩 추가하면 다음 실행 때
-# 각 라인의 "url" 필드에 그대로 들어간다. 라인 id는 위 LINES의 id 값과 동일해야 한다.
-# 예: "money-cake": "https://smartstore.naver.com/itecha/products/1234567890",
+# 2026-08-04부터 스마트스토어 링크는 xlsx의 "사이트링크" 열(E)에서 직접 읽는다 —
+# 라인 안 아무 SKU 행에나 하나 채워두면 그 라인의 url이 된다(대표 1개 행이면 충분,
+# 색상·사이즈는 같은 페이지의 옵션이므로 SKU마다 다 채울 필요 없음).
+# URL_MAP은 xlsx에 없는 라인(예: 플라워클래스처럼 EXTRA_LINES에만 있는 것)을 위한
+# 수동 폴백이다 — xlsx 쪽에 값이 있으면 그게 항상 우선한다.
 URL_MAP = {
-    # "rose-hydrangea-bouquet": "",
-    # "money-cake": "",
+    # "flower-class": "",
 }
 
 # xlsx에 없지만 실제 운영 중인 상품 (script-guide.md 기준)
@@ -251,13 +251,22 @@ def price_band(p):
     return "5만원 이상"
 
 
+URL_RE = re.compile(r'^https?://')
+
+
 def main():
     wb = openpyxl.load_workbook(SRC, data_only=True)
     ws = wb['Sheet1']
     skus = []
-    for r in ws.iter_rows(min_row=2, max_row=ws.max_row, max_col=4, values_only=True):
-        if r[0]:
-            skus.append(dict(name=str(r[0]).strip(), price=r[1], mat=str(r[2] or '').strip()))
+    bad_urls = []
+    for r in ws.iter_rows(min_row=2, max_row=ws.max_row, max_col=5, values_only=True):
+        if not r[0]:
+            continue
+        url = str(r[4]).strip() if len(r) > 4 and r[4] else None
+        if url and not URL_RE.match(url):
+            bad_urls.append((r[0], url))
+            url = None
+        skus.append(dict(name=str(r[0]).strip(), price=r[1], mat=str(r[2] or '').strip(), url=url))
 
     buckets = {ln['id']: [] for ln in LINES}
     unmatched = []
@@ -276,6 +285,12 @@ def main():
             continue
         prices = [g['price'] for g in group]
         mats = sorted({g['mat'] for g in group})
+        urls_in_line = sorted({g['url'] for g in group if g['url']})
+        if len(urls_in_line) > 1:
+            print(f"?? 라인 '{ln['name']}' 안에 서로 다른 링크가 {len(urls_in_line)}개 있음 — 첫 번째만 사용:")
+            for u in urls_in_line:
+                print(f"     {u}")
+        line_url = urls_in_line[0] if urls_in_line else URL_MAP.get(ln['id'])
         variants = []
         for g in group:
             v = OrderedDict(sku=g['name'], price=g['price'])
@@ -293,7 +308,7 @@ def main():
             ("recipient", ln['recipient']), ("occasion", ln['occasion']),
             ("giftType", ln['giftType']),
             ("situation", ln['situation']), ("reason", ln['reason']),
-            ("url", URL_MAP.get(ln['id'])),
+            ("url", line_url),
             ("skuCount", len(group)), ("variants", variants),
         ]))
 
@@ -345,6 +360,13 @@ def main():
 
     covered = sum(l['skuCount'] for l in lines_out if l['id'] != 'flower-class')
     print(f"라인 {len(lines_out)}개 / SKU {covered}개 매칭 (원본 {len(skus)}개)")
+    if bad_urls:
+        print(f"\n!! 유효하지 않은 링크 {len(bad_urls)}개 (http로 시작 안 함 — 무시하고 진행):")
+        for name, url in bad_urls:
+            print(f"   - {name}: '{url}'")
+    no_url = [l['name'] for l in lines_out if not l.get('url')]
+    if no_url:
+        print(f"\n-- 아직 링크 없는 라인 {len(no_url)}개: {', '.join(no_url)}")
     if unmatched:
         print(f"\n!! 미분류 {len(unmatched)}개:")
         for u in unmatched:
