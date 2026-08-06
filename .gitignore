@@ -5,3 +5,11 @@ dist/
 .dev.vars
 ~$*.xlsx
 __pycache__/
+
+# 브랜드 배너 원본 사진은 용량이 커서(수 MB) 추적하지 않는다 —
+# 웹용으로 리사이즈·압축한 파생본(brand-*.jpg 등 아래 화이트리스트)만 커밋한다
+assets/banners/*
+!assets/banners/florist-bouquet.jpg
+!assets/banners/lifestyle.jpg
+!assets/banners/workshop.jpg
+!assets/banners/brand-*.jpg

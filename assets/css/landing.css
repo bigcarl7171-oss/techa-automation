@@ -159,21 +159,55 @@ body.landing .site-footer .wrap { max-width: 1320px; }
   color: #fff; -webkit-text-fill-color: #fff; background: none;
 }
 .shell-hero p { margin: 0 0 18px; color: rgba(255,255,255,.88); font-size: 14px; max-width: 420px; }
+.shell-hero-actions { display: flex; flex-wrap: wrap; gap: 10px; }
 .shell-hero-cta {
   display: inline-flex; align-items: center; gap: 6px;
   background: linear-gradient(180deg, #f3c169 0%, var(--amber) 100%);
   color: var(--amber-cta-ink); font-weight: 700; font-size: 14px;
   padding: 11px 20px; border-radius: var(--radius-pill);
-  transition: filter 150ms ease, transform 140ms var(--ease-out);
+  transition: filter 150ms ease, transform 140ms var(--ease-out), background-color 150ms ease;
+}
+.shell-hero-cta-ghost {
+  background: rgba(255,255,255,.12); color: #fff;
+  border: 1px solid rgba(255,255,255,.4);
 }
 @media (hover: hover) and (pointer: fine) {
   .shell-hero-cta:hover { text-decoration: none; filter: brightness(1.2); }
+  .shell-hero-cta-ghost:hover { background: rgba(255,255,255,.2); filter: none; }
 }
 .shell-hero-cta:active { transform: scale(0.97); }
 
 /* ---------- 브랜드 한 줄 소개 (히어로 밖) ---------- */
 .shell-brand-note { text-align: center; font-size: 13px; color: var(--muted); margin: 0 0 20px; }
 .shell-brand-note b { color: var(--blue-ink); }
+
+/* ---------- 브랜드 증명 밴드 (실제 상품·현장 사진) ---------- */
+.shell-brandband {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 0 0 28px;
+}
+.shell-brandband-item {
+  position: relative; display: block; border-radius: var(--radius-md); overflow: hidden;
+  aspect-ratio: 1 / 1; color: #fff;
+  transition: transform 160ms var(--ease-out);
+}
+.shell-brandband-item img {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+}
+.shell-brandband-item::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0) 45%, rgba(20,16,10,.78) 100%);
+}
+.shell-brandband-item span {
+  position: relative; z-index: 1; display: block; align-self: flex-end;
+  font-size: 12.5px; font-weight: 600; line-height: 1.35; padding: 10px;
+}
+.shell-brandband-item { display: flex; flex-direction: column; justify-content: flex-end; }
+@media (hover: hover) and (pointer: fine) {
+  .shell-brandband-item:hover { transform: translateY(-2px); text-decoration: none; }
+}
+@media (max-width: 720px) {
+  .shell-brandband { grid-template-columns: repeat(2, 1fr); }
+}
 
 /* ---------- 신뢰 문구 3줄 (통계 칩 대체) ---------- */
 .shell-trust {
