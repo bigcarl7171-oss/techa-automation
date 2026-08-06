@@ -4,8 +4,12 @@
 
 - **데이터**: `assets/data/techa-products.json`
 - **생성 스크립트**: `scripts/build-products.py`
-- **가격 원본**: `docs/테차상품가격리스트.xlsx` (2026-08-04 레포 안으로 이동 — 어느 컴퓨터에서
-  clone해도 그대로 재생성 가능. `.assetsignore`에 `/docs`가 있어 사이트로는 서빙 안 됨)
+- **가격 원본**: `docs/테차상품가격리스트.xlsx`
+- **추천 태그 원본**: `docs/gift-finder-tags.xlsx` (2026-08-06 추가 — recipient/occasion/
+  giftType/situation/reason을 코드가 아니라 이 xlsx에서 관리한다)
+
+두 xlsx 모두 레포 안에 있어 어느 컴퓨터에서 clone해도 그대로 재생성 가능. `.assetsignore`에
+`/docs`가 있어 사이트로는 서빙 안 됨.
 
 ---
 
@@ -77,15 +81,42 @@ d = json.load(open('assets/data/techa-products.json', encoding='utf-8'))
 
 ## 갱신
 
-가격이나 상품이 바뀌면 **xlsx를 고치고 스크립트를 다시 돌린다**:
+가격이나 상품이 바뀌면 `docs/테차상품가격리스트.xlsx`를, 추천 태그를 고치려면
+`docs/gift-finder-tags.xlsx`를 고친 뒤 스크립트를 다시 돌린다:
 
 ```bash
 python scripts/build-products.py
 ```
 
-추천 태그(recipient/occasion/giftType/situation/reason)를 고칠 때는
-`scripts/build-products.py` 안의 `LINES` 정의를 고친다. **JSON을 직접 편집하지 말 것** —
-다음 실행 때 덮어써진다.
+**JSON을 직접 편집하지 말 것** — 다음 실행 때 덮어써진다. `LINES`/`EXTRA_LINES`는
+이제 상품명 매칭 규칙(`match`)과 가격 데이터만 담고, 추천 태그는 전부
+`gift-finder-tags.xlsx`에서 읽어온다.
+
+### gift-finder-tags.xlsx 구조
+
+시트 "라인별 추천태그", 라인당 한 행:
+
+| 열 | 내용 |
+|---|---|
+| 라인ID | 손대지 말 것 — 가격리스트와 매칭하는 키 |
+| 상품라인명 / 분류 | 참고용 |
+| 추천대상(recipient) | 쉼표로 여러 값. 예: `연인, 배우자` |
+| 상황·목적(occasion) | 쉼표로 여러 값 |
+| 선물유형(giftType) | 쉼표로 여러 값 |
+| 추천상황 설명(situation) | 사이트 카드에 그대로 노출되는 문장 |
+| 추천 이유(reason) | 사이트 카드에 그대로 노출되는 문장 |
+| 비고(note) | `EXTRA_LINES`(플라워클래스 등)에만 쓰임 |
+
+새 값을 추가하면(예: occasion에 새 상황 추가) 사이트 필터 옵션에도 코드 수정 없이
+자동으로 반영된다 — `axes`가 매 실행마다 `lines`에 실제로 등장한 값에서 동적으로
+계산되기 때문.
+
+라인 구성(어떤 SKU가 어떤 라인인지) 자체를 바꿔야 하면 — 예: 라인을 새로 쪼개거나
+합칠 때 — `scripts/build-products.py`의 `LINES`(`match` 규칙)를 고쳐야 한다. 이건
+Excel만으로는 안 되고 코드 수정이 필요하다.
+
+라인 태그를 다시 xlsx로 뽑아야 할 일이 있으면(예: 코드에 임시로 넣은 태그를
+xlsx로 옮길 때) `scripts/export-gift-tags.py`를 쓴다.
 
 ## 스마트스토어 링크 (2026-08-04 반영)
 

@@ -1,10 +1,10 @@
 {
   "meta": {
-    "updated": "2026-08-04",
-    "source": "테차상품가격리스트.xlsx",
+    "updated": "2026-08-06",
+    "source": "테차상품가격리스트.xlsx (가격) + gift-finder-tags.xlsx (추천 태그)",
     "skuCount": 147,
     "lineCount": 25,
-    "note": "제품 라인 단위로 추천 태그를 관리한다. 색상·사이즈·전원방식 등 변형은 variants에 담긴다. 가격은 원(KRW). 태그를 고칠 때는 이 JSON을 고치고, xlsx는 가격 원본으로만 쓴다."
+    "note": "제품 라인 단위로 추천 태그를 관리한다. 색상·사이즈·전원방식 등 변형은 variants에 담긴다. 가격은 원(KRW). 태그를 고칠 때는 docs/gift-finder-tags.xlsx를 고치고 스크립트를 다시 돌린다 — 이 JSON을 직접 편집하지 말 것(다음 실행 때 덮어써진다)."
   },
   "axes": {
     "recipient": [

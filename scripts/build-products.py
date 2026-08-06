@@ -12,193 +12,66 @@ sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 # 이 스크립트(scripts/) 기준 상대경로 — 어느 컴퓨터에서 어느 위치로 clone해도 그대로 동작
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC = os.path.join(REPO_ROOT, 'docs', '테차상품가격리스트.xlsx')
+TAGS_SRC = os.path.join(REPO_ROOT, 'docs', 'gift-finder-tags.xlsx')
 OUT = os.path.join(REPO_ROOT, 'assets', 'data', 'techa-products.json')
 
 # ---------------------------------------------------------------------------
-# 제품 라인 정의
+# 제품 라인 정의 — 매칭 구조만 코드에 둔다.
 #   match: SKU 이름이 이 조건을 만족하면 해당 라인에 속함 (순서대로 평가, 먼저 맞는 라인 승)
 #   all=반드시 포함할 토큰 / none=포함되면 안 되는 토큰
+# 추천 태그(recipient/occasion/giftType/situation/reason)는 코드가 아니라
+# docs/gift-finder-tags.xlsx에서 읽는다 — 태그를 고칠 땐 그 xlsx만 고치면 된다.
 # ---------------------------------------------------------------------------
 LINES = [
     dict(id="rose-hydrangea-bouquet", name="장미수국 꽃다발", cat="꽃다발",
-         match=dict(all=["장미수국", "꽃다발"]),
-         recipient=["연인", "배우자"],
-         occasion=["기념일", "프러포즈", "생일", "화이트데이", "발렌타인데이",
-                   "크리스마스", "병문안"],
-         giftType=["휴대전달형"],
-         situation="연인·배우자에게 기념일이나 프러포즈처럼 마음을 제대로 전하고 싶을 때",
-         reason="장미와 수국을 함께 엮은 프리저브드 꽃다발이라 생화처럼 며칠 만에 시들지 않고, 받은 날 그대로의 모습이 오래 남아요."),
-
+         match=dict(all=["장미수국", "꽃다발"])),
     dict(id="hydrangea-bouquet", name="수국 꽃다발", cat="꽃다발",
-         match=dict(all=["수국", "꽃다발"], none=["장미수국"]),
-         recipient=["연인", "친구", "부모님"], occasion=["생일", "기념일", "병문안"],
-         giftType=["휴대전달형"],
-         situation="연인·친구·부모님 누구에게 드려도 부담 없는 무난한 꽃 선물을 찾을 때, 또는 물·흙 없는 꽃다발이 필요한 병문안 자리",
-         reason="수국은 색이 은은해서 취향을 크게 타지 않고, 프리저브드라 오래 두고 볼 수 있어요. 순수 프리저브드 소재라 물 관리가 필요 없어 병문안에도 부담 없어요."),
-
+         match=dict(all=["수국", "꽃다발"], none=["장미수국"])),
     dict(id="superior-rose", name="수페리어 장미", cat="꽃다발",
-         match=dict(all=["수페리어"]),
-         recipient=["연인", "배우자"],
-         occasion=["프러포즈", "기념일", "화이트데이", "발렌타인데이", "병문안"],
-         giftType=["휴대전달형"],
-         situation="프러포즈나 중요한 기념일처럼 각 잡고 준비하는 자리",
-         reason="큰 송이 프리저브드 장미 한 종으로 구성해 꽃 자체가 주인공이 되는 구성이에요."),
-
+         match=dict(all=["수페리어"])),
     dict(id="rose-soap-bouquet", name="장미 비누꽃다발", cat="꽃다발",
-         match=dict(all=["장미", "비누꽃다발"]),
-         recipient=["연인", "배우자", "친구"], occasion=["생일", "기념일", "화이트데이", "발렌타인데이"],
-         giftType=["휴대전달형"],
-         situation="생일·기념일에 향까지 함께 전하고 싶을 때",
-         reason="비누로 만든 꽃송이라 은은한 향이 함께 나요. 향이 부담스러우면 무향 옵션도 있습니다."),
-
+         match=dict(all=["장미", "비누꽃다발"])),
     dict(id="pinkpeach-bouquet", name="핑크피치 꽃다발", cat="꽃다발",
-         match=dict(all=["핑크피치"]),
-         recipient=["연인", "친구"], occasion=["생일", "기념일", "화이트데이"],
-         giftType=["휴대전달형"],
-         situation="화사한 색감의 꽃다발로 생일을 축하하고 싶을 때",
-         reason="핑크와 피치 톤을 섞어 사진에 특히 예쁘게 담기는 조합이에요."),
-
+         match=dict(all=["핑크피치"])),
     dict(id="sunflower-bouquet", name="해바라기 꽃다발", cat="꽃다발",
-         match=dict(all=["해바라기", "꽃다발"]),
-         recipient=["부모님", "친구", "직장동료"], occasion=["집들이·개업", "승진·퇴임"],
-         giftType=["휴대전달형"],
-         situation="집들이·개업·승진처럼 좋은 기운을 빌어주고 싶은 자리",
-         reason="해바라기는 예로부터 재물운을 상징해 개업·집들이 선물로 많이 찾으세요."),
-
+         match=dict(all=["해바라기", "꽃다발"])),
     dict(id="carnation-rose-bouquet", name="카네이션장미 꽃다발", cat="꽃다발",
-         match=dict(all=["카네이션장미", "꽃다발"]),
-         recipient=["부모님", "조부모님", "선생님"], occasion=["어버이날", "스승의날", "생신·환갑"],
-         giftType=["휴대전달형"],
-         situation="어버이날·스승의날에 카네이션을 챙겨야 할 때",
-         reason="카네이션과 장미를 함께 엮어 카네이션만 있을 때보다 풍성하고, 시들지 않아 오래 두고 보실 수 있어요."),
-
+         match=dict(all=["카네이션장미", "꽃다발"])),
     dict(id="carnation-money-bouquet", name="카네이션 돈꽃다발", cat="돈꽃다발",
-         match=dict(all=["카네이션", "돈꽃다발"]),
-         recipient=["부모님", "조부모님"], occasion=["어버이날", "생신·환갑", "칠순·팔순"],
-         giftType=["현금동봉형", "휴대전달형"],
-         situation="어버이날이나 생신에 현금을 드리고 싶은데 봉투만 드리기는 밋밋할 때",
-         reason="카네이션 사이에 지폐를 꽂는 구조라 현금의 실용성과 꽃의 정성을 같이 전할 수 있어요."),
-
+         match=dict(all=["카네이션", "돈꽃다발"])),
     dict(id="rose-money-bouquet", name="장미 돈꽃다발", cat="돈꽃다발",
-         match=dict(all=["장미", "돈꽃다발"]),
-         recipient=["부모님", "조부모님"], occasion=["생신·환갑", "칠순·팔순", "어버이날"],
-         giftType=["현금동봉형", "휴대전달형"],
-         situation="부모님 생신·환갑·칠순에 현금 선물을 준비할 때",
-         reason="며느리·사위·손주가 어른께 드리는 선물로 가장 많이 찾는 구성이에요."),
-
+         match=dict(all=["장미", "돈꽃다발"])),
     dict(id="single-stem-soap-box", name="비누꽃 한송이·두송이 박스", cat="소품",
-         match=dict(any_of=["장미한송이", "장미두송이", "카네이션한송이", "카네이션두송이"]),
-         recipient=["친구", "직장동료", "선생님", "연인"],
-         occasion=["스승의날", "소소한 감사", "단체·답례품",
-                   "화이트데이", "발렌타인데이", "빼빼로데이"],
-         giftType=["휴대전달형", "단체·답례품"],
-         situation="행사·모임에서 여러 명에게 하나씩 돌리거나, 부담 없이 마음만 가볍게 전할 때",
-         reason="1만원 안쪽 가격에 투명 박스까지 포함이라 답례품이나 단체 선물로 쓰기 좋아요."),
-
+         match=dict(any_of=["장미한송이", "장미두송이", "카네이션한송이", "카네이션두송이"])),
     dict(id="kinderjoy-doll-bouquet", name="킨더조이 레보니 인형꽃다발", cat="인형꽃다발",
-         match=dict(all=["킨더조이"]),
-         recipient=["아이"], occasion=["발표회·재롱잔치", "졸업·입학", "생일"],
-         giftType=["아이용", "휴대전달형"],
-         situation="유치원 재롱잔치·발표회·졸업식에서 아이에게 안겨줄 꽃다발이 필요할 때",
-         reason="꽃과 인형에 킨더조이까지 들어 있어 아이가 바로 좋아하고, 사진에서 아이 얼굴을 가리지 않는 크기예요."),
-
+         match=dict(all=["킨더조이"])),
     dict(id="character-doll-bouquet", name="캐릭터 인형꽃다발", cat="인형꽃다발",
-         match=dict(any_of=["마이멜로디", "시나모롤"]),
-         recipient=["아이"], occasion=["생일", "발표회·재롱잔치", "졸업·입학"],
-         giftType=["아이용", "휴대전달형"],
-         situation="산리오 캐릭터를 좋아하는 아이에게 생일·발표회 선물을 할 때",
-         reason="마이멜로디·시나모롤 인형이 함께 있어 꽃다발을 받은 뒤에도 인형은 계속 곁에 둘 수 있어요."),
-
+         match=dict(any_of=["마이멜로디", "시나모롤"])),
     dict(id="rebony-trophy-doll-bouquet", name="레보니 인형꽃다발 (트로피포트)", cat="인형꽃다발",
-         match=dict(any_of=["깡총커플", "앙증맞은 레보니"]),
-         recipient=["아이"], occasion=["발표회·재롱잔치", "졸업·입학"],
-         giftType=["아이용"],
-         situation="발표회·졸업식에서 아이를 주인공처럼 축하해주고 싶을 때",
-         reason="트로피 모양 포트에 담겨 있어 시상식 분위기가 나고, 행사 뒤엔 방에 두는 소품이 돼요."),
-
+         match=dict(any_of=["깡총커플", "앙증맞은 레보니"])),
     dict(id="glassdome-moodlamp", name="유리돔 무드등", cat="무드등",
          match=dict(any_of=["안개꽃핑크 무드등", "안개꽃파랑 무드등", "스타티스 무드등",
-                            "핑크장미 무드등", "레드장미 무드등", "파랑장미 무드등"]),
-         recipient=["연인", "배우자", "본인"],
-         occasion=["기념일", "집들이·개업", "생일",
-                   "화이트데이", "발렌타인데이", "크리스마스", "병문안"],
-         giftType=["인테리어형"],
-         situation="선물한 뒤에도 방에 두고 매일 보게 되는 것을 찾을 때, 또는 물·흙 없이 병문안에 가져갈 꽃을 찾을 때",
-         reason="유리돔 안에 꽃을 담고 조명을 넣어, 꽃 선물이면서 동시에 인테리어 조명 역할을 해요. 물이 없어 병실에 가져가도 관리 부담이 없어요."),
-
+                            "핑크장미 무드등", "레드장미 무드등", "파랑장미 무드등"])),
     dict(id="classic-money-box", name="클래식투명 용돈박스", cat="용돈박스",
-         match=dict(all=["클래식투명용돈박스"]),
-         recipient=["부모님", "조부모님"], occasion=["생신·환갑", "어버이날", "설날·명절"],
-         giftType=["현금동봉형"],
-         situation="현금을 드리되 봉투 대신 형태를 갖춰 전하고 싶을 때",
-         reason="투명 박스라 안에 든 꽃과 현금이 함께 보이고, 돈티슈·머니캡 두 방식 중 고를 수 있어요."),
-
+         match=dict(all=["클래식투명용돈박스"])),
     dict(id="premium-window-money-box", name="프리미엄창문 용돈박스", cat="용돈박스",
-         match=dict(all=["프리미엄창문"]),
-         recipient=["부모님", "조부모님"], occasion=["생신·환갑", "어버이날", "설날·명절"],
-         giftType=["현금동봉형"],
-         situation="용돈박스 중에서도 조금 더 격식 있는 구성을 원할 때",
-         reason="창문형 박스에 꽃을 배치해 정면에서 봤을 때 정돈된 느낌이 나요. 스몰·라지 두 크기가 있습니다."),
-
+         match=dict(all=["프리미엄창문"])),
     dict(id="sunflower-frame", name="해바라기 액자", cat="액자",
-         match=dict(all=["해바라기 액자"]),
-         recipient=["직장동료", "부모님", "본인"], occasion=["집들이·개업", "승진·퇴임"],
-         giftType=["인테리어형"],
-         situation="개업·집들이 선물로 벽에 걸 수 있는 것을 찾을 때",
-         reason="재물운을 상징하는 해바라기를 액자에 담아, 매장이나 거실에 걸어두기 좋아요."),
-
+         match=dict(all=["해바라기 액자"])),
     dict(id="cup-moodlamp-single", name="프리저브드 꽃 무드등 한송이", cat="무드등",
-         match=dict(all=["프리저브드 꽃 무드등 한송이"]),
-         recipient=["연인", "친구", "본인"],
-         occasion=["생일", "기념일", "화이트데이", "발렌타인데이", "병문안"],
-         giftType=["인테리어형"],
-         situation="2만원대에서 오래 두고 볼 수 있는 선물을 찾을 때, 또는 병문안처럼 관리 부담 없는 꽃이 필요할 때",
-         reason="컵 모양 무드등에 꽃 한 송이를 담은 구성이라 책상이나 머리맡에 두기 좋은 크기예요. 물을 안 갈아줘도 돼서 병실에도 부담 없어요."),
-
+         match=dict(all=["프리저브드 꽃 무드등 한송이"])),
     dict(id="ionantha-moodlamp", name="이오난사 스칸디아모스 무드등", cat="무드등",
-         match=dict(all=["이오난사"]),
-         recipient=["직장동료", "본인", "친구"], occasion=["집들이·개업", "승진·퇴임"],
-         giftType=["인테리어형"],
-         situation="사무실 책상이나 작업 공간에 둘 식물 소품을 찾을 때",
-         reason="이오난사와 스칸디아모스는 물 주기가 거의 필요 없는 공기정화 식물이라, 관리할 시간이 없어도 괜찮아요."),
-
+         match=dict(all=["이오난사"])),
     dict(id="centerpiece", name="센터피스", cat="센터피스",
-         match=dict(all=["센터피스"]),
-         recipient=["부모님", "본인", "직장동료"], occasion=["집들이·개업", "생신·환갑", "크리스마스"],
-         giftType=["인테리어형"],
-         situation="식탁이나 거실 테이블 가운데 놓을 장식을 찾을 때",
-         reason="사방 어느 각도에서 봐도 균형이 잡히도록 만든 구성이라 테이블 가운데 두기에 맞아요."),
-
+         match=dict(all=["센터피스"])),
     dict(id="topiary-moodlamp", name="토피어리 수국 무드등", cat="무드등",
-         match=dict(all=["토피어리"]),
-         recipient=["연인", "부모님", "본인"], occasion=["집들이·개업", "생일", "기념일", "크리스마스"],
-         giftType=["인테리어형"],
-         situation="화분 형태의 조명 소품을 찾을 때",
-         reason="동그랗게 다듬은 수국에 LED를 넣어, 불을 켜면 화분이 조명이 되는 구조예요."),
-
+         match=dict(all=["토피어리"])),
     dict(id="money-cake", name="용돈케이크 머니박스", cat="용돈박스",
-         match=dict(all=["용돈케이크"]),
-         recipient=["부모님", "조부모님"], occasion=["생신·환갑", "칠순·팔순", "어버이날"],
-         giftType=["현금동봉형"],
-         situation="현금만 드리기엔 민망하고 거창한 이벤트는 부담스러울 때",
-         reason="케이크 모양에 현금을 꽂고 LED 조명까지 들어가, 촛불 대신 불을 켜고 축하하는 자리를 만들 수 있어요."),
-
+         match=dict(all=["용돈케이크"])),
     dict(id="hydrangea-moodlamp", name="수국꽃무드등", cat="무드등",
-         match=dict(all=["수국꽃무드등"]),
-         recipient=["연인", "배우자", "부모님"],
-         occasion=["기념일", "프러포즈", "생신·환갑", "화이트데이", "발렌타인데이", "크리스마스"],
-         giftType=["인테리어형"],
-         situation="가장 공들인 선물 하나를 준비할 때",
-         reason="프리저브드 수국을 가득 채우고 조명을 넣은 대표 상품이에요. 전원은 USB와 건전지 중 고를 수 있고, USB 쪽 선호가 조금 더 많습니다."),
-
+         match=dict(all=["수국꽃무드등"])),
     dict(id="flower-postcard", name="꽃엽서카드", cat="소품",
-         match=dict(all=["꽃엽서카드"]),
-         recipient=["연인", "부모님", "친구", "선생님", "직장동료", "아이"],
-         occasion=["소소한 감사", "생일", "기념일",
-                   "화이트데이", "발렌타인데이", "빼빼로데이", "크리스마스", "병문안"],
-         giftType=["휴대전달형", "함께보내기"],
-         situation="다른 선물에 손편지를 곁들이거나, 카드 한 장으로 마음만 전할 때",
-         reason="크래프트 카드에 미니 드라이플라워를 붙여, 카드 자체가 작은 꽃다발이 돼요."),
+         match=dict(all=["꽃엽서카드"])),
 ]
 
 # 2026-08-04부터 스마트스토어 링크는 xlsx의 "사이트링크" 열(E)에서 직접 읽는다 —
@@ -210,14 +83,9 @@ URL_MAP = {
     "flower-class": "https://smartstore.naver.com/itecha/products/10537190482",
 }
 
-# xlsx에 없지만 실제 운영 중인 상품 (script-guide.md 기준)
+# xlsx에 없지만 실제 운영 중인 상품 (script-guide.md 기준) — 가격 정보만 여기 둔다.
 EXTRA_LINES = [
     dict(id="flower-class", name="플라워클래스 (원데이)", cat="체험",
-         recipient=["연인", "친구", "본인"], occasion=["데이트", "취미·자기계발", "기념일"],
-         giftType=["체험형"],
-         situation="물건 대신 함께 시간을 보내는 경험을 선물하고 싶을 때",
-         reason="조소를 전공한 플로리스트가 직접 지도하고, 완성한 작품은 그대로 가져가실 수 있어요.",
-         note="가격리스트(xlsx)에 없는 항목 — script-guide.md 3-8 기준으로 추가",
          variants=[
              dict(sku="원데이 클래스 70분 (1인)", price=50000, option="1인"),
              dict(sku="원데이 클래스 70분 (4인 이상, 1인당)", price=45000, option="4인 이상"),
@@ -263,7 +131,33 @@ def price_band(p):
 URL_RE = re.compile(r'^https?://')
 
 
+def split_tags(s):
+    return [t.strip() for t in str(s or '').split(',') if t.strip()]
+
+
+def load_tags():
+    """docs/gift-finder-tags.xlsx -> {라인ID: {recipient, occasion, giftType, situation, reason, note}}"""
+    wb = openpyxl.load_workbook(TAGS_SRC, data_only=True)
+    ws = wb['라인별 추천태그']
+    tags = {}
+    for r in ws.iter_rows(min_row=2, max_row=ws.max_row, max_col=9, values_only=True):
+        if not r[0]:
+            continue
+        line_id = str(r[0]).strip()
+        tags[line_id] = dict(
+            recipient=split_tags(r[3]), occasion=split_tags(r[4]), giftType=split_tags(r[5]),
+            situation=str(r[6] or '').strip(), reason=str(r[7] or '').strip(),
+            note=str(r[8] or '').strip() or None,
+        )
+    return tags
+
+
 def main():
+    tags = load_tags()
+    missing = [ln['id'] for ln in (LINES + EXTRA_LINES) if ln['id'] not in tags]
+    if missing:
+        print(f"!! gift-finder-tags.xlsx에 태그가 없는 라인 {len(missing)}개 (건너뜀): {', '.join(missing)}")
+
     wb = openpyxl.load_workbook(SRC, data_only=True)
     ws = wb['Sheet1']
     skus = []
@@ -292,6 +186,9 @@ def main():
         if not group:
             print(f"!! 빈 라인: {ln['name']}")
             continue
+        t = tags.get(ln['id'])
+        if not t:
+            continue
         prices = [g['price'] for g in group]
         mats = sorted({g['mat'] for g in group})
         urls_in_line = sorted({g['url'] for g in group if g['url']})
@@ -314,14 +211,17 @@ def main():
             ("priceMin", min(prices)), ("priceMax", max(prices)),
             ("priceBands", sorted({price_band(p) for p in prices},
                                   key=lambda b: ["1만원대", "2만원대", "3만원대", "4만원대", "5만원 이상"].index(b))),
-            ("recipient", ln['recipient']), ("occasion", ln['occasion']),
-            ("giftType", ln['giftType']),
-            ("situation", ln['situation']), ("reason", ln['reason']),
+            ("recipient", t['recipient']), ("occasion", t['occasion']),
+            ("giftType", t['giftType']),
+            ("situation", t['situation']), ("reason", t['reason']),
             ("url", line_url),
             ("skuCount", len(group)), ("variants", variants),
         ]))
 
     for ln in EXTRA_LINES:
+        t = tags.get(ln['id'])
+        if not t:
+            continue
         prices = [v['price'] for v in ln['variants']]
         lines_out.append(OrderedDict([
             ("id", ln['id']), ("name", ln['name']), ("category", ln['cat']),
@@ -329,11 +229,11 @@ def main():
             ("priceMin", min(prices)), ("priceMax", max(prices)),
             ("priceBands", sorted({price_band(p) for p in prices},
                                   key=lambda b: ["1만원대", "2만원대", "3만원대", "4만원대", "5만원 이상"].index(b))),
-            ("recipient", ln['recipient']), ("occasion", ln['occasion']),
-            ("giftType", ln['giftType']),
-            ("situation", ln['situation']), ("reason", ln['reason']),
+            ("recipient", t['recipient']), ("occasion", t['occasion']),
+            ("giftType", t['giftType']),
+            ("situation", t['situation']), ("reason", t['reason']),
             ("url", URL_MAP.get(ln['id'])),
-            ("note", ln['note']),
+            ("note", t['note']),
             ("skuCount", len(ln['variants'])), ("variants", ln['variants']),
         ]))
 
@@ -348,12 +248,13 @@ def main():
 
     doc = OrderedDict([
         ("meta", OrderedDict([
-            ("updated", "2026-08-04"),
-            ("source", "테차상품가격리스트.xlsx"),
+            ("updated", "2026-08-06"),
+            ("source", "테차상품가격리스트.xlsx (가격) + gift-finder-tags.xlsx (추천 태그)"),
             ("skuCount", len(skus)),
             ("lineCount", len(lines_out)),
             ("note", "제품 라인 단위로 추천 태그를 관리한다. 색상·사이즈·전원방식 등 변형은 variants에 담긴다. "
-                     "가격은 원(KRW). 태그를 고칠 때는 이 JSON을 고치고, xlsx는 가격 원본으로만 쓴다."),
+                     "가격은 원(KRW). 태그를 고칠 때는 docs/gift-finder-tags.xlsx를 고치고 스크립트를 다시 돌린다 — "
+                     "이 JSON을 직접 편집하지 말 것(다음 실행 때 덮어써진다)."),
         ])),
         ("axes", OrderedDict([
             ("recipient", recipients),
@@ -387,4 +288,5 @@ def main():
         print(f"  {l['skuCount']:3d}종 {l['priceMin']:>6,}~{l['priceMax']:>6,}원  {l['name']}")
 
 
-main()
+if __name__ == '__main__':
+    main()
