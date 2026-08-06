@@ -92,13 +92,13 @@
     <div class="result empty" id="daysResult" style="margin-top:14px">날짜를 선택해 주세요.</div>
   </section>
 
-  <!-- ③ 전환: 스마트스토어 소식받기로 연결 (개인정보를 새로 받지 않는다) -->
+  <!-- ③ 전환: 스마트스토어 알림받기로 연결 (개인정보를 새로 받지 않는다) -->
   <div class="save-box">
     <h2>다음에 챙길 날, 미리 알려드릴까요?</h2>
-    <p>테차 스마트스토어에서 <b>소식받기</b>를 눌러두시면, 어버이날·스승의날 같은
-       날이 오기 전에 먼저 알려드려요. 따로 정보를 남기실 필요 없어요.</p>
-    <a class="btn-save" id="newsSignup" href="https://smartstore.naver.com/itecha" target="_blank" rel="noopener">테차 소식받기 →</a>
-    <p class="hintline">스토어 페이지 좌측 상단의 '소식받기'를 눌러주시면 됩니다.</p>
+    <p>테차 스마트스토어에서 <b>알림받기</b>를 눌러두시면, 어버이날·스승의날 같은
+       절기마다 미리 알려드려요. 따로 정보를 남기실 필요 없이, 가끔만 보내드립니다.</p>
+    <a class="btn-save" id="newsSignup" href="https://smartstore.naver.com/itecha" target="_blank" rel="noopener">테차 알림받기 →</a>
+    <p class="hintline">스토어 페이지 좌측 상단의 '알림받기'를 눌러주시면 됩니다.</p>
   </div>
 
   <!-- ④ 재방문 유인 -->
@@ -244,7 +244,7 @@ TECHA.initPage({ title:"시들지 않는 꽃 관리법", desc:"오래 예쁘게 
       '<div class="sub">함께한 지 ' + days.toLocaleString() + '일 되었어요</div>';
   });
 
-  // ---------- ③ 소식받기 유도 ----------
+  // ---------- ③ 알림받기 유도 ----------
   document.getElementById("newsSignup").addEventListener("click", function () {
     TECHA.track("news_signup_click", { situation: "care_page" });
   });

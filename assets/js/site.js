@@ -273,7 +273,7 @@
   // 쓰는 이벤트:
   //   situation_click   상황 카드 클릭        { situation }
   //   care_view         관리법 조회           { product }
-  //   news_signup_click 소식받기 유도 클릭    { situation }
+  //   news_signup_click 알림받기 유도 클릭    { situation }
   //   shop_click        스마트스토어 이동     { placement }
   //   gift_finder_filter        선물 큐레이션 필터 변경   { recipient, occasion, price }
   //   gift_finder_product_click 선물 큐레이션 구매 링크 클릭 { line }
